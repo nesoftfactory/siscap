@@ -13,7 +13,6 @@ target
 *.com
 *.dll
 *.exe
-*.zip
 *.o
 *.so
 .DS_Store
