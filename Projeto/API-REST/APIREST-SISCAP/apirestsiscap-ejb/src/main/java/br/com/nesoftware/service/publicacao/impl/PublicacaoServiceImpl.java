@@ -39,7 +39,7 @@ public class PublicacaoServiceImpl implements IPublicacaoService {
         	
         	//TODO chama negócio para validar regras. Algo tipo
         	//publicacaoNegocio.validarRegras(publicacao)
-        	//publicacao.setId(null);
+        	publicacao.setId(null);
         	publicacaoDao.inserir(publicacao);
         }
         else {
