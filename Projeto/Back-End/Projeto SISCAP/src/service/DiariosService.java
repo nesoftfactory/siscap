@@ -82,7 +82,7 @@ public class DiariosService {
 						dataFinal);
 				if (isFinalPaginacao == null) {
 					System.out.println("Erro na fonte:" + urlString + " - pagina - " + pageDomTeresina);
-					isFinalPaginacao = Boolean.TRUE;
+					isFinalPaginacao = Boolean.FALSE;
 				}
 			}
 		} else if (urlString.equals(DOM_PARNAIBA)) {
