@@ -16,8 +16,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Date dataInicial =  DiariosService.getData("23/07/2018 00:00:00");
-        Date dataFinal = DiariosService.getData("26/07/2018 23:59:59");
+        Date dataInicial =  DiariosService.getData("07/01/2005 00:00:00");
+        Date dataFinal = DiariosService.getData("30/07/2018 23:59:59");
 
         // Vetor de url das fontes
         String[] fontes = new String[]{

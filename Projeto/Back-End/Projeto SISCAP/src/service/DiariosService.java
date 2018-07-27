@@ -82,7 +82,7 @@ public class DiariosService {
 						dataFinal);
 				if (isFinalPaginacao == null) {
 					System.out.println("Erro na fonte:" + urlString + " - pagina - " + pageDomTeresina);
-					isFinalPaginacao = Boolean.FALSE;
+					isFinalPaginacao = Boolean.TRUE;
 				}
 			}
 		} else if (urlString.equals(DOM_PARNAIBA)) {
@@ -116,7 +116,7 @@ public class DiariosService {
 			// A expressão regular das datas e PDFs estão diferentes para cada URL
 			if (urlString.equals(DOM_TERESINA)) {
 				regexForDate = "\\d{2}/\\d{2}/\\d{4}";
-				regexForPDF = "[0-9A-Za-z]+[-]?+A?+[0-9]+[-]+[0-9A-Za-z]+[.][Pp][Dd][Ff]";
+				regexForPDF = "DOM+[0-9]+A?+[-]+[A|B-B-|A-A-|0-9]+[-]?+\\s?+[0-9A-Za-z]+\\s?+[(]?+[0-9]?+[)]?+.(pdf|rar|exe)";
 			} else if (urlString.equals(DOM_PARNAIBA)) {
 				regexForDate = "\\d{2}-\\d{2}-\\d{4}";
 				regexForPDF = "[0-9A-Za-z]+[.][Pp][Dd][Ff]";
