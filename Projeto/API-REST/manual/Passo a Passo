@@ -21,12 +21,23 @@
 11)Adicionar nas permissões do banco "SISCAP", o usuário "SISCAP"
 
 12)Criar uma tabela com o nome "PUBLICACOES" exempo da seguinte forma:
+USE [siscap]
+GO
+
+/****** Object:  Table [dbo].[PUBLICACOES]    Script Date: 27/07/2018 17:10:37 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[PUBLICACOES](
-	[ID] [numeric](18, 0) NOT NULL,
+	[ID] [numeric](18, 0) IDENTITY(1,1) NOT NULL,
 	[DT_CADASTRO] [date] NOT NULL,
-	[DT_PUBLICACAO] [date] NOT NULL,
-	[FONTE] [ntext] NOT NULL,
-CONSTRAINT [PK_PUBLICACOES] PRIMARY KEY CLUSTERED 
+	[DT_PUBLICACAO] [nchar](10) NOT NULL,
+	[FONTE] [ntext] NOT NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 
 13)Baixar projetos maven do git (pasta APIREST)
 
