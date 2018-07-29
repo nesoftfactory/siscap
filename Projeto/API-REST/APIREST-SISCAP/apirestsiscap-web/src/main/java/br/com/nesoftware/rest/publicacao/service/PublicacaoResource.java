@@ -56,10 +56,12 @@ public class PublicacaoResource {
     		@ApiResponse(code = HttpURLConnection.HTTP_UNAUTHORIZED, message = MensagensRetornoHTTP.MSG_UNAUTHORIZED, response = FalhaNegocioRepresentation.class),
     	    @ApiResponse(code = HttpURLConnection.HTTP_BAD_REQUEST, message = MensagensRetornoHTTP.MSG_BADREQUEST, response = String.class)})
 	public Response inserir(
-			@ApiParam(value = "Nova Publicacao.", required = true) final PublicacaoRepresentation rep,
+			@ApiParam(value = "Nova Publicacao.", required = true) final String fonte,
 			@Context HttpServletRequest request) throws NegocioException{
 		
-		Publicacao publicacao = publicacaoParser.getBo(rep);
+		PublicacaoRepresentation pubRepresentation = new PublicacaoRepresentation();
+		pubRepresentation.setFonte(fonte);
+		Publicacao publicacao = publicacaoParser.getBo(pubRepresentation);
 		
 		publicacaoService.inserir(publicacao);
         
