@@ -19,7 +19,7 @@
 
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>paradise-#{guestPreferences.theme}</param-value>
+		<param-value>paradise-blue</param-value>
 	</context-param>
 	<context-param>
 		<param-name>primefaces.FONT_AWESOME</param-name>

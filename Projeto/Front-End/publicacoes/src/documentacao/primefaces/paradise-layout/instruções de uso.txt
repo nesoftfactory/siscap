@@ -1,0 +1,1 @@
+Copiar o jar para a pasta ".m2\repository\org\primefaces\premium\paradise-theme\1.0.3" para que o maven consiga localizar a dependência informada no arquivo pom.xml
