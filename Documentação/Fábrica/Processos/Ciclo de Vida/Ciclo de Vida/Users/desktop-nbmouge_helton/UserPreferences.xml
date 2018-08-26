@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <UserPreferences xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OpenedItems>
-    <ModelItem ItemType="Diagram" DiagramId="d88294c8-0fb4-447f-ac24-626e641b0dc1" IsSelected="true" />
+    <ModelItem ItemType="Diagram" DiagramId="d88294c8-0fb4-447f-ac24-626e641b0dc1" IsSelected="false" />
+    <ModelItem ItemType="Diagram" DiagramId="309da389-1bfa-4ea3-8822-cd399694fbf4" IsSelected="true" />
   </OpenedItems>
 </UserPreferences>
