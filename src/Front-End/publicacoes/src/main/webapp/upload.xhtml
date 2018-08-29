@@ -17,7 +17,7 @@
 							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Fonte" for="fonte"/>
-								<p:selectOneMenu id="fonte" value="#{prototipoUploadController.fonte}" required="true">
+								<p:selectOneMenu id="fonte" value="#{uploadController.fonte}" required="true">
 						            <f:selectItem itemLabel="Selecione" itemValue="" />
 						            <f:selectItem itemLabel="Diário Oficial do Estado do Piauí" itemValue="1" />
 						            <f:selectItem itemLabel="Diário Oficial dos municípios" itemValue="2" />
@@ -26,24 +26,24 @@
 						        </p:selectOneMenu>
 
 								<p:outputLabel value="Data" for="data"/>
-								<p:calendar id="data" value="#{prototipoUploadController.data}" showOn="button" required="true" />
+								<p:calendar id="data" value="#{uploadController.data}" showOn="button" required="true" />
 								
 							</p:panelGrid>
-							<p:fileUpload fileUploadListener="#{prototipoUploadController.uploadFile}" mode="advanced" 
+							<p:fileUpload fileUploadListener="#{uploadController.uploadFile}" mode="advanced" 
 								label="Selecione o diário" auto="true" 
 								dragDropSupport="true" update="arquivo" fileLimit="1" allowTypes="/(\.|\/)(pdf|gif|jpe?g|png)$/" />
 														
 							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Arquivo" for="arquivo"/>
-								<p:inputText id="arquivo" value="#{prototipoUploadController.nomeArquivo}" readonly="true"/>
+								<p:inputText id="arquivo" value="#{uploadController.nomeArquivo}" readonly="true"/>
 							</p:panelGrid>
 							
 							<p:toolbar>
 								<p:toolbarGroup>
- 									<p:commandButton value="Limpar" action="#{prototipoUploadController.limpar()}" process="@this" update="@form"
+ 									<p:commandButton value="Limpar" action="#{uploadController.limpar()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
- 									<p:commandButton value="Salvar" action="#{prototipoUploadController.salvar()}" process="@form" update="@form"
+ 									<p:commandButton value="Salvar" action="#{uploadController.salvar()}" process="@form" update="@form"
 										icon="fa fa-save White" iconPos="right" style="width:auto;"/>
 								</p:toolbarGroup>
 							</p:toolbar>	

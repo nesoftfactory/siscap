@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Usuários</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="msgs" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Cadastro de usuários" style="margin-bottom:20px">
+							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								<p:outputLabel value="Nome" for="nome"/>
+								<p:inputText id="nome" value="#{usuariosController.usuario.nome}" required="true" />
+								
+								<p:outputLabel value="Email" for="email"/>
+								<p:inputText id="email" value="#{usuariosController.usuario.email}" required="true" />
+								
+								<p:outputLabel value="Login" for="login"/>
+								<p:inputText id="login" value="#{usuariosController.usuario.login}" required="true" />
+
+								
+							</p:panelGrid>
+						
+							<p:toolbar>
+								<p:toolbarGroup>
+ 									<p:commandButton value="Limpar" action="#{usuariosController.limpar()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" 
+										update="@form" action="#{usuariosController.limpar()}" >
+                						<p:collector value="#{prototipoFontesController.usuario}" addTo="#{prototipoFontesController.usuarios}" unique="true"/>
+            						</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>	
+							
+
+						     					
+						</p:panel>
+
+						<p:dataTable id="usuariosTable" var="usuario" value="#{usuariosController.usuarios}" reflow="true" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Lista de Usuários
+                            </f:facet>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{usuario.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Email">
+                                <h:outputText value="#{usuario.email}" />
+                            </p:column>
+
+                            <p:column headerText="Login">
+                                <h:outputText value="#{usuario.login}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ações">
+								<p:commandButton icon="fa fa-edit" title="editar" process="usuariosTable"
+									action="#{usuariosController.editar(usuario)}" update="@form"/>
+								<p:commandButton icon="fa fa-trash" title="excluir" update="usuariosTable" process="usuariosTable"
+									actionListener="#{usuariosController.excluir(usuario)}" >                						
+							        <p:confirm header="Confirmação" message="Confirma exclusão desse usuário?" icon="ui-icon-alert" />
+								</p:commandButton>
+						    </p:column>
+                        </p:dataTable>
+                        
+                   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					    </p:confirmDialog>
+                        
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
