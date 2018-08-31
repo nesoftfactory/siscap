@@ -1,17 +1,22 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.gov.pi.tce.publicacoes.clients.UsuarioServiceClient;
 import modelo.Usuario;
 
 @Named
 @ViewScoped
 public class UsuariosController extends BeanController {
+	
+	@Inject
+	private UsuarioServiceClient usuarioServiceClient;
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,11 +41,15 @@ public class UsuariosController extends BeanController {
 		usuarios.remove(usuarioExcluir);
 	}
      
-   
     
 	private void iniciaUsuarios() {
-		usuarios = new ArrayList<>();
-		usuarios.add(new Usuario("Helton Souto", "helton@siscap.com", "helton"));
+		try {
+			usuarios = usuarioServiceClient.ConsultarTodos();
+		}
+		catch (Exception e) {
+			//TODO testar cadastramento de mensagens
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+		}
 	}
 
 	public List<Usuario> getUsuarios() {

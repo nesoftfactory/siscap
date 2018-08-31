@@ -9,6 +9,7 @@ import javax.ws.rs.core.Application;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 import br.com.nesoftware.rest.publicacao.service.PublicacaoResource;
+import br.com.nesoftware.rest.publicacao.service.UsuarioResource;
 import io.swagger.annotations.Contact;
 import io.swagger.annotations.Info;
 import io.swagger.annotations.SwaggerDefinition;
@@ -69,6 +70,7 @@ public class RestApplication extends Application {
 
         /* Adicionar Servicos Aqui */
 		resources.add(PublicacaoResource.class);
+		resources.add(UsuarioResource.class);
 		
 		return resources;
 	}

@@ -34,7 +34,7 @@
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
 									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" 
 										update="@form" action="#{usuariosController.limpar()}" >
-                						<p:collector value="#{prototipoFontesController.usuario}" addTo="#{prototipoFontesController.usuarios}" unique="true"/>
+                						<p:collector value="#{usuariosController.usuario}" addTo="#{usuariosController.usuarios}" unique="true"/>
             						</p:commandButton>
 								</p:toolbarGroup>
 							</p:toolbar>	

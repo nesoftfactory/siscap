@@ -5,4 +5,18 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
     version="2.2">
 
+<application>
+
+  <locale-config>
+   <default-locale>pt_BR</default-locale>
+  </locale-config>
+  <message-bundle>Mensagens</message-bundle>
+  <resource-bundle>
+   <base-name>Mensagens</base-name>
+   <var>texto</var>
+  </resource-bundle>
+ </application>
+
+
+
 </faces-config>

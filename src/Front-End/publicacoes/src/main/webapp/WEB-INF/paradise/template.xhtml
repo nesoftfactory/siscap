@@ -29,6 +29,15 @@
 			<ui:include src="./menu.xhtml" />
 
 			<div class="layout-content">
+				<ui:insert name="MENSAGEM">
+					<!-- <p:div styleClass="#{utilsBean.styleMessages}" rendered="#{utilsBean.temMensagens}">
+						<h:messages errorClass="erro" infoClass="sucesso" warnClass="warning" showDetail="true" showSummary="false" styleClass="erro" layout="block"/>
+					</p:div>
+					-->
+					<p:messages id="messages" showDetail="true" closable="true">
+				        <p:autoUpdate />
+				    </p:messages>
+				</ui:insert>
 				<ui:insert name="content" />
 			</div>
 
