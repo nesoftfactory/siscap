@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -19,13 +20,13 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="fonte")
-public class Fonte {
+@Table(name="feriado")
+public class Feriado {
 	
 	private Long id;
 	private String nome;
-	private String url;
-	private TipoFonte tipoFonte;
+	private LocalDate data;
+	private Fonte fonte;
 	private LocalDateTime dataCriacao;
 	private String usuarioCriacao;
 	private LocalDateTime dataAtualizacao;
@@ -52,23 +53,23 @@ public class Fonte {
 		this.nome = nome;
 	}
 	
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	@NotNull
-	@ManyToOne
-	@JoinColumn(name="id_tipo_fonte")
-	public TipoFonte getTipoFonte() {
-		return tipoFonte;
+	public LocalDate getData() {
+		return data;
 	}
 
-	public void setTipoFonte(TipoFonte tipoFonte) {
-		this.tipoFonte = tipoFonte;
+	public void setData(LocalDate data) {
+		this.data = data;
+	}
+
+	@ManyToOne(optional=true)
+	@JoinColumn(name="id_fonte")
+	public Fonte getFonte() {
+		return fonte;
+	}
+
+	public void setFonte(Fonte fonte) {
+		this.fonte = fonte;
 	}
 
 	@Column(name="data_criacao")
@@ -138,12 +139,6 @@ public class Fonte {
 		this.dataAtualizacao = LocalDateTime.now();
 	}
 	
-	@JsonIgnore
-	@Transient
-	public boolean isInativo( ) {
-		return !this.ativo;
-	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -160,7 +155,7 @@ public class Fonte {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Fonte other = (Fonte) obj;
+		Feriado other = (Feriado) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
