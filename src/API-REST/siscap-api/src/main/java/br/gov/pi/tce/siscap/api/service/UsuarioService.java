@@ -1,7 +1,6 @@
 package br.gov.pi.tce.siscap.api.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.UsuarioRepository;
 import br.gov.pi.tce.siscap.api.service.exception.UsuarioComCpfJaExistenteException;
+import br.gov.pi.tce.siscap.api.service.exception.UsuarioComLoginJaExistenteException;
 
 @Service
 public class UsuarioService {
@@ -59,8 +59,14 @@ public class UsuarioService {
 	}
 	
 	private void validarUsuario(Usuario usuario) {
+		validarCpfDuplicado(usuario);
+		validarLoginDuplicado(usuario);
+	}
+
+	private void validarCpfDuplicado(Usuario usuario) {
 		if (usuario.isAlterando()) {
-			List<Usuario> usuarios = usuarioRepository.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
+			List<Usuario> usuarios = usuarioRepository
+					.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
 			if (!usuarios.isEmpty()) {
 				throw new UsuarioComCpfJaExistenteException();
 			}
@@ -69,9 +75,22 @@ public class UsuarioService {
 				throw new UsuarioComCpfJaExistenteException();
 			}
 		}
-		
 	}
 
+	private void validarLoginDuplicado(Usuario usuario) {
+		if (usuario.isAlterando()) {
+			List<Usuario> usuarios = usuarioRepository
+					.buscarPorLoginComIdDiferenteDoInformado(usuario.getLogin(), usuario.getId());
+			if (!usuarios.isEmpty()) {
+				throw new UsuarioComLoginJaExistenteException();
+			}
+		} else {
+			if(usuarioRepository.findByLogin(usuario.getLogin()).isPresent()) {
+				throw new UsuarioComLoginJaExistenteException();
+			}
+		}
+	}
+	
 	private void atualizaDadosAdicao(Usuario usuario) {
 		usuario.setUsuarioCriacao(USUARIO);
 	}

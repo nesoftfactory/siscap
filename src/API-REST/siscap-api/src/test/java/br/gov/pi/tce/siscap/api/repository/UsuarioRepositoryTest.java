@@ -1,7 +1,6 @@
 package br.gov.pi.tce.siscap.api.repository;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.gov.pi.tce.siscap.api.model.Usuario;
-import br.gov.pi.tce.siscap.api.repository.UsuarioRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,17 +26,14 @@ public class UsuarioRepositoryTest {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
-	private static final String CPF = "02444657039";
-	private static final String CPF2 = "91410800091";
-
 	private Usuario usuario;
 	private Usuario usuario2;
 	
 	@Before
 	public void setUp() {
-		this.usuario = criaUsuario(CPF, "teste", "usuario teste", "sistema");
+		this.usuario = criaUsuario("02444657039", "teste1", "usuario teste", "sistema");
 		usuarioRepository.save(this.usuario);
-		this.usuario2 = criaUsuario(CPF2, "teste", "usuario teste", "sistema");
+		this.usuario2 = criaUsuario("91410800091", "teste2", "usuario teste", "sistema");
 		usuarioRepository.save(this.usuario2);
 	}
 
@@ -49,7 +44,8 @@ public class UsuarioRepositoryTest {
 	
 	@Test
 	public void naoDeveConsiderarProprioCpfQuandoAlterando() {
-		List<Usuario> usuarios = usuarioRepository.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
+		List<Usuario> usuarios = usuarioRepository
+				.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
 		
 		assertTrue(usuarios.isEmpty());
 	}
@@ -57,8 +53,9 @@ public class UsuarioRepositoryTest {
 	@Test
 	public void deveEncontrarOutroCpfQuandoAlterando() {
 		usuario.setCpf(usuario2.getCpf());
-		List<Usuario> usuarios = usuarioRepository.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
-		
+		List<Usuario> usuarios = usuarioRepository
+				.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
+
 		assertFalse(usuarios.isEmpty());
 	}
 
@@ -69,8 +66,30 @@ public class UsuarioRepositoryTest {
 		assertTrue(usuarioBanco.isPresent());
 	}
 
+	@Test
+	public void naoDeveConsiderarProprioLoginQuandoAlterando() {
+		List<Usuario> usuarios = usuarioRepository.buscarPorLoginComIdDiferenteDoInformado(usuario.getLogin(), usuario.getId());
+		
+		assertTrue(usuarios.isEmpty());
+	}
+
+	@Test
+	public void deveEncontrarOutroLoginQuandoAlterando() {
+		usuario.setLogin(usuario2.getLogin());
+		List<Usuario> usuarios = usuarioRepository.buscarPorLoginComIdDiferenteDoInformado(usuario.getLogin(), usuario.getId());
+		
+		assertFalse(usuarios.isEmpty());
+	}
+
+	@Test
+	public void deveEncontrarLoginQuandoIncluindo() {
+		Optional<Usuario> usuarioBanco = usuarioRepository.findByLogin(usuario.getLogin());
+		
+		assertTrue(usuarioBanco.isPresent());
+	}
+
 	private Usuario criaUsuario(String cpf, String login, String nome, String usuarioSitema) {
-		usuario = new Usuario();		
+		Usuario usuario = new Usuario();		
 		usuario.setCpf(cpf);
 		usuario.setAdmin(true);
 		usuario.setAtivo(true);

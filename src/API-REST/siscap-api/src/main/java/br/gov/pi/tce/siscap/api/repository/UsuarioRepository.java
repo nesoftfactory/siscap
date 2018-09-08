@@ -10,12 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.gov.pi.tce.siscap.api.model.Usuario;
 
+@Transactional(readOnly=true)
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-	@Transactional(readOnly=true)
 	Optional<Usuario> findByCpf(String cpf);
 	
-	@Transactional(readOnly=true)
 	@Query("SELECT u FROM Usuario u WHERE u.cpf = :cpf AND u.id != :idUsuario")
 	List<Usuario> buscarPorCpfComIdDiferenteDoInformado(@Param("cpf") String cpf, @Param("idUsuario") Long idUsuario);
+
+	Optional<Usuario> findByLogin(String login);
+	
+	@Query("SELECT u FROM Usuario u WHERE u.login = :login AND u.id != :idUsuario")
+	List<Usuario> buscarPorLoginComIdDiferenteDoInformado(@Param("login") String login, @Param("idUsuario") Long idUsuario);
 }

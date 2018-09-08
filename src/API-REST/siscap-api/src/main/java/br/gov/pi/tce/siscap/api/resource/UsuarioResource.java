@@ -30,6 +30,7 @@ import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.UsuarioRepository;
 import br.gov.pi.tce.siscap.api.service.UsuarioService;
 import br.gov.pi.tce.siscap.api.service.exception.UsuarioComCpfJaExistenteException;
+import br.gov.pi.tce.siscap.api.service.exception.UsuarioComLoginJaExistenteException;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -93,8 +94,17 @@ public class UsuarioResource {
 	}
 	
 	@ExceptionHandler(UsuarioComCpfJaExistenteException.class)
-	public ResponseEntity<Object> handleTipoFonteInexistenteOuInativaException(UsuarioComCpfJaExistenteException ex) {
+	public ResponseEntity<Object> handleUsuarioComCpfJaExistenteException(UsuarioComCpfJaExistenteException ex) {
 		String mensagemUsuario = messageSource.getMessage("usuario.cpf-ja-existente", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		
+		return ResponseEntity.badRequest().body(erros);
+	}
+
+	@ExceptionHandler(UsuarioComLoginJaExistenteException.class)
+	public ResponseEntity<Object> handleUsuarioComLoginJaExistenteException(UsuarioComLoginJaExistenteException ex) {
+		String mensagemUsuario = messageSource.getMessage("usuario.login-ja-existente", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
