@@ -35,6 +35,12 @@
 		    <artifactId>mssql-jdbc</artifactId>
 		    <scope>runtime</scope>
 		</dependency>
+		
+		<!-- banco de dados usado nos testes-->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
 
 		<!-- Migração da base de dados -->
 		<dependency>

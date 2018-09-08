@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -138,6 +139,11 @@ public class Usuario {
 	@PreUpdate
 	public void preUpdate() {
 		this.dataAtualizacao = LocalDateTime.now();
+	}
+	
+	@Transient
+	public boolean isAlterando() {
+		return getId() != null;
 	}
 	
 	@Override
