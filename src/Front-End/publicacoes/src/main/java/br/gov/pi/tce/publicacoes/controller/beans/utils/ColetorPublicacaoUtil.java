@@ -61,6 +61,10 @@ public class ColetorPublicacaoUtil {
 
 	public final static String PALAVRA_FINAL_DO_ARQUIVO_DOM_PARNAIBA = "assets/diarios/";
 
+	/**
+	 * @param date
+	 * @return
+	 */
 	private static Date convertDate(String date) {
 
 		if (date.isEmpty()) {

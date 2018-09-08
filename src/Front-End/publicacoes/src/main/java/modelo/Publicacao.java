@@ -5,6 +5,7 @@ import java.util.Date;
 /**
  * Classe responsável por representar a entidade Publicacao.
  * 
+ * 
  * @author Erick Guilherme Cavalcanti
  *
  */
