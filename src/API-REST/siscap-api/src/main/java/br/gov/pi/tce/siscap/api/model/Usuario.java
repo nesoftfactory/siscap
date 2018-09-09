@@ -142,6 +142,7 @@ public class Usuario {
 	}
 	
 	@Transient
+	@JsonIgnore
 	public boolean isAlterando() {
 		return getId() != null;
 	}
