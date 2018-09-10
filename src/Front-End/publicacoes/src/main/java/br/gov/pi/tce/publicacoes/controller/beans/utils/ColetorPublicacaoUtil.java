@@ -85,10 +85,13 @@ public class ColetorPublicacaoUtil {
 		return null;
 	}
 
-	// Busca de diário oficial em
-	// http://www.dom.teresina.pi.gov.br/lista_diario.php,
-	// http://www.diarioficialdosmunicipios.org/
-	// e tambem no http://dom.parnaiba.pi.gov.br/
+	/**
+	 * Busca de diário oficial nas fontes de Parnaíba, Teresina e Municípios.
+	 * 
+	 * @param urlString
+	 * @param dataInicial
+	 * @param dataFinal
+	 */
 	public static void getDiariosDOM(String urlString, Date dataInicial, Date dataFinal) {
 
 		int pageDomTeresina = 1;
@@ -155,6 +158,13 @@ public class ColetorPublicacaoUtil {
 
 	/**
 	 * @param urlString
+	 * @param pageDom
+	 * @param arquivoList
+	 * @param diarios
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @param diasUteisList
+	 * @return
 	 */
 	private static Boolean getPaginasDiariosDOM(String urlString, String pageDom, List<String> arquivoList,
 			List<Publicacao> diarios, Date dataInicial, Date dataFinal, List<LocalDate> diasUteisList) {
@@ -201,6 +211,12 @@ public class ColetorPublicacaoUtil {
 		return isFinalPaginacao;
 	}
 
+	/**
+	 * Método responsável por buscar os htmls de um dos meses da fonte do diário oficial dos municípios.
+	 * 
+	 * @param urlString
+	 * @return
+	 */
 	private static List<String> getPaginasAnoMesDiarioOficialMunicipios(String urlString) {
 		String regexForPDF = "[0-9A-Za-z]+[.][Hh][Tt][Mm][Ll]";// String regexForPDF = "[0-9]+[.][Hh][Tt][Mm][Ll]";
 		String linhaHTML = "";
@@ -336,6 +352,8 @@ public class ColetorPublicacaoUtil {
 
 
 	/**
+	 * Método resposável por chamar a API para incluir a publicação.
+	 * 
 	 * @param linkArquivoPublicacao
 	 * @param diarios
 	 * @param dataPublicacao
@@ -447,6 +465,12 @@ public class ColetorPublicacaoUtil {
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
+	/**
+	 *  
+	 * 
+	 * @param localDate
+	 * @return
+	 */
 	public static Date asDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	}
@@ -464,6 +488,8 @@ public class ColetorPublicacaoUtil {
 	}
 
 	/**
+	 * Converte uma string no formato dd/MM/yyyy HH:mm:ss em data.
+	 * 
 	 * @param dataStr
 	 * @return data
 	 */
