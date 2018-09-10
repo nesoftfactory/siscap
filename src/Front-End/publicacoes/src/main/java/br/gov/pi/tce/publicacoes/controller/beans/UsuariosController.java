@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.gov.pi.tce.publicacoes.clients.UsuarioServiceClient;
-import modelo.Usuario;
+import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Named
 @ViewScoped
@@ -38,19 +38,60 @@ public class UsuariosController extends BeanController {
 	}
 	
 	public void excluir(Usuario usuarioExcluir) {
-		usuarios.remove(usuarioExcluir);
+		try {
+			if(usuario == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			}
+			else {
+				if(usuario.getId() > 0) {
+					usuarioServiceClient.excluirUsuarioPorCodigo(usuario.getId());
+				}	
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				iniciaUsuarios();
+			}
+			limpar();
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+		}
 	}
      
     
 	private void iniciaUsuarios() {
 		try {
-			usuarios = usuarioServiceClient.ConsultarTodos();
+			usuarios = usuarioServiceClient.consultarTodos();
+			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 		}
 		catch (Exception e) {
-			//TODO testar cadastramento de mensagens
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+		}
+	}
+	
+	
+	
+	public void salvar() {
+		try {
+			if(usuario == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			}
+			else {
+				if(usuario.getId() == null || usuario.getId() == 0) {
+					usuarioServiceClient.cadastrarUsuario(usuario);
+				}	
+				else {
+					usuarioServiceClient.alterarUsuario(usuario);
+				}
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				iniciaUsuarios();
+			}
+			limpar();
+			
+		}
+		catch (Exception e) {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
 		}
 	}
+
 
 	public List<Usuario> getUsuarios() {
 		return usuarios;

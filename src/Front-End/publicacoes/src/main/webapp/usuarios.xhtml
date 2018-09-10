@@ -9,7 +9,7 @@
 
 	<ui:define name="content">
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="true" />
+			<p:growl id="msgs" showDetail="true" sticky="true" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
@@ -17,13 +17,22 @@
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
-								<p:inputText id="nome" value="#{usuariosController.usuario.nome}" required="true" />
+								<p:inputText id="nome" value="#{usuariosController.usuario.nome}" required="true" maxlength="100"/>
+								
+								<p:outputLabel value="CPF" for="cpf"/>
+								<p:inputMask id="cpf" value="#{usuariosController.usuario.cpf}" required="true" mask="999.999.999-99"/>
 								
 								<p:outputLabel value="Email" for="email"/>
-								<p:inputText id="email" value="#{usuariosController.usuario.email}" required="true" />
+								<p:inputText id="email" value="#{usuariosController.usuario.email}" validatorMessage="Formato Inválido" required="true" maxlength="40">
+									<f:validateRegex
+										pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+								</p:inputText>		
 								
 								<p:outputLabel value="Login" for="login"/>
-								<p:inputText id="login" value="#{usuariosController.usuario.login}" required="true" />
+								<p:inputText id="login" value="#{usuariosController.usuario.login}" required="true" maxlength="20"/>
+								
+								<p:outputLabel value="Admin?" for="admin"/>
+								<p:selectBooleanCheckbox id="admin" value="#{usuariosController.usuario.admin}"  />
 
 								
 							</p:panelGrid>
@@ -33,8 +42,8 @@
  									<p:commandButton value="Limpar" action="#{usuariosController.limpar()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
 									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" 
-										update="@form" action="#{usuariosController.limpar()}" >
-                						<p:collector value="#{usuariosController.usuario}" addTo="#{usuariosController.usuarios}" unique="true"/>
+										update="@form" action="#{usuariosController.salvar()}" >
+                						<!-- <p:collector value="#{usuariosController.usuario}" addTo="#{usuariosController.usuarios}" unique="true"/>  -->
             						</p:commandButton>
 								</p:toolbarGroup>
 							</p:toolbar>	

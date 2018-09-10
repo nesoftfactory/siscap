@@ -12,7 +12,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
-import modelo.Usuario;
+import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Local
 @Stateless(name="UsuarioServiceClient")
@@ -38,7 +38,7 @@ public class UsuarioServiceClient{
 	
 	
 	
-	public List<Usuario> ConsultarTodos(){
+	public List<Usuario> consultarTodos(){
 		try {
 			this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTA_TODOS);
 			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
@@ -52,40 +52,36 @@ public class UsuarioServiceClient{
 	}
 	
 	
-	
-	public String CadastrarUsuario(Usuario Usuario){
-
+	public Usuario cadastrarUsuario(Usuario usuario){
 		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CADASTRAR);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-		Response response = invocationBuilder.post(Entity.entity(Usuario, RESPONSE_TYPE));
-		return response.readEntity(String.class);
-
+		Response response = invocationBuilder.post(Entity.entity(usuario, RESPONSE_TYPE));
+		return response.readEntity(Usuario.class);
 	}
 
-	public String AlterarUsuario(Usuario Usuario){
+	public Usuario alterarUsuario(Usuario usuario){
 		this.webTarget = this.client.target(URL_SERVICE).path(PATH_ALTERAR);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-		Response response = invocationBuilder.put(Entity.entity(Usuario, RESPONSE_TYPE));
-		return response.readEntity(String.class);
+		Response response = invocationBuilder.put(Entity.entity(usuario, RESPONSE_TYPE));
+		return response.readEntity(Usuario.class);
 
 	}
 
 
-	public Usuario ConsultarUsuarioPorCodigo(int codigo){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_GET_USUARIO).path(String.valueOf(codigo));
+	public Usuario consultarUsuarioPorCodigo(Long id){
+		this.webTarget = this.client.target(URL_SERVICE).path(PATH_GET_USUARIO).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
 		return response.readEntity(Usuario.class);
 	}
 
 
-	public String ExcluirUsuarioPorCodigo(int codigo){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_EXCLUIR).path(String.valueOf(codigo));
+	public String excluirUsuarioPorCodigo(Long id){
+		this.webTarget = this.client.target(URL_SERVICE).path(PATH_EXCLUIR).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.delete();
 		return response.readEntity(String.class);
 
 	}
-
 
 }
