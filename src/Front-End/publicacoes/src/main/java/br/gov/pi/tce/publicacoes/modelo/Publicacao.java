@@ -1,4 +1,4 @@
-package modelo;
+package br.gov.pi.tce.publicacoes.modelo;
 
 import java.util.Date;
 

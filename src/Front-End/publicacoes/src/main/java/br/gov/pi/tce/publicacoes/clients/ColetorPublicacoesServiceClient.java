@@ -1,4 +1,4 @@
-package br.gov.pi.tce.publicacoes.service;
+package br.gov.pi.tce.publicacoes.clients;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import javax.ejb.Stateless;
 import br.gov.pi.tce.publicacoes.controller.beans.utils.ColetorPublicacaoUtil;
 
 @Stateless
-public class ColetorPublicacoes {
+public class ColetorPublicacoesServiceClient {
 	
 	// URL das fontes dos diários oficiais
 	public final static String URL_FONTE_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br";

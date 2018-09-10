@@ -23,14 +23,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.Part;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
 
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
-import modelo.Fonte;
-import modelo.Publicacao;
+import br.gov.pi.tce.publicacoes.modelo.Fonte;
+import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 
 /**
  * 

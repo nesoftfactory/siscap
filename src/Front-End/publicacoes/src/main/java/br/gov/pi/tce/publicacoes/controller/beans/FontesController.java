@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
-import modelo.Fonte;
+import br.gov.pi.tce.publicacoes.modelo.Fonte;
 
 @Named
 @ViewScoped
