@@ -10,6 +10,7 @@ import br.gov.pi.tce.publicacoes.controller.beans.utils.ColetorPublicacaoUtil;
 /**
  * Classe responsável por executar o agendamento das coletas das publicações nos sites.
  * 
+ * 
  * @author Erick Guilherme Cavalcanti
  *
  */
