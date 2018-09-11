@@ -76,6 +76,7 @@ public class UsuariosController extends BeanController {
 			}
 			else {
 				if(usuario.getId() == null || usuario.getId() == 0) {
+					usuario.setCpf("111.111.111.11");
 					usuarioServiceClient.cadastrarUsuario(usuario);
 				}	
 				else {

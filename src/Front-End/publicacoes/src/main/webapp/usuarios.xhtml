@@ -19,21 +19,14 @@
 								<p:outputLabel value="Nome" for="nome"/>
 								<p:inputText id="nome" value="#{usuariosController.usuario.nome}" required="true" maxlength="100"/>
 								
-								<p:outputLabel value="CPF" for="cpf"/>
-								<p:inputMask id="cpf" value="#{usuariosController.usuario.cpf}" required="true" mask="999.999.999-99"/>
-								
-								<p:outputLabel value="Email" for="email"/>
-								<p:inputText id="email" value="#{usuariosController.usuario.email}" validatorMessage="Formato Inválido" required="true" maxlength="40">
-									<f:validateRegex
-										pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-								</p:inputText>		
-								
 								<p:outputLabel value="Login" for="login"/>
 								<p:inputText id="login" value="#{usuariosController.usuario.login}" required="true" maxlength="20"/>
 								
-								<p:outputLabel value="Admin?" for="admin"/>
+							 	<p:outputLabel value="Administrador?" for="admin"/>
 								<p:selectBooleanCheckbox id="admin" value="#{usuariosController.usuario.admin}"  />
-
+								
+								<p:outputLabel value="Ativo?" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{usuariosController.usuario.ativo}"  />
 								
 							</p:panelGrid>
 						
@@ -60,12 +53,16 @@
                                 <h:outputText value="#{usuario.nome}" />
                             </p:column>
 
-                            <p:column headerText="Email">
-                                <h:outputText value="#{usuario.email}" />
-                            </p:column>
-
                             <p:column headerText="Login">
                                 <h:outputText value="#{usuario.login}" />
+                            </p:column>
+                            
+                            <p:column headerText="Administrador?">
+                            	<h:outputText value="#{usuario.textoAdmin}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ativo?">
+                           		 <h:outputText value="#{usuario.textoAtivo}" />
                             </p:column>
                             
                             <p:column headerText="Ações">

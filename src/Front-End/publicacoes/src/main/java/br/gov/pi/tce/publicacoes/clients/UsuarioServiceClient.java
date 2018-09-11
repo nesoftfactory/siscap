@@ -23,8 +23,9 @@ public class UsuarioServiceClient{
 	private static final String PATH_ALTERAR = "alterar";
 	private static final String PATH_CADASTRAR = "usuarios/novo";
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-	private final String URL_SERVICE = "http://localhost:8080/apirestsiscap/rest/";
-	private final String PATH_CONSULTA_TODOS = "usuarios";
+	private final String URL_SERVICE = "http://localhost:7788/";
+	private final String PATH = "usuarios";
+	private String URI = "http://localhost:7788/usuarios";
 
 	
 	private Client client;
@@ -40,7 +41,7 @@ public class UsuarioServiceClient{
 	
 	public List<Usuario> consultarTodos(){
 		try {
-			this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTA_TODOS);
+			this.webTarget = this.client.target(URL_SERVICE).path(PATH);
 			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 			Response response = invocationBuilder.get();
 			List<Usuario> list = response.readEntity(new GenericType<List<Usuario>>() {});
@@ -53,7 +54,15 @@ public class UsuarioServiceClient{
 	
 	
 	public Usuario cadastrarUsuario(Usuario usuario){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CADASTRAR);
+			
+//		RestTemplate restTemplate = new RestTemplate();
+//		restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+//		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
+//		Usuario result = restTemplate.postForObject( URI, usuario, Usuario.class);
+//		return result;
+		
+		//this.webTarget = this.client.target(URL_SERVICE).path(PATH);
+		this.webTarget = this.client.target(URL_SERVICE);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.post(Entity.entity(usuario, RESPONSE_TYPE));
 		return response.readEntity(Usuario.class);

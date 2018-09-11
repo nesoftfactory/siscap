@@ -1,7 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Usuario implements Serializable{
 	
@@ -12,15 +11,12 @@ public class Usuario implements Serializable{
 	
 	private Long id;
 	private String nome;
-	private String email;
-	private String login;
 	private String cpf;
-	private String status;
-	private boolean admin;
-	private Usuario usuarioCriacao;
-	private Date dataCriacao;
-	private Date dataAtualizacao;
-	private Usuario usuarioAtualizacao;
+	private String login;
+	private Boolean admin = false;
+	private Boolean ativo = false;
+	
+	
 	
 	
 	
@@ -30,22 +26,20 @@ public class Usuario implements Serializable{
 		super();
 	}
 
-	public Usuario(String nome, String email, String login) {
+	public Usuario(String nome, String login,  boolean ativo, boolean admin ) {
 		super();
 		this.nome = nome;
-		this.email = email;
 		this.login = login;
+		this.ativo = ativo;
+		this.admin = admin;
 	}
 
 
 
-	public Usuario(Long id, String nome, String email, String login) {
-		this(nome,email,login);
+	public Usuario(Long id, String nome, String login,  boolean ativo, boolean admin) {
+		this(nome,login,ativo,admin);
 		this.id = id;
 	}
-
-	
-	
 	
 
 	public String getCpf() {
@@ -56,52 +50,22 @@ public class Usuario implements Serializable{
 		this.cpf = cpf;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public boolean isAdmin() {
+	
+	
+	public Boolean getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(boolean admin) {
+	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
 
-	public Usuario getUsuarioCriacao() {
-		return usuarioCriacao;
+	public Boolean getAtivo() {
+		return ativo;
 	}
 
-	public void setUsuarioCriacao(Usuario usuarioCriacao) {
-		this.usuarioCriacao = usuarioCriacao;
-	}
-
-	public Date getDataCriacao() {
-		return dataCriacao;
-	}
-
-	public void setDataCriacao(Date dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
-	public Date getDataAtualizacao() {
-		return dataAtualizacao;
-	}
-
-	public void setDataAtualizacao(Date dataAtualizacao) {
-		this.dataAtualizacao = dataAtualizacao;
-	}
-
-	public Usuario getUsuarioAtualizacao() {
-		return usuarioAtualizacao;
-	}
-
-	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
-		this.usuarioAtualizacao = usuarioAtualizacao;
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 	public Long getId() {
@@ -116,18 +80,21 @@ public class Usuario implements Serializable{
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
 	public String getLogin() {
 		return login;
 	}
 	public void setLogin(String login) {
 		this.login = login;
 	}
+	
+	public String getTextoAdmin() {
+		return getAdmin() ? "Sim" : "Não";
+	}
+	
+	public String getTextoAtivo() {
+		return getAtivo() ? "Sim" : "Não";
+	}
+	
 	
 	
 
