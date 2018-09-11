@@ -1,4 +1,4 @@
-package br.gov.pi.tce.publicacoes.clients;
+package br.gov.pi.tce.publicacoes.services;
 
 import java.util.Date;
 
@@ -7,8 +7,14 @@ import javax.ejb.Stateless;
 
 import br.gov.pi.tce.publicacoes.controller.beans.utils.ColetorPublicacaoUtil;
 
+/**
+ * Classe responsável por executar o agendamento das coletas das publicações nos sites.
+ * 
+ * @author Erick Guilherme Cavalcanti
+ *
+ */
 @Stateless
-public class ColetorPublicacoesServiceClient {
+public class ColetorPublicacoesService {
 	
 	// URL das fontes dos diários oficiais
 	public final static String URL_FONTE_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br";
@@ -18,10 +24,10 @@ public class ColetorPublicacoesServiceClient {
 	
 	public final static int QUANTIDADE_DIAS = 10;
 
-	@Schedule(hour="0", minute = "50")
+	@Schedule(hour="0", minute = "16")
 	public void coletarDiarioOficialParnaiba() {
 		Date dataInicial = new Date();
-		dataInicial.setDate(dataInicial.getDate() + QUANTIDADE_DIAS);
+		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
 		ColetorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
 	}
@@ -29,7 +35,7 @@ public class ColetorPublicacoesServiceClient {
 	@Schedule(hour="8")
 	public void coletarDiarioOficialTeresina() {
 		Date dataInicial = new Date();
-		dataInicial.setDate(dataInicial.getDate() + QUANTIDADE_DIAS);
+		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
 		ColetorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
 	}
@@ -37,7 +43,7 @@ public class ColetorPublicacoesServiceClient {
 	@Schedule(hour="9")
 	public void coletarDiarioOficialMunicipios() {
 		Date dataInicial = new Date();
-		dataInicial.setDate(dataInicial.getDate() + QUANTIDADE_DIAS);
+		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
 		ColetorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
 	}
@@ -45,7 +51,7 @@ public class ColetorPublicacoesServiceClient {
 	@Schedule(hour="10")
 	public void coletarDiarioOficialPiaui() {
 		Date dataInicial = new Date();
-		dataInicial.setDate(dataInicial.getDate() + QUANTIDADE_DIAS);
+		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
 		ColetorPublicacaoUtil.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
 	}
