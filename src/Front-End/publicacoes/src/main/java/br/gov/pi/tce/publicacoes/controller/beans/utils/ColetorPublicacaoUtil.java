@@ -547,5 +547,21 @@ public class ColetorPublicacaoUtil {
 //							response.getStatusInfo().toString()));
 //		}
 	}
+	
+//	public static void realizarDownload() {
+//		URL url;
+//		try {
+//			url = new URL("http://dom.parnaiba.pi.gov.br/assets/diarios/858e1f1d6fceedca3fd70610b4eb1097.pdf");
+//			File file = new File("C:\\Temp\\arquivo-baixado.pdf");
+//			FileUtils.copyURLToFile(url, file);
+//		} catch (MalformedURLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 }
