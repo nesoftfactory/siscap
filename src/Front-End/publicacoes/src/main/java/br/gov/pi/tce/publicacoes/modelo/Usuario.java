@@ -2,11 +2,9 @@ package br.gov.pi.tce.publicacoes.modelo;
 
 import java.io.Serializable;
 
-public class Usuario implements Serializable{
+public class Usuario implements Serializable 
+{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -15,12 +13,6 @@ public class Usuario implements Serializable{
 	private String login;
 	private Boolean admin = false;
 	private Boolean ativo = false;
-	
-	
-	
-	
-	
-	
 	
 	public Usuario() {
 		super();
@@ -34,13 +26,10 @@ public class Usuario implements Serializable{
 		this.admin = admin;
 	}
 
-
-
 	public Usuario(Long id, String nome, String login,  boolean ativo, boolean admin) {
 		this(nome,login,ativo,admin);
 		this.id = id;
 	}
-	
 
 	public String getCpf() {
 		return cpf;
@@ -50,8 +39,6 @@ public class Usuario implements Serializable{
 		this.cpf = cpf;
 	}
 
-	
-	
 	public Boolean getAdmin() {
 		return admin;
 	}
@@ -94,8 +81,5 @@ public class Usuario implements Serializable{
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}
-	
-	
-	
 
 }

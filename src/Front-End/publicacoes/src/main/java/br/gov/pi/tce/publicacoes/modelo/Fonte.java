@@ -1,57 +1,51 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
+import java.util.Date;
+import java.util.UUID;
+
 public class Fonte {
 	
-	private Long id;
-	private String descricao;
-	private String esfera;
-	private String url;
-
-	
-	
-
+	private UUID id;
+    private String nome;
+    private String url;
+    private TipoFonte tipoFonte;
+    private boolean ativo;
+    private Usuario usuarioCriacao;
+    private Date dataCriacao;
+    private Date dataAtualizacao;
+    private Usuario usuarioAtualizacao; 
+    
 	public Fonte() {
 		super();
 	}
-	
-	
-	public Fonte(String descricao, String esfera, String url) {
+
+	public Fonte(String nome, String url, TipoFonte tipoFonte) {
 		super();
-		this.descricao = descricao;
-		this.esfera = esfera;
-		this.url = url;
+		setId(UUID.randomUUID());
+		setNome(nome);
+		setUrl(url);
+		setTipoFonte(tipoFonte);
+		setAtivo(true);
+		setUsuarioCriacao(new Usuario());
+		setDataCriacao(new Date());
+		setUsuarioAtualizacao(null);
+		setDataAtualizacao(null);
 	}
-	
 
-	public Fonte(Long id, String descricao, String esfera, String url) {
-		this(descricao,esfera,url);
-		this.id = id;
-	}
-	
-	
-
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	private void setId(UUID id) {
 		this.id = id;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public String getEsfera() {
-		return esfera;
-	}
-
-	public void setEsfera(String esfera) {
-		this.esfera = esfera;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	public String getUrl() {
@@ -61,4 +55,53 @@ public class Fonte {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+	public TipoFonte getTipoFonte() {
+		return tipoFonte;
+	}
+
+	public void setTipoFonte(TipoFonte tipoFonte) {
+		this.tipoFonte = tipoFonte;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public Usuario getUsuarioCriacao() {
+		return usuarioCriacao;
+	}
+
+	public void setUsuarioCriacao(Usuario usuarioCriacao) {
+		this.usuarioCriacao = usuarioCriacao;
+	}
+
+	public Date getDataCriacao() {
+		return dataCriacao;
+	}
+
+	public void setDataCriacao(Date dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
+
+	public Date getDataAtualizacao() {
+		return dataAtualizacao;
+	}
+
+	public void setDataAtualizacao(Date dataAtualizacao) {
+		this.dataAtualizacao = dataAtualizacao;
+	}
+
+	public Usuario getUsuarioAtualizacao() {
+		return usuarioAtualizacao;
+	}
+
+	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
+		this.usuarioAtualizacao = usuarioAtualizacao;
+	}
+
 }

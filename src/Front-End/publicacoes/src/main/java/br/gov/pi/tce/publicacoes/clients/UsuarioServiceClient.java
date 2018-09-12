@@ -30,14 +30,10 @@ public class UsuarioServiceClient{
 	
 	private Client client;
 	private WebTarget webTarget;
-
-
 	
 	public UsuarioServiceClient(){
 		this.client = ClientBuilder.newClient();  
 	}
-	
-	
 	
 	public List<Usuario> consultarTodos(){
 		try {

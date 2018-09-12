@@ -16,8 +16,8 @@
 						<p:panel header="Cadastro de fontes" style="margin-bottom:20px">
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
-								<p:outputLabel value="Descrição" for="descricao"/>
-								<p:inputText id="descricao" value="#{fontesController.fonte.descricao}" required="true" />
+								<p:outputLabel value="Nome" for="nome"/>
+								<p:inputText id="nome" value="#{fontesController.fonte.nome}" required="true" />
 
 								<p:outputLabel value="Esfera" for="esfera"/>
 								<p:selectOneMenu id="esfera" value="#{fonteController.fonte.esfera}" required="true">
@@ -51,12 +51,12 @@
                             <f:facet name="header">
                                 Lista de Fontes
                             </f:facet>
-                            <p:column headerText="Descrição">
-                                <h:outputText value="#{fonte.descricao}" />
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{fonte.nome}" />
                             </p:column>
 
-                            <p:column headerText="Esfera">
-                                <h:outputText value="#{fonte.esfera}" />
+                            <p:column headerText="Tipo">
+                                <h:outputText value="#{fonte.tipoFonte.nome}" />
                             </p:column>
 
                             <p:column headerText="URL">
