@@ -66,8 +66,6 @@ public class UsuariosController extends BeanController {
 		}
 	}
 	
-	
-	
 	public void salvar() {
 		try {
 			if(usuario == null) {
@@ -93,8 +91,9 @@ public class UsuariosController extends BeanController {
 		}
 	}
 
-
 	public List<Usuario> getUsuarios() {
+		System.out.println(usuarios);
+		
 		return usuarios;
 	}
 	
