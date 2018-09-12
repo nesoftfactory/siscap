@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -32,34 +33,31 @@ public class UsuarioService {
 	public Usuario adicionar(Usuario usuario) {
 		atualizaDadosAdicao(usuario);
 		Usuario usuarioSalvo = salvar(usuario);
-		
 		return usuarioSalvo;
 	}
 
-	public void atualizarPropriedadeAtivo(Long id, Boolean ativo) {
+	public void atualizarPropriedadeAtivo(Long id, Boolean ativo){
 		Usuario usuario = buscarUsuarioPeloCodigo(id);
 		usuario.setAtivo(ativo);
 		
 		salvar(usuario);
 	}
 	
-	public void atualizarPropriedadeAdmin(Long id, Boolean admin) {
+	public void atualizarPropriedadeAdmin(Long id, Boolean admin){
 		Usuario usuario = buscarUsuarioPeloCodigo(id);
 		usuario.setAdmin(admin);;
-
 		salvar(usuario);
 	}
 	
 	private Usuario salvar(Usuario usuario) {
 		validarUsuario(usuario);
-		
 		atualizarDadosEdicao(usuario);
 		Usuario usuarioSalvo = usuarioRepository.save(usuario);
 		return usuarioSalvo;
 	}
 	
 	private void validarUsuario(Usuario usuario) {
-		validarCpfDuplicado(usuario);
+		//validarCpfDuplicado(usuario);
 		validarLoginDuplicado(usuario);
 	}
 
@@ -93,10 +91,13 @@ public class UsuarioService {
 	
 	private void atualizaDadosAdicao(Usuario usuario) {
 		usuario.setUsuarioCriacao(USUARIO);
+		usuario.setDataCriacao(LocalDateTime.now());
+		
 	}
 
 	private void atualizarDadosEdicao(Usuario usuario) {
 		usuario.setUsuarioAtualizacao(USUARIO);
+		usuario.setDataAtualizacao(LocalDateTime.now());
 	}
 
 	private Usuario buscarUsuarioPeloCodigo(Long id) {

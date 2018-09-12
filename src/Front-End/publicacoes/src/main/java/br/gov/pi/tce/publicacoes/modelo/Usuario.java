@@ -1,19 +1,19 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Usuario implements Serializable 
+public class Usuario implements Serializable
 {
-	
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
 	private String nome;
-	private String cpf;
 	private String login;
+	private String cpf;
 	private Boolean admin = false;
 	private Boolean ativo = false;
-	
+
 	public Usuario() {
 		super();
 	}
@@ -74,10 +74,12 @@ public class Usuario implements Serializable
 		this.login = login;
 	}
 	
+	@JsonIgnore
 	public String getTextoAdmin() {
 		return getAdmin() ? "Sim" : "Não";
 	}
 	
+	@JsonIgnore
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}

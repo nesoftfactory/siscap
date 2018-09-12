@@ -22,10 +22,10 @@
 								<p:outputLabel value="Login" for="login"/>
 								<p:inputText id="login" value="#{usuariosController.usuario.login}" required="true" maxlength="20"/>
 								
-							 	<p:outputLabel value="Administrador?" for="admin"/>
+							 	<p:outputLabel value="Administrador? (Sim/Não)" for="admin"/>
 								<p:selectBooleanCheckbox id="admin" value="#{usuariosController.usuario.admin}"  />
 								
-								<p:outputLabel value="Ativo?" for="ativo"/>
+								<p:outputLabel value="Ativo? (Sim/Não)" for="ativo"/>
 								<p:selectBooleanCheckbox id="ativo" value="#{usuariosController.usuario.ativo}"  />
 								
 							</p:panelGrid>
@@ -57,12 +57,12 @@
                                 <h:outputText value="#{usuario.login}" />
                             </p:column>
                             
-                            <p:column headerText="Administrador?">
-                            	<h:outputText value="#{usuario.textoAdmin}" />
+                            <p:column headerText="Administrador? (Sim/Não)">
+                            	 <h:outputText value="#{usuario.textoAdmin}" />
                             </p:column>
                             
-                            <p:column headerText="Ativo?">
-                           		 <h:outputText value="#{usuario.textoAtivo}" />
+                            <p:column headerText="Ativo? (Sim/Não)">
+                           		  <h:outputText value="#{usuario.textoAtivo}" />
                             </p:column>
                             
                             <p:column headerText="Ações">

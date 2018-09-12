@@ -31,7 +31,7 @@ public class Usuario {
 	private String usuarioCriacao;
 	private LocalDateTime dataAtualizacao;
 	private String usuarioAtualizacao;
-	private Boolean ativo;
+	private Boolean ativo = false;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -54,7 +54,7 @@ public class Usuario {
 	}
 	
 	@NotNull
-	@CPF
+//	@CPF
 	public String getCpf() {
 		return cpf;
 	}
@@ -148,6 +148,7 @@ public class Usuario {
 	}
 	
 	@Override
+	@JsonIgnore
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -156,6 +157,7 @@ public class Usuario {
 	}
 
 	@Override
+	@JsonIgnore
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
