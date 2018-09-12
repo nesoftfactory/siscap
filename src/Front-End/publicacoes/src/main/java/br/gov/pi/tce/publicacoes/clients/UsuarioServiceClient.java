@@ -1,6 +1,8 @@
 package br.gov.pi.tce.publicacoes.clients;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -12,6 +14,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
+import br.gov.pi.tce.publicacoes.controller.beans.utils.Erro;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Local
@@ -19,13 +22,10 @@ import br.gov.pi.tce.publicacoes.modelo.Usuario;
 public class UsuarioServiceClient{
 	
 	private static final String PATH_EXCLUIR = "excluir";
-	private static final String PATH_GET_USUARIO = "getUsuario";
 	private static final String PATH_ALTERAR = "alterar";
-	private static final String PATH_CADASTRAR = "usuarios/novo";
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private final String URL_SERVICE = "http://localhost:7788/";
-	private final String PATH = "usuarios";
-	private String URI = "http://localhost:7788/usuarios";
+	private String URI = "http://localhost:7788/usuarios/";
 
 	
 	private Client client;
@@ -41,7 +41,7 @@ public class UsuarioServiceClient{
 	
 	public List<Usuario> consultarTodos(){
 		try {
-			this.webTarget = this.client.target(URL_SERVICE).path(PATH);
+			this.webTarget = this.client.target(URI);
 			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 			Response response = invocationBuilder.get();
 			List<Usuario> list = response.readEntity(new GenericType<List<Usuario>>() {});
@@ -53,42 +53,60 @@ public class UsuarioServiceClient{
 	}
 	
 	
-	public Usuario cadastrarUsuario(Usuario usuario){
-			
-//		RestTemplate restTemplate = new RestTemplate();
-//		restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
-//		restTemplate.getMessageConverters().add(new StringHttpMessageConverter());
-//		Usuario result = restTemplate.postForObject( URI, usuario, Usuario.class);
-//		return result;
-		
-		//this.webTarget = this.client.target(URL_SERVICE).path(PATH);
-		this.webTarget = this.client.target(URL_SERVICE);
+	public Usuario cadastrarUsuario(Usuario usuario) throws Exception{
+		this.webTarget = this.client.target(URI);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.post(Entity.entity(usuario, RESPONSE_TYPE));
+		trataRetorno(response);
 		return response.readEntity(Usuario.class);
 	}
 
-	public Usuario alterarUsuario(Usuario usuario){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_ALTERAR);
+	private void trataRetorno(Response response) throws Exception {
+		if(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+			List erros = response.readEntity(List.class);
+			if(erros != null && !erros.isEmpty()) {
+				Map p;
+				String msg = (String)((Map)erros.get(0)).get("mensagemUsuario");
+				throw new Exception(msg);
+			}
+			else {
+				throw new Exception("Erro interno.");
+			}
+		}
+	}
+
+
+
+	public Usuario alterarUsuario(Usuario usuario) throws Exception{
+		this.webTarget = this.client.target(URI).path(String.valueOf(usuario.getId()));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.put(Entity.entity(usuario, RESPONSE_TYPE));
+		trataRetorno(response);
 		return response.readEntity(Usuario.class);
 
 	}
 
 
 	public Usuario consultarUsuarioPorCodigo(Long id){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_GET_USUARIO).path(String.valueOf(id));
+		this.webTarget = this.client.target(URI).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
-		return response.readEntity(Usuario.class);
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			return  response.readEntity(Usuario.class);
+		}
 	}
 
 
 	public String excluirUsuarioPorCodigo(Long id){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_EXCLUIR).path(String.valueOf(id));
+		this.webTarget = this.client.target(URI).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.delete();
+		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+			return null;
+		}	
 		return response.readEntity(String.class);
 
 	}

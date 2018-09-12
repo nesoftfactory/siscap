@@ -39,12 +39,12 @@ public class UsuariosController extends BeanController {
 	
 	public void excluir(Usuario usuarioExcluir) {
 		try {
-			if(usuario == null) {
+			if(usuarioExcluir == null) {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
 			}
 			else {
-				if(usuario.getId() > 0) {
-					usuarioServiceClient.excluirUsuarioPorCodigo(usuario.getId());
+				if(usuarioExcluir.getId() > 0) {
+					usuarioServiceClient.excluirUsuarioPorCodigo(usuarioExcluir.getId());
 				}	
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 				iniciaUsuarios();
@@ -60,7 +60,6 @@ public class UsuariosController extends BeanController {
 	private void iniciaUsuarios() {
 		try {
 			usuarios = usuarioServiceClient.consultarTodos();
-			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 		}
 		catch (Exception e) {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
@@ -76,7 +75,8 @@ public class UsuariosController extends BeanController {
 			}
 			else {
 				if(usuario.getId() == null || usuario.getId() == 0) {
-					usuario.setCpf("111.111.111.11");
+					//TODO Retirar após ajuste no banco de dados na api
+					usuario.setCpf("11111111111");
 					usuarioServiceClient.cadastrarUsuario(usuario);
 				}	
 				else {
@@ -89,7 +89,7 @@ public class UsuariosController extends BeanController {
 			
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			addMessage(FacesMessage.SEVERITY_ERROR,  null, e.getMessage());
 		}
 	}
 
