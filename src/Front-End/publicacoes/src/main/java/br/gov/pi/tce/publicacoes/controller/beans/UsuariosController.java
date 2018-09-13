@@ -92,8 +92,6 @@ public class UsuariosController extends BeanController {
 	}
 
 	public List<Usuario> getUsuarios() {
-		System.out.println(usuarios);
-		
 		return usuarios;
 	}
 	
