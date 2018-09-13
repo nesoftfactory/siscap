@@ -22,7 +22,7 @@ public class TipoFontesController extends BeanController {
 	private static final long serialVersionUID = 1L;
 
 	private TipoFonte tipoFonte;
-	private ArrayList<TipoFonte> tipoFontes;
+	private List<TipoFonte> tipoFontes;
 	
 	@Inject
 	private FonteServiceClient fonteServiceClient;
@@ -30,19 +30,16 @@ public class TipoFontesController extends BeanController {
 	@PostConstruct
 	public void init() {
 		limpar();
-		iniciaTipoFontes();
+		getTipoFontes();
 	}
 	
 	public void limpar() {
 		tipoFonte = new TipoFonte();
 	}
 	
-	private void iniciaTipoFontes() {
-		tipoFontes = fonteServiceClient.getDefaultTipoFontes();
-	}
-	
 	public List<TipoFonte> getTipoFontes() {
-		return fonteServiceClient.consultarTodasTipoFontes();
+		tipoFontes = fonteServiceClient.consultarTodasTipoFontes();
+		return tipoFontes;
 	}
 	
 	public TipoFonte getTipoFonte(UUID id) {
@@ -73,6 +70,7 @@ public class TipoFontesController extends BeanController {
 				else {
 					fonteServiceClient.alterarTipoFonte(tipoFonte);
 				}
+				getTipoFontes();
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 			}
 			limpar();
@@ -89,6 +87,7 @@ public class TipoFontesController extends BeanController {
 			}
 			else {
 				fonteServiceClient.excluirTipoFontePorCodigo(tipoFonte.getId());
+				getTipoFontes();
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 			}
 		}

@@ -5,9 +5,6 @@ import java.util.UUID;
 
 public class TipoFonte 
 {
-	// Nomes de Tipo Fonte Padrão
-	public static final String TIPO_FONTE_PADRAO_1 = "Tipo Fonte 1";
-	public static final String TIPO_FONTE_PADRAO_2 = "Tipo Fonte 2";
 	
 	private UUID id;
     private String nome;

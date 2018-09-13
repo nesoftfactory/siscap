@@ -38,36 +38,9 @@ public class FonteServiceClient {
 
 	private Client client;
 	private WebTarget webTarget;
-	private ArrayList<TipoFonte> tipoFontes = new ArrayList<TipoFonte>();
-	
-	private void iniciaTipoFontes() {
-		this.tipoFontes.add(new TipoFonte(TipoFonte.TIPO_FONTE_PADRAO_1));
-		this.tipoFontes.add(new TipoFonte(TipoFonte.TIPO_FONTE_PADRAO_2));
-	}
 	
 	public FonteServiceClient(){
 		this.client = ClientBuilder.newClient();  
-	}
-	
-	public ArrayList<TipoFonte> getDefaultTipoFontes() {
-		if (tipoFontes.size() == 0) {
-			iniciaTipoFontes();
-		}
-		return tipoFontes;
-	}
-	
-	public TipoFonte consultarTipoFontePorNome(String nome) {
-		if (tipoFontes.size() == 0) {
-			iniciaTipoFontes();
-		}
-		
-		for (TipoFonte tipoFonte: tipoFontes) {
-			if (tipoFonte.getNome().equals(nome)) {
-				return tipoFonte;
-			}
-		}
-		
-		return null;
 	}
 	
 	public List<Fonte> consultarTodasFontes(){
