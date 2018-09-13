@@ -2,8 +2,10 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,14 +35,6 @@ public class FontesController extends BeanController {
 	public void limpar() {
 		fonte = new Fonte();
 	}
-
-	public void editar(Fonte fonteEditar) {
-		fonte = fonteEditar;
-	}
-	
-	public void excluir(Fonte fonteExcluir) {
-		fontes.remove(fonteExcluir);
-	}
      
 	private void iniciaFontes() {
 		
@@ -48,22 +42,67 @@ public class FontesController extends BeanController {
 		TipoFonte tipoFonte2 = fonteServiceClient.consultarTipoFontePorNome(TipoFonte.TIPO_FONTE_PADRAO_2);
 		
 		fontes = new ArrayList<>();
-		fontes.add(new Fonte("Diário Oficial do Estado", "http://www.diariooficial.pi.gov.br/", tipoFonte1));
-		fontes.add(new Fonte("Diário Oficial dos Municípios", "http://www.diarioficialdosmunicipios.org/", tipoFonte2));
-		fontes.add(new Fonte("Diário Oficial de Teresina", "http://www.dom.teresina.pi.gov.br/", tipoFonte2));
-		fontes.add(new Fonte("Diário Oficial de Parnaíba", "http://dom.parnaiba.pi.gov.br/", tipoFonte2));
+		fontes.add(new Fonte(Fonte.FONTE_NOME_DO_ESTADO, Fonte.FONTE_URL_DO_ESTADO, tipoFonte1));
+		fontes.add(new Fonte(Fonte.FONTE_NOME_DO_MUNICIPIOS, Fonte.FONTE_URL_DO_MUNICIPIOS, tipoFonte2));
+		fontes.add(new Fonte(Fonte.FONTE_NOME_DO_TERESINA, Fonte.FONTE_URL_DO_TERESINA, tipoFonte2));
+		fontes.add(new Fonte(Fonte.FONTE_NOME_DO_PARNAIBA, Fonte.FONTE_URL_DO_PARNAIBA, tipoFonte2));
 	}
 
 	public List<Fonte> getFontes() {
-		return fontes;
+		return fonteServiceClient.consultarTodasFontes();
 	}
 	
-	public Fonte getFonte() {
+	public Fonte getFonte(UUID id) {
+		try {
+			if(id == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			}
+			
+			fonte = fonteServiceClient.consultarFontePorCodigo(id);
+			
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+		}
+		
 		return fonte;
 	}
-
-	public void setFonte(Fonte fonte) {
-		this.fonte = fonte;
+	
+	public void salvar() {
+		try {
+			if(fonte == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			}
+			else {
+				if (fonte.getId() == null) {
+					fonteServiceClient.cadastrarFonte(fonte);
+				}	
+				else {
+					fonteServiceClient.alterarFonte(fonte);
+				}
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+			}
+			limpar();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  null, e.getMessage());
+		}
 	}
+	
+	public void excluir(Fonte fonte) {
+		try {
+			if(fonte == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			}
+			else {
+				fonteServiceClient.excluirFontePorCodigo(fonte.getId());
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+			}
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+		}
+	}
+
 
 }

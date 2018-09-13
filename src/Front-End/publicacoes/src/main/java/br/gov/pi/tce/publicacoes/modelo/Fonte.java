@@ -5,6 +5,16 @@ import java.util.UUID;
 
 public class Fonte {
 	
+	// Nomes e URL das Fontes Padrão
+	public static final String FONTE_NOME_DO_ESTADO     = "Diário Oficial do Estado";
+	public static final String FONTE_NOME_DO_MUNICIPIOS = "Diário Oficial dos Municípios";
+	public static final String FONTE_NOME_DO_TERESINA   = "Diário Oficial de Teresina";
+	public static final String FONTE_NOME_DO_PARNAIBA   = "Diário Oficial de Parnaíba";
+	public static final String FONTE_URL_DO_ESTADO      = "http://www.diariooficial.pi.gov.br/";
+	public static final String FONTE_URL_DO_MUNICIPIOS  = "http://www.diarioficialdosmunicipios.org/";
+	public static final String FONTE_URL_DO_TERESINA    = "http://www.dom.teresina.pi.gov.br/";
+	public static final String FONTE_URL_DO_PARNAIBA    = "http://dom.parnaiba.pi.gov.br/";
+	
 	private UUID id;
     private String nome;
     private String url;
