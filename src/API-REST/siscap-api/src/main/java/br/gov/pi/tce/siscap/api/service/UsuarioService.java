@@ -91,13 +91,11 @@ public class UsuarioService {
 	
 	private void atualizaDadosAdicao(Usuario usuario) {
 		usuario.setUsuarioCriacao(USUARIO);
-		usuario.setDataCriacao(LocalDateTime.now());
 		
 	}
 
 	private void atualizarDadosEdicao(Usuario usuario) {
 		usuario.setUsuarioAtualizacao(USUARIO);
-		usuario.setDataAtualizacao(LocalDateTime.now());
 	}
 
 	private Usuario buscarUsuarioPeloCodigo(Long id) {
