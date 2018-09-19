@@ -30,7 +30,8 @@ public class ColetorPublicacoesService {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		ColetorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
+		ColetorPublicacaoUtil coletorPublicacaoUtil = new ColetorPublicacaoUtil();
+		coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
 	}
 	
 	@Schedule(hour="8")
@@ -38,7 +39,8 @@ public class ColetorPublicacoesService {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		ColetorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
+		ColetorPublicacaoUtil coletorPublicacaoUtil = new ColetorPublicacaoUtil();
+		coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
 	}
 	
 	@Schedule(hour="9")
@@ -46,7 +48,8 @@ public class ColetorPublicacoesService {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		ColetorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
+		ColetorPublicacaoUtil coletorPublicacaoUtil = new ColetorPublicacaoUtil();
+		coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
 	}
 	
 	@Schedule(hour="10")
@@ -54,7 +57,8 @@ public class ColetorPublicacoesService {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		ColetorPublicacaoUtil.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
+		ColetorPublicacaoUtil coletorPublicacaoUtil = new ColetorPublicacaoUtil();
+		coletorPublicacaoUtil.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
 	}
 	
 }

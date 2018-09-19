@@ -11,15 +11,15 @@ import java.util.Date;
  */
 public class Publicacao {
 
-	private Long idPublicacao;
+	private Long id;
 	private Fonte fonte;
-	private String nomePublicacao;
-	private Date dataPublicacao;
-	private String codigoPublicacao;
-	private String nomeArquivoPublicacao;
-	private String linkArquivoPublicacao;
-	private String arquivoPublicacao;
-	private Boolean ativo;
+	private String nome;
+	private Date data;
+	private String codigo;
+	private String nomeArquivo;
+	private String linkArquivo;
+	private String arquivo;
+	private Boolean sucesso;
 	private Boolean anexo;
 	private Long quantidadeTentativas;
 
@@ -33,66 +33,65 @@ public class Publicacao {
 
 	/**
 	 * @param fonte
-	 * @param nomePublicacao
-	 * @param dataPublicacao
-	 * @param codigoPublicacao
-	 * @param nomeArquivoPublicacao
-	 * @param linkArquivoPublicacao
-	 * @param arquivoPublicacao
-	 * @param ativo
+	 * @param nome
+	 * @param data
+	 * @param codigo
+	 * @param nomeArquivo
+	 * @param linkArquivo
+	 * @param arquivo
+	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Fonte fonte, String nomePublicacao, Date dataPublicacao, String codigoPublicacao,
-			String nomeArquivoPublicacao, String linkArquivoPublicacao, String arquivoPublicacao, Boolean ativo, Boolean anexo,
+	public Publicacao(Fonte fonte, String nome, Date data, String codigo,
+			String nomeArquivo, String linkArquivo, String arquivo, Boolean sucesso, Boolean anexo,
 			Long quantidadeTentativas) {
 		super();
 		this.fonte = fonte;
-		this.nomePublicacao = nomePublicacao;
-		this.dataPublicacao = dataPublicacao;
-		this.codigoPublicacao = codigoPublicacao;
-		this.nomeArquivoPublicacao = nomeArquivoPublicacao;
-		this.linkArquivoPublicacao = linkArquivoPublicacao;
-		this.arquivoPublicacao = arquivoPublicacao;
-		this.ativo = ativo;
+		this.nome = nome;
+		this.data = data;
+		this.codigo = codigo;
+		this.nomeArquivo = nomeArquivo;
+		this.linkArquivo = linkArquivo;
+		this.arquivo = arquivo;
+		this.sucesso = sucesso;
 		this.anexo = anexo;
 		this.quantidadeTentativas = quantidadeTentativas;
 	}
 
 	/**
-	 * @param idPublicacao
-	 * @param idFonte
-	 * @param nomePublicacao
-	 * @param dataPublicacao
-	 * @param codigoPublicacao
-	 * @param nomeArquivoPublicacao
-	 * @param linkArquivoPublicacao
-	 * @param arquivoPublicacao
-	 * @param ativo
+	 * @param id
+	 * @param fonte
+	 * @param nome
+	 * @param data
+	 * @param codigo
+	 * @param nomeArquivo
+	 * @param linkArquivo
+	 * @param arquivo
+	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Long idPublicacao, Fonte fonte, String nomePublicacao, Date dataPublicacao,
-			String codigoPublicacao, String nomeArquivoPublicacao, String linkArquivoPublicacao,
-			String arquivoPublicacao, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
-			String usuarioAtualizacao, Boolean ativo, Boolean anexo, Long quantidadeTentativas) {
-		this(fonte, nomePublicacao, dataPublicacao, codigoPublicacao, nomeArquivoPublicacao, linkArquivoPublicacao,
-				arquivoPublicacao, ativo, anexo, quantidadeTentativas);
-		this.idPublicacao = idPublicacao;
+	public Publicacao(Long id, Fonte fonte, String nome, Date data,
+			String codigo, String nomeArquivo, String linkArquivo,
+			String arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
+			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas) {
+		this(fonte, nome, data, codigo, nomeArquivo, linkArquivo, arquivo, sucesso, anexo, quantidadeTentativas);
+		this.id = id;
 	}
 
 	/**
-	 * @return the idPublicacao
+	 * @return the id
 	 */
-	public Long getIdPublicacao() {
-		return idPublicacao;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * @param idPublicacao the idPublicacao to set
+	 * @param id the id to set
 	 */
-	public void setIdPublicacao(Long idPublicacao) {
-		this.idPublicacao = idPublicacao;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
@@ -110,101 +109,101 @@ public class Publicacao {
 	}
 
 	/**
-	 * @return the nomePublicacao
+	 * @return the nome
 	 */
-	public String getNomePublicacao() {
-		return nomePublicacao;
+	public String getNome() {
+		return nome;
 	}
 
 	/**
-	 * @param nomePublicacao the nomePublicacao to set
+	 * @param nome the nome to set
 	 */
-	public void setNomePublicacao(String nomePublicacao) {
-		this.nomePublicacao = nomePublicacao;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
 	/**
-	 * @return the dataPublicacao
+	 * @return the data
 	 */
-	public Date getDataPublicacao() {
-		return dataPublicacao;
+	public Date getData() {
+		return data;
 	}
 
 	/**
-	 * @param dataPublicacao the dataPublicacao to set
+	 * @param data the data to set
 	 */
-	public void setDataPublicacao(Date dataPublicacao) {
-		this.dataPublicacao = dataPublicacao;
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	/**
-	 * @return the codigoPublicacao
+	 * @return the codigo
 	 */
-	public String getCodigoPublicacao() {
-		return codigoPublicacao;
+	public String getCodigo() {
+		return codigo;
 	}
 
 	/**
-	 * @param codigoPublicacao the codigoPublicacao to set
+	 * @param codigo the codigo to set
 	 */
-	public void setCodigoPublicacao(String codigoPublicacao) {
-		this.codigoPublicacao = codigoPublicacao;
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
 	}
 
 	/**
-	 * @return the nomeArquivoPublicacao
+	 * @return the nomeArquivo
 	 */
-	public String getNomeArquivoPublicacao() {
-		return nomeArquivoPublicacao;
+	public String getNomeArquivo() {
+		return nomeArquivo;
 	}
 
 	/**
-	 * @param nomeArquivoPublicacao the nomeArquivoPublicacao to set
+	 * @param nomeArquivo the nomeArquivo to set
 	 */
-	public void setNomeArquivoPublicacao(String nomeArquivoPublicacao) {
-		this.nomeArquivoPublicacao = nomeArquivoPublicacao;
+	public void setNomeArquivo(String nomeArquivo) {
+		this.nomeArquivo = nomeArquivo;
 	}
 
 	/**
-	 * @return the linkArquivoPublicacao
+	 * @return the linkArquivo
 	 */
-	public String getLinkArquivoPublicacao() {
-		return linkArquivoPublicacao;
+	public String getLinkArquivo() {
+		return linkArquivo;
 	}
 
 	/**
-	 * @param linkArquivoPublicacao the linkArquivoPublicacao to set
+	 * @param linkArquivo the linkArquivo to set
 	 */
-	public void setLinkArquivoPublicacao(String linkArquivoPublicacao) {
-		this.linkArquivoPublicacao = linkArquivoPublicacao;
+	public void setLinkArquivo(String linkArquivo) {
+		this.linkArquivo = linkArquivo;
 	}
 
 	/**
-	 * @return the arquivoPublicacao
+	 * @return the arquivo
 	 */
-	public String getArquivoPublicacao() {
-		return arquivoPublicacao;
+	public String getArquivo() {
+		return arquivo;
 	}
 
 	/**
-	 * @param arquivoPublicacao the arquivoPublicacao to set
+	 * @param arquivo the arquivo to set
 	 */
-	public void setArquivoPublicacao(String arquivoPublicacao) {
-		this.arquivoPublicacao = arquivoPublicacao;
+	public void setArquivo(String arquivo) {
+		this.arquivo = arquivo;
 	}
 
 	/**
-	 * @return the ativo
+	 * @return the sucesso
 	 */
-	public Boolean getAtivo() {
-		return ativo;
+	public Boolean getSucesso() {
+		return sucesso;
 	}
 
 	/**
-	 * @param ativo the ativo to set
+	 * @param sucesso the sucesso to set
 	 */
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
+	public void setSucesso(Boolean sucesso) {
+		this.sucesso = sucesso;
 	}
 
 	/**

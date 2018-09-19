@@ -9,7 +9,7 @@ package br.gov.pi.tce.publicacoes.modelo;
  */
 public class HistoricoPublicacao {
 
-	private Long idHistoricoPublicacao;
+	private Long id;
 	private Publicacao publicacao;
 	private String mensagemErro;
 	private Boolean ativo;
@@ -35,28 +35,28 @@ public class HistoricoPublicacao {
 	}
 
 	/**
-	 * @param idHistoricoPublicacao
+	 * @param id
 	 * @param publicacao
 	 * @param mensagemErro
 	 * @param ativo
 	 */
-	public HistoricoPublicacao(Long idHistoricoPublicacao, Publicacao publicacao, String mensagemErro, Boolean ativo) {
+	public HistoricoPublicacao(Long id, Publicacao publicacao, String mensagemErro, Boolean ativo) {
 		this(publicacao, mensagemErro, ativo);
-		this.idHistoricoPublicacao = idHistoricoPublicacao;
+		this.id = id;
 	}
 
 	/**
-	 * @return the idHistoricoPublicacao
+	 * @return the id
 	 */
-	public Long getIdHistoricoPublicacao() {
-		return idHistoricoPublicacao;
+	public Long getId() {
+		return id;
 	}
 
 	/**
-	 * @param idHistoricoPublicacao the idHistoricoPublicacao to set
+	 * @param id the id to set
 	 */
-	public void setIdHistoricoPublicacao(Long idHistoricoPublicacao) {
-		this.idHistoricoPublicacao = idHistoricoPublicacao;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	/**
