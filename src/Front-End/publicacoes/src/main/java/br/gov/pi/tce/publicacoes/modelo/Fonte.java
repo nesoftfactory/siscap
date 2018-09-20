@@ -1,7 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import java.util.Date;
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Fonte {
 	
@@ -10,19 +9,18 @@ public class Fonte {
 	public static final String FONTE_NOME_DO_MUNICIPIOS = "Diário Oficial dos Municípios";
 	public static final String FONTE_NOME_DO_TERESINA   = "Diário Oficial de Teresina";
 	public static final String FONTE_NOME_DO_PARNAIBA   = "Diário Oficial de Parnaíba";
+	
 	public static final String FONTE_URL_DO_ESTADO      = "http://www.diariooficial.pi.gov.br/";
 	public static final String FONTE_URL_DO_MUNICIPIOS  = "http://www.diarioficialdosmunicipios.org/";
 	public static final String FONTE_URL_DO_TERESINA    = "http://www.dom.teresina.pi.gov.br/";
 	public static final String FONTE_URL_DO_PARNAIBA    = "http://dom.parnaiba.pi.gov.br/";
 	
-	private UUID id;
+	private Long id;
     private String nome;
     private String url;
     private TipoFonte tipoFonte;
-    private boolean ativo;
+    private Boolean ativo;
     private Usuario usuarioCriacao;
-    private Date dataCriacao;
-    private Date dataAtualizacao;
     private Usuario usuarioAtualizacao; 
     
 	public Fonte() {
@@ -31,22 +29,16 @@ public class Fonte {
 
 	public Fonte(String nome, String url, TipoFonte tipoFonte) {
 		super();
-		setId(UUID.randomUUID());
 		setNome(nome);
 		setUrl(url);
 		setTipoFonte(tipoFonte);
-		setAtivo(true);
-		setUsuarioCriacao(new Usuario());
-		setDataCriacao(new Date());
-		setUsuarioAtualizacao(null);
-		setDataAtualizacao(null);
 	}
 
-	public UUID getId() {
+	public Long getId() {
 		return id;
 	}
 
-	private void setId(UUID id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -74,11 +66,13 @@ public class Fonte {
 		this.tipoFonte = tipoFonte;
 	}
 
-	public boolean isAtivo() {
+	
+
+	public Boolean getAtivo() {
 		return ativo;
 	}
 
-	public void setAtivo(boolean ativo) {
+	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 
@@ -90,28 +84,17 @@ public class Fonte {
 		this.usuarioCriacao = usuarioCriacao;
 	}
 
-	public Date getDataCriacao() {
-		return dataCriacao;
-	}
-
-	public void setDataCriacao(Date dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
-	public Date getDataAtualizacao() {
-		return dataAtualizacao;
-	}
-
-	public void setDataAtualizacao(Date dataAtualizacao) {
-		this.dataAtualizacao = dataAtualizacao;
-	}
-
 	public Usuario getUsuarioAtualizacao() {
 		return usuarioAtualizacao;
 	}
 
 	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
+	}
+	
+	@JsonIgnore
+	public String getTextoAtivo() {
+		return getAtivo() ? "Sim" : "Não";
 	}
 
 }

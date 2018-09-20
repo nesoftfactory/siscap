@@ -1,8 +1,6 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -11,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
-import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
@@ -30,19 +27,53 @@ public class TipoFontesController extends BeanController {
 	@PostConstruct
 	public void init() {
 		limpar();
-		getTipoFontes();
+		iniciaTipoFontes();
+	}
+	
+	public void editar(TipoFonte tipoFonteEditar) {
+		tipoFonte = tipoFonteEditar;
+	}
+	
+	
+	private void iniciaTipoFontes() {
+		try {
+			tipoFontes = fonteServiceClient.consultarTodasTipoFontes();
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+		}
 	}
 	
 	public void limpar() {
 		tipoFonte = new TipoFonte();
 	}
 	
+	
+	public TipoFonte getTipoFonte() {
+		return tipoFonte;
+	}
+
+	public void setTipoFonte(TipoFonte tipoFonte) {
+		this.tipoFonte = tipoFonte;
+	}
+
+	public FonteServiceClient getFonteServiceClient() {
+		return fonteServiceClient;
+	}
+
+	public void setFonteServiceClient(FonteServiceClient fonteServiceClient) {
+		this.fonteServiceClient = fonteServiceClient;
+	}
+
+	public void setTipoFontes(List<TipoFonte> tipoFontes) {
+		this.tipoFontes = tipoFontes;
+	}
+
 	public List<TipoFonte> getTipoFontes() {
-		tipoFontes = fonteServiceClient.consultarTodasTipoFontes();
 		return tipoFontes;
 	}
 	
-	public TipoFonte getTipoFonte(UUID id) {
+	public TipoFonte getTipoFonte(Long id) {
 		try {
 			if (id == null) {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
@@ -70,7 +101,7 @@ public class TipoFontesController extends BeanController {
 				else {
 					fonteServiceClient.alterarTipoFonte(tipoFonte);
 				}
-				getTipoFontes();
+				iniciaTipoFontes();
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 			}
 			limpar();
@@ -87,7 +118,7 @@ public class TipoFontesController extends BeanController {
 			}
 			else {
 				fonteServiceClient.excluirTipoFontePorCodigo(tipoFonte.getId());
-				getTipoFontes();
+				iniciaTipoFontes();
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 			}
 		}

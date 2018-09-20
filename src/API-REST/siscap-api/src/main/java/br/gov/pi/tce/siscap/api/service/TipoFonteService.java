@@ -11,10 +11,12 @@ import br.gov.pi.tce.siscap.api.repository.TipoFonteRepository;
 @Service
 public class TipoFonteService {
 
-	private final String USUARIO = "automatizar";
 	
 	@Autowired
 	private TipoFonteRepository tipoFonteRepository;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	public TipoFonte atualizar(Long id, TipoFonte tipoFonte) {
 		TipoFonte tipoFonteSalva = buscarTipoFontePeloCodigo(id);
@@ -40,12 +42,12 @@ public class TipoFonteService {
 	}
 	
 	private void atualizaDadosAdicao(TipoFonte tipoFonte) {
-		tipoFonte.setUsuarioCriacao(USUARIO);
+		tipoFonte.setUsuarioCriacao(usuarioService.getUsuarioLogado());
 		atualizarDadosEdicao(tipoFonte);
 	}
 
 	private void atualizarDadosEdicao(TipoFonte tipoFonte) {
-		tipoFonte.setUsuarioAtualizacao(USUARIO);
+		tipoFonte.setUsuarioAtualizacao(usuarioService.getUsuarioLogado());
 	}
 
 	private TipoFonte buscarTipoFontePeloCodigo(Long id) {

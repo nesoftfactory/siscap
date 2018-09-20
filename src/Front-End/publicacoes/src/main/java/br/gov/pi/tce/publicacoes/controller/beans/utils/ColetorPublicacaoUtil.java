@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -186,7 +185,7 @@ public class ColetorPublicacaoUtil {
 	 * @param idFonte
 	 * @return
 	 */
-	private Boolean isFeriado(Date date, UUID idFonte) {
+	private Boolean isFeriado(Date date, Long idFonte) {
 		return Boolean.TRUE;
 	}
 

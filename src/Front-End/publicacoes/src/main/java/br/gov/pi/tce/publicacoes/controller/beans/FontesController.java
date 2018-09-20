@@ -1,8 +1,6 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -21,15 +19,37 @@ public class FontesController extends BeanController {
 	private static final long serialVersionUID = 1L;
 
 	private Fonte fonte;
-	private List<Fonte> fontes;
+	
 	
 	@Inject
 	private FonteServiceClient fonteServiceClient;
 	
+	
+	private List<Fonte> fontes;
+	
+	
+	
+	public List<TipoFonte> getTiposFontes(){
+		return fonteServiceClient.consultarTodasTipoFontes();
+	}
+	
 	@PostConstruct
 	public void init() {
 		limpar();
-		getFontes();
+		iniciaFontes();
+	}
+	
+	public void editar(Fonte fonteEditar) {
+		fonte = fonteEditar;
+	}
+	
+	private void iniciaFontes() {
+		try {
+			fontes = fonteServiceClient.consultarTodasFontes();
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+		}
 	}
 	
 	public void limpar() {
@@ -37,11 +57,10 @@ public class FontesController extends BeanController {
 	}
 
 	public List<Fonte> getFontes() {
-		fontes = fonteServiceClient.consultarTodasFontes();
 		return fontes;
 	}
 	
-	public Fonte getFonte(UUID id) {
+	public Fonte getFonte(Long id) {
 		try {
 			if (id == null) {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
@@ -69,7 +88,7 @@ public class FontesController extends BeanController {
 				else {
 					fonteServiceClient.alterarFonte(fonte);
 				}
-				getFontes();
+				iniciaFontes();
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 			}
 			limpar();
@@ -86,7 +105,7 @@ public class FontesController extends BeanController {
 			}
 			else {
 				fonteServiceClient.excluirFontePorCodigo(fonte.getId());
-				getFontes();
+				iniciaFontes();
 				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
 			}
 		}
@@ -95,5 +114,19 @@ public class FontesController extends BeanController {
 		}
 	}
 
+	
+	public Fonte getFonte() {
+		return fonte;
+	}
+
+	public void setFonte(Fonte fonte) {
+		this.fonte = fonte;
+	}
+
+
+	public void setFontes(List<Fonte> fontes) {
+		this.fontes = fontes;
+	}
+ 
 
 }

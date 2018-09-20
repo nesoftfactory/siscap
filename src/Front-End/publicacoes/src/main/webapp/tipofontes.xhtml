@@ -17,15 +17,20 @@
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
-								<p:inputText id="nome" value="#{tipoFontesController.tipoFonte.nome}" required="true" />												
+								<p:inputText id="nome" value="#{tipoFontesController.tipoFonte.nome}" required="true" />
+								
+								<p:outputLabel value="Ativa? (Sim/Não)" for="ativa"/>
+								<p:selectBooleanCheckbox id="ativa" value="#{tipoFontesController.tipoFonte.ativo}"  />
+																				
 							</p:panelGrid>
 							<p:toolbar>
 								<p:toolbarGroup>
  									<p:commandButton value="Limpar" action="#{tipoFontesController.limpar()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										
+										
 									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" 
-										update="@form" action="#{tipoFontesController.limpar()}" >
-                						<p:collector value="#{tipoFontesController.tipoFonte}" addTo="#{tipoFontesController.tipoFontes}" unique="true"/>
+										update="@form" action="#{tipoFontesController.salvar()}" >
             						</p:commandButton>
 								</p:toolbarGroup>
 							</p:toolbar>					     					
@@ -37,6 +42,10 @@
                             </f:facet>
                             <p:column headerText="Nome">
                                 <h:outputText value="#{tipoFonte.nome}" />
+                            </p:column>
+                            
+                             <p:column headerText="Ativa? (Sim/Não)">
+                           		  <h:outputText value="#{tipoFonte.textoAtivo}" />
                             </p:column>
                             
                             <p:column headerText="Ações">

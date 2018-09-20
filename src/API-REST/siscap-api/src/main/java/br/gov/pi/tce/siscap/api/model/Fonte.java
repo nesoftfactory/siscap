@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -27,9 +28,9 @@ public class Fonte {
 	private String url;
 	private TipoFonte tipoFonte;
 	private LocalDateTime dataCriacao;
-	private String usuarioCriacao;
+	private Usuario usuarioCriacao;
 	private LocalDateTime dataAtualizacao;
-	private String usuarioAtualizacao;
+	private Usuario usuarioAtualizacao;
 	private Boolean ativo;
 
 	@Id
@@ -81,13 +82,14 @@ public class Fonte {
 		this.dataCriacao = dataCriacao;
 	}
 
-	@Column(name="usuario_criacao")
+	@OneToOne
+	@JoinColumn( name = "usuario_criacao" )
 	@JsonIgnore
-	public String getUsuarioCriacao() {
+	public Usuario getUsuarioCriacao() {
 		return usuarioCriacao;
 	}
 
-	public void setUsuarioCriacao(String usuarioCriacao) {
+	public void setUsuarioCriacao(Usuario usuarioCriacao) {
 		this.usuarioCriacao = usuarioCriacao;
 	}
 
@@ -101,13 +103,14 @@ public class Fonte {
 		this.dataAtualizacao = dataAtualizacao;
 	}
 
-	@Column(name="usuario_atualizacao")
+	@OneToOne
+	@JoinColumn( name = "usuario_atualizacao" )
 	@JsonIgnore
-	public String getUsuarioAtualizacao() {
+	public Usuario getUsuarioAtualizacao() {
 		return usuarioAtualizacao;
 	}
 
-	public void setUsuarioAtualizacao(String usuarioAtualizacao) {
+	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
 

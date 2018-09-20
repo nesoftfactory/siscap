@@ -93,14 +93,14 @@ public class UsuarioResource {
 		usuarioService.atualizarPropriedadeAdmin(id, admin);
 	}
 	
-	@ExceptionHandler(UsuarioComCpfJaExistenteException.class)
-	public ResponseEntity<Object> handleUsuarioComCpfJaExistenteException(UsuarioComCpfJaExistenteException ex) {
-		String mensagemUsuario = messageSource.getMessage("usuario.cpf-ja-existente", null, LocaleContextHolder.getLocale());
-		String mensagemDesenvolvedor = ex.toString();
-		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
-		
-		return ResponseEntity.badRequest().body(erros);
-	}
+//	@ExceptionHandler(UsuarioComCpfJaExistenteException.class)
+//	public ResponseEntity<Object> handleUsuarioComCpfJaExistenteException(UsuarioComCpfJaExistenteException ex) {
+//		String mensagemUsuario = messageSource.getMessage("usuario.cpf-ja-existente", null, LocaleContextHolder.getLocale());
+//		String mensagemDesenvolvedor = ex.toString();
+//		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+//		
+//		return ResponseEntity.badRequest().body(erros);
+//	}
 
 	@ExceptionHandler(UsuarioComLoginJaExistenteException.class)
 	public ResponseEntity<Object> handleUsuarioComLoginJaExistenteException(UsuarioComLoginJaExistenteException ex) {

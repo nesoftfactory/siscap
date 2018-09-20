@@ -1,6 +1,5 @@
 package br.gov.pi.tce.publicacoes.clients;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,17 +13,13 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
-import br.gov.pi.tce.publicacoes.controller.beans.utils.Erro;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Local
 @Stateless(name="UsuarioServiceClient")
 public class UsuarioServiceClient{
 	
-	private static final String PATH_EXCLUIR = "excluir";
-	private static final String PATH_ALTERAR = "alterar";
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-	private final String URL_SERVICE = "http://localhost:7788/";
 	private String URI = "http://localhost:7788/usuarios/";
 
 	

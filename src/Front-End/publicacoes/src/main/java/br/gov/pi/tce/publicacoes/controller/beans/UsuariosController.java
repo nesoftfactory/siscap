@@ -73,8 +73,6 @@ public class UsuariosController extends BeanController {
 			}
 			else {
 				if(usuario.getId() == null || usuario.getId() == 0) {
-					//TODO Retirar após ajuste no banco de dados na api
-					usuario.setCpf("11111111111");
 					usuarioServiceClient.cadastrarUsuario(usuario);
 				}	
 				else {

@@ -7,14 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,15 +24,15 @@ public class Usuario {
 	
 	private Long id;
 	private String nome;
-	private String cpf;
 	private String login;
 	private Boolean admin = false;
 	private LocalDateTime dataCriacao;
-	private String usuarioCriacao;
+	private Usuario usuarioCriacao;
 	private LocalDateTime dataAtualizacao;
-	private String usuarioAtualizacao;
+	private Usuario usuarioAtualizacao;
 	private Boolean ativo = false;
-
+	
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Long getId() {
@@ -53,15 +53,6 @@ public class Usuario {
 		this.nome = nome;
 	}
 	
-	@NotNull
-//	@CPF
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
 
 	@NotNull
 	public String getLogin() {
@@ -90,13 +81,15 @@ public class Usuario {
 		this.dataCriacao = dataCriacao;
 	}
 
-	@Column(name="usuario_criacao")
-	@JsonIgnore
-	public String getUsuarioCriacao() {
+	@OneToOne
+	@JoinColumn( name = "usuario_criacao" )
+	//@Column(name="usuario_criacao")
+	//@JsonIgnore
+	public Usuario getUsuarioCriacao() {
 		return usuarioCriacao;
 	}
 
-	public void setUsuarioCriacao(String usuarioCriacao) {
+	public void setUsuarioCriacao(Usuario usuarioCriacao) {
 		this.usuarioCriacao = usuarioCriacao;
 	}
 
@@ -110,13 +103,15 @@ public class Usuario {
 		this.dataAtualizacao = dataAtualizacao;
 	}
 
-	@Column(name="usuario_atualizacao")
-	@JsonIgnore
-	public String getUsuarioAtualizacao() {
+	@OneToOne
+	@JoinColumn( name = "usuario_atualizacao" )
+	//@Column(name="usuario_atualizacao")
+	//@JsonIgnore
+	public Usuario getUsuarioAtualizacao() {
 		return usuarioAtualizacao;
 	}
 
-	public void setUsuarioAtualizacao(String usuarioAtualizacao) {
+	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
 

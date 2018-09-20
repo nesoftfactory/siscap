@@ -13,10 +13,10 @@ import br.gov.pi.tce.siscap.api.model.Usuario;
 @Transactional(readOnly=true)
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-	Optional<Usuario> findByCpf(String cpf);
+	//Optional<Usuario> findByCpf(String cpf);
 	
-	@Query("SELECT u FROM Usuario u WHERE u.cpf = :cpf AND u.id != :idUsuario")
-	List<Usuario> buscarPorCpfComIdDiferenteDoInformado(@Param("cpf") String cpf, @Param("idUsuario") Long idUsuario);
+	//@Query("SELECT u FROM Usuario u WHERE u.cpf = :cpf AND u.id != :idUsuario")
+	//List<Usuario> buscarPorCpfComIdDiferenteDoInformado(@Param("cpf") String cpf, @Param("idUsuario") Long idUsuario);
 
 	Optional<Usuario> findByLogin(String login);
 	

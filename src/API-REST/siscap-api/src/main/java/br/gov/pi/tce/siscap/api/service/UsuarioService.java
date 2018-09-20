@@ -1,6 +1,5 @@
 package br.gov.pi.tce.siscap.api.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -10,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.UsuarioRepository;
-import br.gov.pi.tce.siscap.api.service.exception.UsuarioComCpfJaExistenteException;
 import br.gov.pi.tce.siscap.api.service.exception.UsuarioComLoginJaExistenteException;
 
 @Service
 public class UsuarioService {
 
-	private final String USUARIO = "automatizar";
+	
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
@@ -61,19 +59,19 @@ public class UsuarioService {
 		validarLoginDuplicado(usuario);
 	}
 
-	private void validarCpfDuplicado(Usuario usuario) {
-		if (usuario.isAlterando()) {
-			List<Usuario> usuarios = usuarioRepository
-					.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
-			if (!usuarios.isEmpty()) {
-				throw new UsuarioComCpfJaExistenteException();
-			}
-		} else {
-			if(usuarioRepository.findByCpf(usuario.getCpf()).isPresent()) {
-				throw new UsuarioComCpfJaExistenteException();
-			}
-		}
-	}
+//	private void validarCpfDuplicado(Usuario usuario) {
+//		if (usuario.isAlterando()) {
+//			List<Usuario> usuarios = usuarioRepository
+//					.buscarPorCpfComIdDiferenteDoInformado(usuario.getCpf(), usuario.getId());
+//			if (!usuarios.isEmpty()) {
+//				throw new UsuarioComCpfJaExistenteException();
+//			}
+//		} else {
+//			if(usuarioRepository.findByCpf(usuario.getCpf()).isPresent()) {
+//				throw new UsuarioComCpfJaExistenteException();
+//			}
+//		}
+//	}
 
 	private void validarLoginDuplicado(Usuario usuario) {
 		if (usuario.isAlterando()) {
@@ -90,17 +88,24 @@ public class UsuarioService {
 	}
 	
 	private void atualizaDadosAdicao(Usuario usuario) {
-		usuario.setUsuarioCriacao(USUARIO);
+		usuario.setUsuarioCriacao(getUsuarioLogado());
 		
 	}
 
 	private void atualizarDadosEdicao(Usuario usuario) {
-		usuario.setUsuarioAtualizacao(USUARIO);
+		usuario.setUsuarioAtualizacao(getUsuarioLogado());
 	}
-
+	
 	private Usuario buscarUsuarioPeloCodigo(Long id) {
 		Usuario usuarioSalvo = usuarioRepository.findById(id).
 				orElseThrow(() -> new EmptyResultDataAccessException(1));
 		return usuarioSalvo;
 	}
+
+	
+	public Usuario getUsuarioLogado() {
+		//TODO Depois verificar como ajusta para pegar o usuário da sessão
+		return buscarUsuarioPeloCodigo(2L);
+	}
+	
 }

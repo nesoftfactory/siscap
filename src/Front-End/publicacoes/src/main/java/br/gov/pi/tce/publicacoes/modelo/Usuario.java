@@ -10,9 +10,10 @@ public class Usuario implements Serializable
 	private Long id;
 	private String nome;
 	private String login;
-	private String cpf;
 	private Boolean admin = false;
 	private Boolean ativo = false;
+	private Usuario usuarioCriacao;
+	private Usuario usuarioAtualizacao;
 
 	public Usuario() {
 		super();
@@ -29,14 +30,6 @@ public class Usuario implements Serializable
 	public Usuario(Long id, String nome, String login,  boolean ativo, boolean admin) {
 		this(nome,login,ativo,admin);
 		this.id = id;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
 	}
 
 	public Boolean getAdmin() {
@@ -83,5 +76,23 @@ public class Usuario implements Serializable
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}
+
+	public Usuario getUsuarioCriacao() {
+		return usuarioCriacao;
+	}
+
+	public void setUsuarioCriacao(Usuario usuarioCriacao) {
+		this.usuarioCriacao = usuarioCriacao;
+	}
+
+	public Usuario getUsuarioAtualizacao() {
+		return usuarioAtualizacao;
+	}
+
+	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
+		this.usuarioAtualizacao = usuarioAtualizacao;
+	}
+	
+	
 
 }

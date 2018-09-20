@@ -16,13 +16,15 @@ import br.gov.pi.tce.siscap.api.service.exception.TipoFonteInexistenteOuInativaE
 @Service
 public class FonteService {
 
-	private final String USUARIO = "automatizar";
 	
 	@Autowired
 	private FonteRepository fonteRepository;
 	
 	@Autowired
 	private TipoFonteRepository tipoFonteRepository;
+	
+	@Autowired
+	private UsuarioService usuarioService;
 	
 	public Fonte atualizar(Long id, Fonte fonte) {
 		Fonte fonteSalva = buscarFontePeloCodigo(id);
@@ -62,11 +64,11 @@ public class FonteService {
 	}
 
 	private void atualizaDadosAdicao(Fonte fonte) {
-		fonte.setUsuarioCriacao(USUARIO);
+		fonte.setUsuarioCriacao(usuarioService.getUsuarioLogado());
 	}
 
 	private void atualizarDadosEdicao(Fonte fonte) {
-		fonte.setUsuarioAtualizacao(USUARIO);
+		fonte.setUsuarioAtualizacao(usuarioService.getUsuarioLogado());
 	}
 
 	private Fonte buscarFontePeloCodigo(Long id) {

@@ -25,7 +25,7 @@ public class ColetorPublicacoesService {
 	
 	public final static int QUANTIDADE_DIAS = 10;
 
-	@Schedule(hour="0", minute = "16")
+	//@Schedule(hour="0", minute = "16")
 	public void coletarDiarioOficialParnaiba() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);

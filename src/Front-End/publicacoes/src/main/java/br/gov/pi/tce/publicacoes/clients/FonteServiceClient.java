@@ -1,8 +1,7 @@
 package br.gov.pi.tce.publicacoes.clients;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -21,20 +20,10 @@ import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 @Stateless(name="FonteServiceClient")
 public class FonteServiceClient {
 	
-	// Rotas da Entidade Fonte
-	private final String PATH_CONSULTA_TODOS_FONTE = "fontes";
-	
-	//Rotas da Entidade TipoFonte
-	private final String PATH_CONSULTA_TODOS_TIPOFONTE = "tipofontes";
-	
-	//Rotas para Fonte e TipoFonte
-	private static final String PATH_CADASTRAR = "cadastrar";
-	private static final String PATH_CONSULTAR_POR_ID = "consultar";
-	private static final String PATH_ALTERAR = "alterar";
-	private static final String PATH_EXCLUIR = "excluir";
 	
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-	private final String URL_SERVICE = "http://localhost:8080/apirestsiscap/rest/";
+	private String URI_FONTES = "http://localhost:7788/fontes/";
+	private String URI_TIPOS_FONTES = "http://localhost:7788/tiposfonte/";
 
 	private Client client;
 	private WebTarget webTarget;
@@ -45,7 +34,7 @@ public class FonteServiceClient {
 	
 	public List<Fonte> consultarTodasFontes(){
 		try {
-			this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTA_TODOS_FONTE);
+			this.webTarget = this.client.target(URI_FONTES);
 			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 			Response response = invocationBuilder.get();
 			List<Fonte> list = response.readEntity(new GenericType<List<Fonte>>() {});
@@ -58,7 +47,7 @@ public class FonteServiceClient {
 	
 	public List<TipoFonte> consultarTodasTipoFontes(){
 		try {
-			this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTA_TODOS_TIPOFONTE);
+			this.webTarget = this.client.target(URI_TIPOS_FONTES);
 			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 			Response response = invocationBuilder.get();
 			List<TipoFonte> list = response.readEntity(new GenericType<List<TipoFonte>>() {});
@@ -69,60 +58,94 @@ public class FonteServiceClient {
 		}
 	}
 	
-	public Fonte cadastrarFonte(Fonte fonte){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CADASTRAR);
+	public Fonte cadastrarFonte(Fonte fonte) throws Exception{
+		this.webTarget = this.client.target(URI_FONTES);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.post(Entity.entity(fonte, RESPONSE_TYPE));
+		trataRetorno(response);
 		return response.readEntity(Fonte.class);
 	}
 	
-	public TipoFonte cadastrarTipoFonte(TipoFonte tipoFonte){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CADASTRAR);
+	public TipoFonte cadastrarTipoFonte(TipoFonte tipoFonte) throws Exception{
+		this.webTarget = this.client.target(URI_TIPOS_FONTES);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.post(Entity.entity(tipoFonte, RESPONSE_TYPE));
+		trataRetorno(response);
 		return response.readEntity(TipoFonte.class);
 	}
 
-	public Fonte alterarFonte(Fonte fonte){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_ALTERAR);
+	public Fonte alterarFonte(Fonte fonte) throws Exception{
+		this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(fonte.getId()));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.put(Entity.entity(fonte, RESPONSE_TYPE));
+		trataRetorno(response);
 		return response.readEntity(Fonte.class);
 	}
 	
-	public TipoFonte alterarTipoFonte(TipoFonte tipoFonte){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_ALTERAR);
+	public TipoFonte alterarTipoFonte(TipoFonte tipoFonte) throws Exception{
+		this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(tipoFonte.getId()));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.put(Entity.entity(tipoFonte, RESPONSE_TYPE));
+		trataRetorno(response);
 		return response.readEntity(TipoFonte.class);
 	}
 
-	public Fonte consultarFontePorCodigo(UUID id){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTAR_POR_ID).path(String.valueOf(id));
+	public Fonte consultarFontePorCodigo(Long id){
+		this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
-		return response.readEntity(Fonte.class);
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			return  response.readEntity(Fonte.class);
+		}
 	}
 	
-	public TipoFonte consultarTipoFontePorCodigo(UUID id){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTAR_POR_ID).path(String.valueOf(id));
+	public TipoFonte consultarTipoFontePorCodigo(Long id){
+		this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
-		return response.readEntity(TipoFonte.class);
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			return  response.readEntity(TipoFonte.class);
+		}
 	}
 
-	public Fonte excluirFontePorCodigo(UUID id){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_EXCLUIR).path(String.valueOf(id));
+	public String excluirFontePorCodigo(Long id){
+		this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.delete();
-		return response.readEntity(Fonte.class);
+		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+			return null;
+		}	
+		return response.readEntity(String.class);
 	}
 	
-	public TipoFonte excluirTipoFontePorCodigo(UUID id){
-		this.webTarget = this.client.target(URL_SERVICE).path(PATH_EXCLUIR).path(String.valueOf(id));
+	public String excluirTipoFontePorCodigo(Long id){
+		this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.delete();
-		return response.readEntity(TipoFonte.class);
+		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+			return null;
+		}	
+		return response.readEntity(String.class);
+	}
+	
+	private void trataRetorno(Response response) throws Exception {
+		if(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+			List erros = response.readEntity(List.class);
+			if(erros != null && !erros.isEmpty()) {
+				Map p;
+				String msg = (String)((Map)erros.get(0)).get("mensagemUsuario");
+				throw new Exception(msg);
+			}
+			else {
+				throw new Exception("Erro interno.");
+			}
+		}
 	}
 
 }
