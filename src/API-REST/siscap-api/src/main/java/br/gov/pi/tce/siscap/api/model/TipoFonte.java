@@ -144,4 +144,10 @@ public class TipoFonte {
 		return true;
 	}
 	
+	@Transient
+	@JsonIgnore
+	public boolean isAlterando() {
+		return getId() != null;
+	}
+	
 }

@@ -110,7 +110,8 @@ public class FonteServiceClient {
 			return null;
 		}	
 		else {
-			return  response.readEntity(TipoFonte.class);
+			TipoFonte tf = response.readEntity(TipoFonte.class);
+			return  tf;
 		}
 	}
 

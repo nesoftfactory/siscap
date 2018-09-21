@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.resource;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,9 +9,12 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +25,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gov.pi.tce.siscap.api.event.RecursoCriadoEvent;
+import br.gov.pi.tce.siscap.api.exceptionhandler.SiscapExceptionHandler.Erro;
 import br.gov.pi.tce.siscap.api.model.TipoFonte;
 import br.gov.pi.tce.siscap.api.repository.TipoFonteRepository;
 import br.gov.pi.tce.siscap.api.service.TipoFonteService;
+import br.gov.pi.tce.siscap.api.service.exception.FonteComNomeJaExistenteException;
+import br.gov.pi.tce.siscap.api.service.exception.TipoFonteComNomeJaExistenteException;
 
 @RestController
 @RequestMapping("/tiposfonte")
@@ -37,6 +44,9 @@ public class TipoFonteResource {
 	
 	@Autowired
 	private TipoFonteService tipoFonteService;
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	@GetMapping
 	public List<TipoFonte> listar() {
@@ -75,5 +85,14 @@ public class TipoFonteResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void atualizarPropriedadeAtivo(@PathVariable Long id, @RequestBody Boolean ativo) {
 		tipoFonteService.atualizarPropriedadeAtivo(id, ativo);
+	}
+	
+	@ExceptionHandler(TipoFonteComNomeJaExistenteException.class)
+	public ResponseEntity<Object> handleFonteComNomeJaExistenteException(TipoFonteComNomeJaExistenteException ex) {
+		String mensagemTipoFonte = messageSource.getMessage("tipofonte.nome-ja-existente", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemTipoFonte, mensagemDesenvolvedor));
+		
+		return ResponseEntity.badRequest().body(erros);
 	}
 }

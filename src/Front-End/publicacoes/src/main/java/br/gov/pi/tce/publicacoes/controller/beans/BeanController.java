@@ -2,12 +2,21 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+
+import org.apache.commons.beanutils.BeanUtils;
+
+
 
 public class BeanController implements Serializable {
 	
@@ -73,6 +82,40 @@ public class BeanController implements Serializable {
 		catch(Exception exception) {
 			return;
 		}
+	}
+	
+	
+	public List<SelectItem> getSelectItens(Collection beans, String... campos) {
+		List<SelectItem> selectItems = Collections.EMPTY_LIST;
+
+		try {
+			if(beans != null) {
+				selectItems = new ArrayList<SelectItem>(beans.size());
+
+				for(Object objeto : beans) {
+					StringBuilder label = new StringBuilder("");
+					if(campos != null && campos.length > 0) {
+						for(String campo : campos) {
+							label.append(BeanUtils.getProperty(objeto, campo) + " - ");
+						}
+						
+							if(label.length() > 0){	
+								label.delete(label.length() - 3, label.length());
+							}
+						
+					}
+					else {
+						label.append(objeto.toString());
+					}
+					selectItems.add(new SelectItem(objeto, label.toString()));
+				}
+			}
+		}
+		catch(Exception exception) {
+			return Collections.EMPTY_LIST;
+		}
+
+		return selectItems;
 	}
 
 

@@ -76,14 +76,14 @@ public class TipoFontesController extends BeanController {
 	public TipoFonte getTipoFonte(Long id) {
 		try {
 			if (id == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			
 			tipoFonte = fonteServiceClient.consultarTipoFontePorCodigo(id);
 			
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 		
 		return tipoFonte;
@@ -92,7 +92,7 @@ public class TipoFontesController extends BeanController {
 	public void salvar() {
 		try {
 			if (tipoFonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if (tipoFonte.getId() == null) {
@@ -102,28 +102,28 @@ public class TipoFontesController extends BeanController {
 					fonteServiceClient.alterarTipoFonte(tipoFonte);
 				}
 				iniciaTipoFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  null, e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
 		}
 	}
 	
 	public void excluir(TipoFonte tipoFonte) {
 		try {
 			if (tipoFonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				fonteServiceClient.excluirTipoFontePorCodigo(tipoFonte.getId());
 				iniciaTipoFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 	}
 

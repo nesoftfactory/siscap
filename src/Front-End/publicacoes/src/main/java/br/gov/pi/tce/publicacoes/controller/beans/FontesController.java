@@ -1,9 +1,12 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,25 +23,40 @@ public class FontesController extends BeanController {
 
 	private Fonte fonte;
 	
-	
 	@Inject
 	private FonteServiceClient fonteServiceClient;
 	
 	
 	private List<Fonte> fontes;
 	
+	private List<TipoFonte> tiposFontes = Collections.EMPTY_LIST;
 	
-	
-	public List<TipoFonte> getTiposFontes(){
-		return fonteServiceClient.consultarTodasTipoFontes();
-	}
-	
+
 	@PostConstruct
 	public void init() {
 		limpar();
 		iniciaFontes();
+		iniciaTiposFontes();
 	}
 	
+	
+	
+	public List<SelectItem> getTiposFontesParaSelectItems(){
+		return getSelectItens(tiposFontes, "nome");
+	}
+	
+	
+	private void iniciaTiposFontes() {
+		try {
+			tiposFontes = fonteServiceClient.consultarTodasTipoFontes();
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+		}
+		
+	}
+
+
 	public void editar(Fonte fonteEditar) {
 		fonte = fonteEditar;
 	}
@@ -52,6 +70,14 @@ public class FontesController extends BeanController {
 		}
 	}
 	
+	
+	
+
+	public void setTiposFontes(List<TipoFonte> tiposFontes) {
+		this.tiposFontes = tiposFontes;
+	}
+
+
 	public void limpar() {
 		fonte = new Fonte();
 	}
@@ -63,14 +89,14 @@ public class FontesController extends BeanController {
 	public Fonte getFonte(Long id) {
 		try {
 			if (id == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			
 			fonte = fonteServiceClient.consultarFontePorCodigo(id);
 			
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 		
 		return fonte;
@@ -79,7 +105,7 @@ public class FontesController extends BeanController {
 	public void salvar() {
 		try {
 			if (fonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if (fonte.getId() == null) {
@@ -89,28 +115,30 @@ public class FontesController extends BeanController {
 					fonteServiceClient.alterarFonte(fonte);
 				}
 				iniciaFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				iniciaTiposFontes();
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  null, e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
 		}
 	}
 	
 	public void excluir(Fonte fonte) {
 		try {
 			if (fonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				fonteServiceClient.excluirFontePorCodigo(fonte.getId());
 				iniciaFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				iniciaTiposFontes();
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 	}
 

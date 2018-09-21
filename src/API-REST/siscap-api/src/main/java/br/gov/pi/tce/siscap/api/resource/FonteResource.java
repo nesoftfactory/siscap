@@ -29,6 +29,7 @@ import br.gov.pi.tce.siscap.api.exceptionhandler.SiscapExceptionHandler.Erro;
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
 import br.gov.pi.tce.siscap.api.service.FonteService;
+import br.gov.pi.tce.siscap.api.service.exception.FonteComNomeJaExistenteException;
 import br.gov.pi.tce.siscap.api.service.exception.TipoFonteInexistenteOuInativaException;
 
 @RestController
@@ -91,6 +92,15 @@ public class FonteResource {
 		String mensagemUsuario = messageSource.getMessage("tipofonte.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		
+		return ResponseEntity.badRequest().body(erros);
+	}
+	
+	@ExceptionHandler(FonteComNomeJaExistenteException.class)
+	public ResponseEntity<Object> handleFonteComNomeJaExistenteException(FonteComNomeJaExistenteException ex) {
+		String mensagemFonte = messageSource.getMessage("fonte.nome-ja-existente", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemFonte, mensagemDesenvolvedor));
 		
 		return ResponseEntity.badRequest().body(erros);
 	}

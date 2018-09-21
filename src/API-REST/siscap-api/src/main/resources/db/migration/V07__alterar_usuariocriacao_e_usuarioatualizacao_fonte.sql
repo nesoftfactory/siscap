@@ -21,7 +21,4 @@ INSERT INTO fonte (nome, url, id_tipo_fonte, data_criacao, usuario_criacao, data
 INSERT INTO fonte (nome, url, id_tipo_fonte, data_criacao, usuario_criacao, data_atualizacao, usuario_atualizacao, ativo) 
 	VALUES('Diário Oficial de Parnaíba', 'http://dom.parnaiba.pi.gov.br', (select tf.id from tipo_fonte tf where nome = 'Diário Oficial Municipal'),  getdate(), (select u.id from usuario u where login = 'adminAut'), getdate(), (select u.id from usuario u where login = 'adminAut'), 1)
 
-INSERT INTO fonte (nome, url, id_tipo_fonte, data_criacao, usuario_criacao, data_atualizacao, usuario_atualizacao, ativo) 
-	VALUES('Diário Oficial dos municípios', 'http://diarioficialdosmunicipios.org', (select tf.id from tipo_fonte tf where nome = 'Diário Oficial Municipal'),  getdate(), (select u.id from usuario u where login = 'adminAut'), getdate(), (select u.id from usuario u where login = 'adminAut'), 1)
-
 	

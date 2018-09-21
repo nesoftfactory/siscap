@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -11,6 +12,7 @@ import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.model.TipoFonte;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
 import br.gov.pi.tce.siscap.api.repository.TipoFonteRepository;
+import br.gov.pi.tce.siscap.api.service.exception.FonteComNomeJaExistenteException;
 import br.gov.pi.tce.siscap.api.service.exception.TipoFonteInexistenteOuInativaException;
 
 @Service
@@ -46,12 +48,27 @@ public class FonteService {
 	}
 	
 	private Fonte salvar(Fonte fonte) {
+		validarNomeFonteDuplicado(fonte);
 		validarTipoFonte(fonte);
 		atualizarDadosEdicao(fonte);
 		
 		return fonteRepository.save(fonte);
 	}
 	
+	private void validarNomeFonteDuplicado(Fonte fonte) {
+		if (fonte.isAlterando()) {
+			List<Fonte> fontes = fonteRepository
+					.buscarPorNomeComIdDiferenteDoInformado(fonte.getNome(), fonte.getId());
+			if (!fontes.isEmpty()) {
+				throw new FonteComNomeJaExistenteException();
+			}
+		} else {
+			if(fonteRepository.findByNome(fonte.getNome()).isPresent()) {
+				throw new FonteComNomeJaExistenteException();
+			}
+		}
+	}
+
 	private void validarTipoFonte(Fonte fonte) {
 		Optional<TipoFonte> tipoFonteOptional = null;
 		if (fonte.getTipoFonte().getId() != null) {

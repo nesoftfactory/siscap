@@ -40,19 +40,19 @@ public class UsuariosController extends BeanController {
 	public void excluir(Usuario usuarioExcluir) {
 		try {
 			if(usuarioExcluir == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if(usuarioExcluir.getId() > 0) {
 					usuarioServiceClient.excluirUsuarioPorCodigo(usuarioExcluir.getId());
 				}	
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 				iniciaUsuarios();
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 	}
      
@@ -69,7 +69,7 @@ public class UsuariosController extends BeanController {
 	public void salvar() {
 		try {
 			if(usuario == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", null);
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if(usuario.getId() == null || usuario.getId() == 0) {
@@ -78,14 +78,14 @@ public class UsuariosController extends BeanController {
 				else {
 					usuarioServiceClient.alterarUsuario(usuario);
 				}
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", null);
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 				iniciaUsuarios();
 			}
 			limpar();
 			
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  null, e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
 		}
 	}
 

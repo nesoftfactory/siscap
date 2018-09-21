@@ -172,4 +172,10 @@ public class Fonte {
 		return true;
 	}
 	
+	@Transient
+	@JsonIgnore
+	public boolean isAlterando() {
+		return getId() != null;
+	}
+	
 }
