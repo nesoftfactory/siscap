@@ -16,14 +16,15 @@ import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaExcep
 @Service
 public class FeriadoService {
 
-	private final String USUARIO = "automatizar";
-	
 	@Autowired
 	private FonteRepository fonteRepository;
 	
 	@Autowired
 	private FeriadoRepository feriadoRepository;
 	
+	@Autowired
+	private UsuarioService usuarioService;
+
 	public Feriado atualizar(Long id, Feriado feriado) {
 		Feriado feriadoSalvo = buscarFeriadoPeloCodigo(id);
 		BeanUtils.copyProperties(feriado, feriadoSalvo, "id", "dataCriacao", "usuarioCriacao");
@@ -61,11 +62,11 @@ public class FeriadoService {
 	}
 
 	private void atualizaDadosAdicao(Feriado feriado) {
-		feriado.setUsuarioCriacao(USUARIO);
+		feriado.setUsuarioCriacao(usuarioService.getUsuarioLogado());
 	}
 
 	private void atualizarDadosEdicao(Feriado feriado) {
-		feriado.setUsuarioAtualizacao(USUARIO);
+		feriado.setUsuarioAtualizacao(usuarioService.getUsuarioLogado());
 	}
 
 	private Feriado buscarFeriadoPeloCodigo(Long id) {

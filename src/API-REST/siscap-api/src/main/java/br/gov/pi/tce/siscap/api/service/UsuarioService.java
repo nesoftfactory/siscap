@@ -105,7 +105,8 @@ public class UsuarioService {
 	
 	public Usuario getUsuarioLogado() {
 		//TODO Depois verificar como ajusta para pegar o usuário da sessão
-		return buscarUsuarioPeloCodigo(2L);
+		//return buscarUsuarioPeloCodigo(2L);
+		return usuarioRepository.findAll().get(0);
 	}
 	
 }
