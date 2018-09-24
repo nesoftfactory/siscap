@@ -17,20 +17,20 @@ public class Main {
 //        Date dataInicial =  coletorPublicacaoUtil.getData("01/01/2017 00:00:00");
 //        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");        
     	//Teresina
-//        Date dataInicial =  coletorPublicacaoUtil.getData("07/01/2005 00:00:00");
-//        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
+        Date dataInicial =  coletorPublicacaoUtil.getData("07/01/2005 00:00:00");
+        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
         //Piaui
 //        Date dataInicial =  coletorPublicacaoUtil.getData("01/08/2018 00:00:00");
 //        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
     	//Municipios
-        Date dataInicial =  coletorPublicacaoUtil.getData("01/07/2018 00:00:00");
-        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
+//        Date dataInicial =  coletorPublicacaoUtil.getData("01/07/2018 00:00:00");
+//        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
 
         // Vetor de url das fontes
         String[] fontes = new String[]{
 //                URL_FONTE_DIARIO_OFICIAL_PIAUI//,
-                URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS//,
-//        		URL_FONTE_DIARIO_OFICIAL_TERESINA//,
+//                URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS//,
+        		URL_FONTE_DIARIO_OFICIAL_TERESINA//,
 //        		URL_FONTE_DIARIO_OFICIAL_PARNAIBA
         };
 

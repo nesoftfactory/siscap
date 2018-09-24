@@ -22,6 +22,7 @@ public class Publicacao {
 	private Boolean sucesso;
 	private Boolean anexo;
 	private Long quantidadeTentativas;
+	private Publicacao arquivoAnexo;
 
 	/**
 	 * 
@@ -45,18 +46,19 @@ public class Publicacao {
 	 */
 	public Publicacao(Fonte fonte, String nome, Date data, String codigo,
 			String nomeArquivo, String linkArquivo, String arquivo, Boolean sucesso, Boolean anexo,
-			Long quantidadeTentativas) {
+			Long quantidadeTentativas, Publicacao arquivoAnexo) {
 		super();
-		this.fonte = fonte;
-		this.nome = nome;
-		this.data = data;
-		this.codigo = codigo;
-		this.nomeArquivo = nomeArquivo;
-		this.linkArquivo = linkArquivo;
-		this.arquivo = arquivo;
-		this.sucesso = sucesso;
-		this.anexo = anexo;
-		this.quantidadeTentativas = quantidadeTentativas;
+		setFonte(fonte);
+		setNome(nome);
+		setData(data);
+		setCodigo(codigo);
+		setNomeArquivo(nomeArquivo);
+		setLinkArquivo(linkArquivo);
+		setArquivo(arquivo);
+		setSucesso(sucesso);
+		setAnexo(anexo);
+		setQuantidadeTentativas(quantidadeTentativas);
+		setArquivoAnexo(arquivoAnexo);
 	}
 
 	/**
@@ -75,8 +77,8 @@ public class Publicacao {
 	public Publicacao(Long id, Fonte fonte, String nome, Date data,
 			String codigo, String nomeArquivo, String linkArquivo,
 			String arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
-			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas) {
-		this(fonte, nome, data, codigo, nomeArquivo, linkArquivo, arquivo, sucesso, anexo, quantidadeTentativas);
+			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas, Publicacao arquivoAnexo) {
+		this(fonte, nome, data, codigo, nomeArquivo, linkArquivo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
 		this.id = id;
 	}
 
@@ -232,5 +234,19 @@ public class Publicacao {
 	 */
 	public void setQuantidadeTentativas(Long quantidadeTentativas) {
 		this.quantidadeTentativas = quantidadeTentativas;
+	}
+	
+	/**
+	 * @return arquivoAnexo
+	 */
+	public Publicacao getArquivoAnexo() {
+		return arquivoAnexo;
+	}
+		
+	/**
+	 * @param arquivoAnexo
+	 */
+	public void setArquivoAnexo(Publicacao arquivoAnexo) {
+		this.arquivoAnexo = arquivoAnexo;
 	}
 }
