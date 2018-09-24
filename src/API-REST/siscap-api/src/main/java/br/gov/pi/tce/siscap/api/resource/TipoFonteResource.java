@@ -29,7 +29,6 @@ import br.gov.pi.tce.siscap.api.exceptionhandler.SiscapExceptionHandler.Erro;
 import br.gov.pi.tce.siscap.api.model.TipoFonte;
 import br.gov.pi.tce.siscap.api.repository.TipoFonteRepository;
 import br.gov.pi.tce.siscap.api.service.TipoFonteService;
-import br.gov.pi.tce.siscap.api.service.exception.FonteComNomeJaExistenteException;
 import br.gov.pi.tce.siscap.api.service.exception.TipoFonteComNomeJaExistenteException;
 
 @RestController

@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,14 @@ public class SiscapExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		List<Erro> erros = criarListaDeErros(ex.getBindingResult());
+		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleBindException(BindException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
 		List<Erro> erros = criarListaDeErros(ex.getBindingResult());

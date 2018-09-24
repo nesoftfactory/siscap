@@ -29,7 +29,6 @@ import br.gov.pi.tce.siscap.api.exceptionhandler.SiscapExceptionHandler.Erro;
 import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.UsuarioRepository;
 import br.gov.pi.tce.siscap.api.service.UsuarioService;
-import br.gov.pi.tce.siscap.api.service.exception.UsuarioComCpfJaExistenteException;
 import br.gov.pi.tce.siscap.api.service.exception.UsuarioComLoginJaExistenteException;
 
 @RestController
