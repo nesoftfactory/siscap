@@ -337,8 +337,25 @@ public class ColetorPublicacaoUtil {
 
 							if (dataInicial.compareTo(date) <= 0 && dataFinal.compareTo(date) >= 0) {
 								if (fonte.getUrl().equals(URL_FONTE_DIARIO_OFICIAL_PARNAIBA)) {
+									
+									String codigo = "";
+									Matcher matcherDOM = Pattern.compile("DOM_+[\\d]+").matcher(linhaHTML);
+									if (matcherDOM.find()) {
+										Matcher matcherCodigo = Pattern.compile("[\\d]+").matcher(matcherDOM.group());
+										if (matcherCodigo.find()) {
+											codigo = matcherCodigo.group();
+										}
+									}
+									
+									String publicacaoName = "";
+									
+									Matcher matcherTitleTag = Pattern.compile("[title=\"]+[0-9A-Za-z|\\s|_|Ã|š|-|/]+(- EDIÇÃO EXTRA)?+(-EDIÃ‡ÃƒO EXTRA)?+(_PESQUISÃVEL)?+(_EDIÃ‡ÃƒO EXTRA)?+(_EDIÃ‡ÃƒO_EXTRA_Caderno_Ãšnico)?+[\"]").matcher(linhaHTML);
+									if (matcherTitleTag.find()) {
+										publicacaoName = matcherTitleTag.group().replace("title=", "").replace("\"", "").replace("Ãš", "U").replace("EDIÃ‡ÃƒO", "EDIÇÃO").replace("_PESQUISÃVEL", "_PESQUISÁVEL");
+									}
+									
 									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, diarios, date,
-											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, codigo, publicacaoName);// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 								} else {
 									Calendar c = Calendar.getInstance();
 									c.setTime(date);
