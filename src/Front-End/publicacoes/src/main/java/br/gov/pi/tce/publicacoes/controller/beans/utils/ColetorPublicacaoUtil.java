@@ -375,6 +375,15 @@ public class ColetorPublicacaoUtil {
 										}
 									}
 									
+									String codigo = "";
+									Matcher matcherDOM = Pattern.compile("DOM+[\\d]+").matcher(arquivoStr);
+									if (matcherDOM.find()) {
+										Matcher matcherCodigo = Pattern.compile("[\\d]+").matcher(matcherDOM.group());
+										if (matcherCodigo.find()) {
+											codigo = matcherCodigo.group();
+										}
+									}
+									
 									do {
 									linhaHTML = fonteHTML.readLine();
 									Matcher matcherPositive = Pattern.compile("[0-9A-Za-z\\s|-]+.(pdf)").matcher(linhaHTML);
@@ -385,21 +394,12 @@ public class ColetorPublicacaoUtil {
 									}
 									
 									if (matcherPositive.find()) {
-										String arquivoAnexoStr = matcherPositive.group();
-										arquivoAnexo = new Publicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, date, "codigoPublicacao", arquivoAnexoStr, URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, arquivoAnexoStr, Boolean.TRUE, Boolean.TRUE, Long.valueOf(1), null);
+										String arquivoAnexoStr = matcherPositive.group();	
+										arquivoAnexo = new Publicacao(fonte, arquivoAnexoStr, date, codigo, arquivoAnexoStr, URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, arquivoAnexoStr, Boolean.TRUE, Boolean.TRUE, Long.valueOf(1), null);
 										break;
 									}
 									
 									} while(true);
-									
-									String codigo = "";
-									Matcher matcherDOM = Pattern.compile("DOM+[\\d]+").matcher(arquivoStr);
-									if (matcherDOM.find()) {
-										Matcher matcherCodigo = Pattern.compile("[\\d]+").matcher(matcherDOM.group());
-										if (matcherCodigo.find()) {
-											codigo = matcherCodigo.group();
-										}
-									}
 									
 									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", arquivoAnexo, codigo, publicacaoName);//incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 									LocalDate localDate = asLocalDate(date);
@@ -632,7 +632,7 @@ public class ColetorPublicacaoUtil {
 		SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 		for (Publicacao diario : diarios) {
 			System.out.println(diario.getCodigo() + " - " + diario.getNome() + " - " + diario.getLinkArquivo() + " - "
-					+ formatoDeData.format(diario.getData()) + " - " + diario.getNomeArquivo() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNomeArquivo() : "Sem Anexo."));
+					+ formatoDeData.format(diario.getData()) + " - " + diario.getNomeArquivo() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNome() : "Sem Anexo."));
 		}
 	}
 
