@@ -173,7 +173,7 @@ public class ColetorPublicacaoUtil {
 			if (!isFeriado(date, fonte.getId())) {
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 				System.out.println(urlString + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
-				salvarPublicacao(fonte, "", diarios, date, "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null);
+				salvarPublicacao(fonte, "", diarios, date, "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, "codigo", "nome");
 			}
 		}
 	}
@@ -330,6 +330,7 @@ public class ColetorPublicacaoUtil {
 				matcher = pdfPattern.matcher(linhaHTML);
 				while (matcher.find()) {
 					if (!isNull(date)) {
+						
 						String arquivoStr = matcher.group();
 						if (fonte.getUrl().equals(URL_FONTE_DIARIO_OFICIAL_PARNAIBA)
 								|| fonte.getUrl().equals(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS)) {
@@ -337,14 +338,14 @@ public class ColetorPublicacaoUtil {
 							if (dataInicial.compareTo(date) <= 0 && dataFinal.compareTo(date) >= 0) {
 								if (fonte.getUrl().equals(URL_FONTE_DIARIO_OFICIAL_PARNAIBA)) {
 									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, diarios, date,
-											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null);// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 								} else {
 									Calendar c = Calendar.getInstance();
 									c.setTime(date);
 									String mes = String.format("%02d", c.get(Calendar.MONTH) + 1);
 									String ano = String.valueOf(c.get(Calendar.YEAR));
 									salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS + ano + mes + "/" + arquivoStr,
-											diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null);// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+											diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 								}
 								LocalDate localDate = asLocalDate(date);
 								if (diasUteisList.contains(localDate)) {
@@ -364,6 +365,15 @@ public class ColetorPublicacaoUtil {
 								if (dataInicial.compareTo(date) <= 0 && dataFinal.compareTo(date) >= 0) {
 									
 									Publicacao arquivoAnexo = null;
+									String publicacaoName = "";
+									
+									Matcher matcherATag = Pattern.compile("[>]+[0-9A-Za-z\\s|-]+[</a>]").matcher(linhaHTML);
+									if (matcherATag.find()) {
+										Matcher matcherName = Pattern.compile("[0-9A-Za-z\\s|-]+").matcher(matcherATag.group());
+										if (matcherName.find()) {
+											publicacaoName = matcherName.group();
+										}
+									}
 									
 									do {
 									linhaHTML = fonteHTML.readLine();
@@ -382,7 +392,16 @@ public class ColetorPublicacaoUtil {
 									
 									} while(true);
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", arquivoAnexo);//incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+									String codigo = "";
+									Matcher matcherDOM = Pattern.compile("DOM+[\\d]+").matcher(arquivoStr);
+									if (matcherDOM.find()) {
+										Matcher matcherCodigo = Pattern.compile("[\\d]+").matcher(matcherDOM.group());
+										if (matcherCodigo.find()) {
+											codigo = matcherCodigo.group();
+										}
+									}
+									
+									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", arquivoAnexo, codigo, publicacaoName);//incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 									LocalDate localDate = asLocalDate(date);
 									if (diasUteisList.contains(localDate)) {
 										diasUteisList.remove(localDate);
@@ -433,9 +452,9 @@ public class ColetorPublicacaoUtil {
 	 * @param mensagemErro
 	 */
 	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, List<Publicacao> diarios, Date dataPublicacao,
-			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, Publicacao arquivoAnexo) {
+			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, Publicacao arquivoAnexo, String codigo, String PublicacaoName) {
 
-		Publicacao publicacao = new Publicacao(fonte, "nomePublicacao", dataPublicacao, "codigoPublicacao",
+		Publicacao publicacao = new Publicacao(fonte, PublicacaoName, dataPublicacao, codigo,
 				nomeArquivoPublicacao, linkArquivoPublicacao, "arquivoPublicacao", isSucesso, isAnexo,
 				Long.valueOf(1), arquivoAnexo);
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
@@ -512,7 +531,7 @@ public class ColetorPublicacaoUtil {
 					matcher = pdfPattern.matcher(linhaHTML);
 					while (matcher.find()) {
 						if (!isNull(date)) {
-							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, date, matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null);
+							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, date, matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");
 							diarioEncontrado = Boolean.TRUE;
 							// Ao encontrar o pdf sai do loop mais externo
 							break buscaPDF;
@@ -524,7 +543,7 @@ public class ColetorPublicacaoUtil {
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 						System.out.println(URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group() + " - " + formatoDeData.format(date) + " - "
 								+ "Diario Não Encontrado");
-						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, date, matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null);
+						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, date, matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, "codigo", "nome");
 					}
 				}
 				fonteHTML.close();
@@ -612,7 +631,7 @@ public class ColetorPublicacaoUtil {
 		// Formato de exibicao da data
 		SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 		for (Publicacao diario : diarios) {
-			System.out.println(diario.getLinkArquivo() + " - "
+			System.out.println(diario.getCodigo() + " - " + diario.getNome() + " - " + diario.getLinkArquivo() + " - "
 					+ formatoDeData.format(diario.getData()) + " - " + diario.getNomeArquivo() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNomeArquivo() : "Sem Anexo."));
 		}
 	}
