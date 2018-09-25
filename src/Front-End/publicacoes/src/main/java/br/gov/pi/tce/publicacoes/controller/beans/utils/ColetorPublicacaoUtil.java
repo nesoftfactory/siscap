@@ -477,7 +477,10 @@ public class ColetorPublicacaoUtil {
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
 		if (publicacaoConsultada == null) {
 			diarios.add(publicacao);
-			//publicacaoServiceClient.cadastrarPublicacao(publicacao);
+			//Long idPublicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao);
+			if(arquivoAnexo != null) {
+				//publicacaoServiceClient.cadastrarPublicacao(arquivoAnexo, idPublicacao);
+			}
 		} else {
 			if (!publicacao.getSucesso()) {
 				//se quantidade for igual a 3 ou mais  - atualizar que não vai buscar mais (status) e futuramente gerar notificacao

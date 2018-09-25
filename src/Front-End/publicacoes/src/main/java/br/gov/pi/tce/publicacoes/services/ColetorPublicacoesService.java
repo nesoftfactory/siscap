@@ -34,7 +34,7 @@ public class ColetorPublicacoesService {
 		coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="8")
+	//@Schedule(hour="8")
 	public void coletarDiarioOficialTeresina() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
@@ -43,7 +43,7 @@ public class ColetorPublicacoesService {
 		coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="9")
+	//@Schedule(hour="9")
 	public void coletarDiarioOficialMunicipios() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
@@ -52,7 +52,7 @@ public class ColetorPublicacoesService {
 		coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="10")
+	//@Schedule(hour="10")
 	public void coletarDiarioOficialPiaui() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
