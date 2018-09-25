@@ -55,9 +55,9 @@ public class PublicacaoResource {
 	
 	@PostMapping
 	public ResponseEntity<Publicacao> criar(@Valid Publicacao publicacao, @RequestParam MultipartFile partFile,
-			HttpServletResponse response) throws IOException {
+			@RequestParam String link, HttpServletResponse response) throws IOException {
 		
-		Publicacao publicacaoSalva = publicacaoService.adicionar(publicacao, partFile);
+		Publicacao publicacaoSalva = publicacaoService.adicionar(publicacao, partFile, link);
 		
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, publicacaoSalva.getId()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(publicacaoSalva);

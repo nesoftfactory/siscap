@@ -3,6 +3,8 @@ package br.gov.pi.tce.siscap.api.service;
 import java.io.IOException;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,8 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
+import br.gov.pi.tce.siscap.api.model.PublicacaoHistorico;
 import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
+import br.gov.pi.tce.siscap.api.repository.PublicacaoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
 import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaException;
 
@@ -22,32 +26,48 @@ public class PublicacaoService {
 	private PublicacaoRepository publicacaoRepository;
 	
 	@Autowired
+	private PublicacaoHistoricoRepository publicacaoHistoricoRepository;
+	
+	@Autowired
 	private FonteRepository fonteRepository;
 	
 	@Autowired
 	private UsuarioService usuarioService;
-
-	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile) throws IOException {
-		Arquivo arquivo = atualizarArquivo(partFile);
-		if (arquivo != null) {
-			publicacao.setArquivo(arquivo);
-		}
-		
-		atualizaDadosAdicao(publicacao);
-		return salvar(publicacao);
+	
+	private Usuario usuarioLogado;
+	
+	@PostConstruct
+	public void setarUsuarioLogado() {
+		usuarioLogado = usuarioService.getUsuarioLogado();
 	}
 
-	private Arquivo atualizarArquivo(MultipartFile partFile) throws IOException {
-		if (partFile != null) {
-			Arquivo arquivo = new Arquivo(partFile);
-			Usuario usuarioLogado = usuarioService.getUsuarioLogado();
-			arquivo.setUsuarioCriacao(usuarioLogado);
-			arquivo.setUsuarioAtualizacao(usuarioLogado);
-			
-			return arquivo;
-		}
+	private static final String PUBLICACAO_MENSAGEM_INCLUSAO = "Publicaçao incluída";
+	
+	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
+		atualizarArquivo(publicacao, partFile, link);
+		atualizaDadosAdicao(publicacao);
 
-		return null;
+		PublicacaoHistorico historico = atualizarHistorico(publicacao);
+		
+		Publicacao publicacaoSalva = salvar(publicacao);
+		publicacaoHistoricoRepository.save(historico);
+		
+		return publicacaoSalva;
+	}
+
+	private PublicacaoHistorico atualizarHistorico(Publicacao publicacao) {
+		PublicacaoHistorico historico = new PublicacaoHistorico(publicacao, 
+				PUBLICACAO_MENSAGEM_INCLUSAO, true, usuarioLogado);
+		
+		return historico;
+	}
+
+	private void atualizarArquivo(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
+		Arquivo arquivo = null;
+		if (partFile != null) {
+			arquivo = new Arquivo(partFile, link, usuarioLogado);
+		}
+		publicacao.setArquivo(arquivo);
 	}
 
 	private Publicacao salvar(Publicacao publicacaoSalva) {
@@ -58,7 +78,7 @@ public class PublicacaoService {
 	}
 
 	private void atualizarDadosEdicao(Publicacao publicacaoSalva) {
-		publicacaoSalva.setUsuarioAtualizacao(usuarioService.getUsuarioLogado());
+		publicacaoSalva.setUsuarioAtualizacao(usuarioLogado);
 	}
 
 	private void validarFonte(Publicacao publicacaoSalva) {
@@ -72,6 +92,6 @@ public class PublicacaoService {
 	}
 
 	private void atualizaDadosAdicao(Publicacao publicacao) {
-		publicacao.setUsuarioCriacao(usuarioService.getUsuarioLogado());
+		publicacao.setUsuarioCriacao(usuarioLogado);
 	}
 }

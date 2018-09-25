@@ -65,7 +65,7 @@ public class Publicacao extends BaseEntity {
 		this.codigo = codigo;
 	}
 
-	@ManyToOne(optional=true, cascade=CascadeType.PERSIST)
+	@ManyToOne(optional=true, cascade=CascadeType.ALL)
 	@JoinColumn(name="id_arquivo")
 	public Arquivo getArquivo() {
 		return arquivo;

@@ -23,13 +23,16 @@ public class Arquivo extends BaseEntity {
 	public Arquivo() {
 	}
 	
-	public Arquivo(MultipartFile partFile) throws IOException {
+	public Arquivo(MultipartFile partFile, String link, Usuario usuario) throws IOException {
 		this.setNome(partFile.getOriginalFilename());
 		this.setTamanho(partFile.getSize());
 		this.setConteudo(partFile.getBytes());
 		this.setTipo(partFile.getContentType());
+		this.setLink(link);
 		this.setDataAtualizacao(LocalDateTime.now());
 		this.setDataCriacao(LocalDateTime.now());
+		this.setUsuarioCriacao(usuario);
+		this.setUsuarioAtualizacao(usuario);
 	}
 
 	@Lob
