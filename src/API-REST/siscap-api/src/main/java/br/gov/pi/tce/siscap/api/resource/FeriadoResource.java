@@ -28,6 +28,7 @@ import br.gov.pi.tce.siscap.api.event.RecursoCriadoEvent;
 import br.gov.pi.tce.siscap.api.exceptionhandler.SiscapExceptionHandler.Erro;
 import br.gov.pi.tce.siscap.api.model.Feriado;
 import br.gov.pi.tce.siscap.api.repository.FeriadoRepository;
+import br.gov.pi.tce.siscap.api.repository.filter.FeriadoFilter;
 import br.gov.pi.tce.siscap.api.service.FeriadoService;
 import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaException;
 
@@ -48,8 +49,8 @@ public class FeriadoResource {
 	private MessageSource messageSource;
 	
 	@GetMapping
-	public List<Feriado> listar() {
-		return feriadoRepository.findAll();
+	public List<Feriado> pesquisar(FeriadoFilter feriadoFilter) {
+		return feriadoRepository.filtrar(feriadoFilter);
 	}
 	
 	@PostMapping
