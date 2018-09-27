@@ -15,7 +15,7 @@ public class PublicacaoAnexo extends BaseEntity {
 	private Publicacao publicacao;
 	private String nome;
 	private Arquivo arquivo;
-	private String status;
+	private boolean sucesso;
 	
 	@NotNull
 	@Size(min=3, max=50)
@@ -38,12 +38,14 @@ public class PublicacaoAnexo extends BaseEntity {
 		this.publicacao = publicacao;
 	}
 
-	public String getStatus() {
-		return status;
+	
+
+	public boolean isSucesso() {
+		return sucesso;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setSucesso(boolean sucesso) {
+		this.sucesso = sucesso;
 	}
 
 	@ManyToOne(optional=true, cascade=CascadeType.ALL)
@@ -54,6 +56,31 @@ public class PublicacaoAnexo extends BaseEntity {
 
 	public void setArquivo(Arquivo arquivo) {
 		this.arquivo = arquivo;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PublicacaoAnexo other = (PublicacaoAnexo) obj;
+		if (getId() == null) {
+			if (other.getId() != null)
+				return false;
+		} else if (!getId().equals(other.getId()))
+			return false;
+		return true;
 	}
 	
 }

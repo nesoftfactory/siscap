@@ -57,7 +57,7 @@ public class PublicacaoAnexoService {
 
 	private PublicacaoAnexoHistorico atualizarHistoricoAdicao(PublicacaoAnexo publicacaoAnexo) {
 		PublicacaoAnexoHistorico historico = new PublicacaoAnexoHistorico(publicacaoAnexo, 
-				PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO, "Encontrado", usuarioLogado);
+				PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO, true, usuarioLogado);
 		
 		return historico;
 	}

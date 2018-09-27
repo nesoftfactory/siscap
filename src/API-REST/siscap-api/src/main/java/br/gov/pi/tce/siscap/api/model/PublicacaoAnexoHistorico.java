@@ -23,17 +23,17 @@ public class PublicacaoAnexoHistorico  {
 	private Long id;
 	private PublicacaoAnexo publicacaoAnexo;
 	private String mensagem;
-	private String status;
+	private boolean sucesso;
 	private LocalDateTime dataCriacao;
 	private Usuario usuarioCriacao;
 
 	public PublicacaoAnexoHistorico() {
 	}
 
-	public PublicacaoAnexoHistorico(PublicacaoAnexo publicacaoAnexo, String mensagem, String status,Usuario usuarioLogado) {
+	public PublicacaoAnexoHistorico(PublicacaoAnexo publicacaoAnexo, String mensagem, boolean sucesso,Usuario usuarioLogado) {
 		this.publicacaoAnexo = publicacaoAnexo;
 		this.mensagem = mensagem;
-		this.status = status;
+		this.sucesso = sucesso;
 		this.usuarioCriacao= usuarioLogado;
 	}
 
@@ -57,12 +57,14 @@ public class PublicacaoAnexoHistorico  {
 		this.mensagem = mensagem;
 	}
 	
-	public String getStatus() {
-		return status;
+	
+
+	public boolean isSucesso() {
+		return sucesso;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setSucesso(boolean sucesso) {
+		this.sucesso = sucesso;
 	}
 
 	@NotNull
