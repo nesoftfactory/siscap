@@ -1,5 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -12,17 +13,15 @@ import java.util.Date;
 public class Publicacao {
 
 	private Long id;
-	private Fonte fonte;
 	private String nome;
-	private Date data;
+	private Fonte fonte;
+	private LocalDate data;
 	private String codigo;
-	private String nomeArquivo;
-	private String linkArquivo;
-	private String arquivo;
+	private Arquivo arquivo;
 	private Boolean sucesso;
-	private Boolean anexo;
+	private Boolean possuiAnexo;
 	private Long quantidadeTentativas;
-	private Publicacao arquivoAnexo;
+	private Publicacao arquivoAnexo;//remover
 
 	/**
 	 * 
@@ -37,26 +36,22 @@ public class Publicacao {
 	 * @param nome
 	 * @param data
 	 * @param codigo
-	 * @param nomeArquivo
-	 * @param linkArquivo
 	 * @param arquivo
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Fonte fonte, String nome, Date data, String codigo,
-			String nomeArquivo, String linkArquivo, String arquivo, Boolean sucesso, Boolean anexo,
+	public Publicacao(Fonte fonte, String nome, LocalDate data, String codigo,
+			Arquivo arquivo, Boolean sucesso, Boolean anexo,
 			Long quantidadeTentativas, Publicacao arquivoAnexo) {
 		super();
 		setFonte(fonte);
 		setNome(nome);
 		setData(data);
 		setCodigo(codigo);
-		setNomeArquivo(nomeArquivo);
-		setLinkArquivo(linkArquivo);
 		setArquivo(arquivo);
 		setSucesso(sucesso);
-		setAnexo(anexo);
+		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
 		setArquivoAnexo(arquivoAnexo);
 	}
@@ -67,18 +62,15 @@ public class Publicacao {
 	 * @param nome
 	 * @param data
 	 * @param codigo
-	 * @param nomeArquivo
-	 * @param linkArquivo
 	 * @param arquivo
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Long id, Fonte fonte, String nome, Date data,
-			String codigo, String nomeArquivo, String linkArquivo,
-			String arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
+	public Publicacao(Long id, Fonte fonte, String nome, LocalDate data,
+			String codigo, Arquivo arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
 			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas, Publicacao arquivoAnexo) {
-		this(fonte, nome, data, codigo, nomeArquivo, linkArquivo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
+		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
 		this.id = id;
 	}
 
@@ -127,14 +119,14 @@ public class Publicacao {
 	/**
 	 * @return the data
 	 */
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
 
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
@@ -153,48 +145,6 @@ public class Publicacao {
 	}
 
 	/**
-	 * @return the nomeArquivo
-	 */
-	public String getNomeArquivo() {
-		return nomeArquivo;
-	}
-
-	/**
-	 * @param nomeArquivo the nomeArquivo to set
-	 */
-	public void setNomeArquivo(String nomeArquivo) {
-		this.nomeArquivo = nomeArquivo;
-	}
-
-	/**
-	 * @return the linkArquivo
-	 */
-	public String getLinkArquivo() {
-		return linkArquivo;
-	}
-
-	/**
-	 * @param linkArquivo the linkArquivo to set
-	 */
-	public void setLinkArquivo(String linkArquivo) {
-		this.linkArquivo = linkArquivo;
-	}
-
-	/**
-	 * @return the arquivo
-	 */
-	public String getArquivo() {
-		return arquivo;
-	}
-
-	/**
-	 * @param arquivo the arquivo to set
-	 */
-	public void setArquivo(String arquivo) {
-		this.arquivo = arquivo;
-	}
-
-	/**
 	 * @return the sucesso
 	 */
 	public Boolean getSucesso() {
@@ -209,17 +159,17 @@ public class Publicacao {
 	}
 
 	/**
-	 * @return the anexo
+	 * @return the possuiAnexo
 	 */
-	public Boolean getAnexo() {
-		return anexo;
+	public Boolean getPossuiAnexo() {
+		return possuiAnexo;
 	}
 
 	/**
-	 * @param anexo the anexo to set
+	 * @param possuiAnexo the possuiAnexo to set
 	 */
-	public void setAnexo(Boolean anexo) {
-		this.anexo = anexo;
+	public void setPossuiAnexo(Boolean possuiAnexo) {
+		this.possuiAnexo = possuiAnexo;
 	}
 
 	/**
@@ -248,5 +198,19 @@ public class Publicacao {
 	 */
 	public void setArquivoAnexo(Publicacao arquivoAnexo) {
 		this.arquivoAnexo = arquivoAnexo;
+	}
+
+	/**
+	 * @return the arquivo
+	 */
+	public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	/**
+	 * @param arquivo the arquivo to set
+	 */
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
 	}
 }

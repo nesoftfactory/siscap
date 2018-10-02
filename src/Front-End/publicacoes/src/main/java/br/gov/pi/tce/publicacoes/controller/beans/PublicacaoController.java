@@ -1,4 +1,4 @@
-package br.gov.pi.tce.publicacoes.controller.beans.utils;
+package br.gov.pi.tce.publicacoes.controller.beans;
 
 import static java.util.Objects.isNull;
 
@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.ejb.Stateless;
+import javax.faces.view.ViewScoped;	
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.Part;
 import javax.ws.rs.core.GenericEntity;
 
@@ -32,6 +35,7 @@ import br.gov.pi.tce.publicacoes.clients.FeriadoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.clients.HistoricoPublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
+import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.HistoricoPublicacao;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
@@ -42,11 +46,14 @@ import br.gov.pi.tce.publicacoes.modelo.Publicacao;
  * 
  * @author Erick Guilherme Cavalcanti
  *
- */
-//@Named
+ */	
+//@Named	
 //@ViewScoped
-public class ColetorPublicacaoUtil {
+@Stateless
+public class PublicacaoController extends BeanController{
 
+	private static final long serialVersionUID = 1L;
+	
 	// URL das fontes dos diários oficiais
 	public final static String URL_FONTE_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br";
 	public final static String URL_FONTE_DIARIO_OFICIAL_TERESINA = "http://www.dom.teresina.pi.gov.br";
@@ -70,14 +77,14 @@ public class ColetorPublicacaoUtil {
 	@Inject
 	private PublicacaoServiceClient publicacaoServiceClient;
 	
-	@Inject
-	private HistoricoPublicacaoServiceClient historicoPublicacaoServiceClient;
-	
-	@Inject
-	private FeriadoServiceClient feriadoServiceClient;
-	
-	@Inject
-	private FonteServiceClient fonteServiceClient;
+//	@Inject
+//	private HistoricoPublicacaoServiceClient historicoPublicacaoServiceClient;
+//	
+//	@Inject
+//	private FeriadoServiceClient feriadoServiceClient;
+//	
+//	@Inject
+//	private FonteServiceClient fonteServiceClient;
 
 	/**
 	 * @param date
@@ -111,6 +118,8 @@ public class ColetorPublicacaoUtil {
 	 */
 	private Fonte consultarFontePorUrl(String url){
 		Fonte fonte = new Fonte();
+		fonte.setId(Long.valueOf(1));
+		fonte.setNome("Parnaiba");
 		fonte.setUrl(url);
 		return fonte;
 	}
@@ -411,8 +420,9 @@ public class ColetorPublicacaoUtil {
 									}
 									
 									if (matcherPositive.find()) {
-										String arquivoAnexoStr = matcherPositive.group();	
-										arquivoAnexo = new Publicacao(fonte, arquivoAnexoStr, date, codigo, arquivoAnexoStr, URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, arquivoAnexoStr, Boolean.TRUE, Boolean.TRUE, Long.valueOf(1), null);
+										String arquivoAnexoStr = matcherPositive.group();
+										Arquivo arquivo = new Arquivo(arquivoAnexoStr, Long.valueOf(10), "tipo", URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, "conteudo".getBytes());
+										arquivoAnexo = new Publicacao(fonte, arquivoAnexoStr, asLocalDate(date), codigo, arquivo, Boolean.TRUE, Boolean.TRUE, Long.valueOf(1), null);
 										break;
 									}
 									
@@ -469,15 +479,22 @@ public class ColetorPublicacaoUtil {
 	 * @param mensagemErro
 	 */
 	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, List<Publicacao> diarios, Date dataPublicacao,
-			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, Publicacao arquivoAnexo, String codigo, String PublicacaoName) {
+			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, Publicacao arquivoAnexo, String codigo, String publicacaoName) {
 
-		Publicacao publicacao = new Publicacao(fonte, PublicacaoName, dataPublicacao, codigo,
-				nomeArquivoPublicacao, linkArquivoPublicacao, "arquivoPublicacao", isSucesso, isAnexo,
-				Long.valueOf(1), arquivoAnexo);
+		Arquivo arquivo = new Arquivo(nomeArquivoPublicacao, Long.valueOf(10),"tipo", linkArquivoPublicacao, "conteudo".getBytes());
+		Publicacao publicacao = new Publicacao(fonte, publicacaoName, asLocalDate(dataPublicacao), codigo, arquivo, isSucesso, isAnexo,Long.valueOf(1), arquivoAnexo);
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
 		if (publicacaoConsultada == null) {
 			diarios.add(publicacao);
-			//Long idPublicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao);
+			try {
+				System.out.println("Entrou");
+				System.out.println("Entrou 2");
+				publicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao);
+			} catch (Exception e) {
+//				 TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Deu Erro.");
+			}
 			if(arquivoAnexo != null) {
 				//publicacaoServiceClient.cadastrarPublicacao(arquivoAnexo, idPublicacao);
 			}
@@ -651,8 +668,8 @@ public class ColetorPublicacaoUtil {
 		// Formato de exibicao da data
 		SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 		for (Publicacao diario : diarios) {
-			System.out.println(diario.getCodigo() + " - " + diario.getNome() + " - " + diario.getLinkArquivo() + " - "
-					+ formatoDeData.format(diario.getData()) + " - " + diario.getNomeArquivo() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNome() : "Sem Anexo."));
+			System.out.println(diario.getCodigo() + " - " + diario.getNome() + " - " + diario.getArquivo().getLink() + " - "
+					+ formatoDeData.format(asDate(diario.getData())) + " - " + diario.getArquivo().getNome() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNome() : "Sem Anexo."));
 		}
 	}
 
@@ -725,6 +742,8 @@ public class ColetorPublicacaoUtil {
 //			url = new URL("http://dom.parnaiba.pi.gov.br/assets/diarios/858e1f1d6fceedca3fd70610b4eb1097.pdf");
 //			File file = new File("C:\\Temp\\arquivo-baixado.pdf");
 //			FileUtils.copyURLToFile(url, file);
+//			FileInputStream fileInputStream = new FileInputStream(file);
+//			//fileInputStream.close();.asopdskjdvsok;vsdovf
 //		} catch (MalformedURLException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();

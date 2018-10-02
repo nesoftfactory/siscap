@@ -2,6 +2,8 @@ package br.gov.pi.tce.publicacoes.controller.beans.utils;
 
 import java.util.Date;
 
+import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
+
 public class Main {
 	
 	// URL das fontes dos diários oficiais
@@ -12,9 +14,10 @@ public class Main {
 
     public static void main(String[] args) {
 
-    	ColetorPublicacaoUtil coletorPublicacaoUtil = new ColetorPublicacaoUtil();
+    	PublicacaoController coletorPublicacaoUtil = new PublicacaoController();
     	//Parnaiba
-        Date dataInicial =  coletorPublicacaoUtil.getData("01/01/2017 00:00:00");
+        //Date dataInicial =  coletorPublicacaoUtil.getData("01/01/2017 00:00:00");
+        Date dataInicial =  coletorPublicacaoUtil.getData("25/09/2018 00:00:00");
         Date dataFinal = coletorPublicacaoUtil.getData("30/09/2018 23:59:59");        
     	//Teresina
 //        Date dataInicial =  coletorPublicacaoUtil.getData("07/01/2005 00:00:00");
