@@ -1,5 +1,7 @@
 package br.gov.pi.tce.siscap.api.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -16,6 +18,25 @@ public class PublicacaoAnexo extends BaseEntity {
 	private String nome;
 	private Arquivo arquivo;
 	private boolean sucesso;
+	
+	
+	public PublicacaoAnexo(Long id, LocalDateTime dataCriacao, Usuario usuarioCriacao, LocalDateTime dataAtualizacao, Usuario usuarioAtualizacao, String nome, boolean sucesso, Long idPublicacao, Long idArquivo) {
+		super();
+		setId(id);
+		setDataCriacao(dataCriacao);
+		setUsuarioCriacao(usuarioCriacao);
+		setDataAtualizacao(dataAtualizacao);
+		setUsuarioAtualizacao(usuarioAtualizacao);
+		setNome(nome);
+		setSucesso(sucesso);
+		Publicacao p = new Publicacao();
+		p.setId(idPublicacao);
+		setPublicacao(p);
+		Arquivo a = new Arquivo();
+		a.setId(idArquivo);
+		setArquivo(a);
+	}
+	
 	
 	@NotNull
 	@Size(min=3, max=50)

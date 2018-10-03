@@ -71,6 +71,20 @@ public class PublicacaoAnexoResource {
 				ResponseEntity.ok(publicacaoAnexoOptional.get()) : ResponseEntity.notFound().build();
 	}
 	
+	
+	@GetMapping("/{id}/publicacao")
+	public ResponseEntity<PublicacaoAnexo> buscarPeloIdPublicacao(@PathVariable Long id) {
+		List<PublicacaoAnexo> listaPublicacaoAnexoOptional = publicacaoAnexoRepository.buscarPorIdPublicacao(id);
+		if(listaPublicacaoAnexoOptional != null && !listaPublicacaoAnexoOptional.isEmpty()) {
+			PublicacaoAnexo pa = listaPublicacaoAnexoOptional.get(0);
+			return ResponseEntity.status(HttpStatus.OK).body(pa);
+			
+		}
+		else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code=HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long id) {
