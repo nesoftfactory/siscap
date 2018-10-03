@@ -15,7 +15,7 @@ public class Publicacao {
 	private Long id;
 	private String nome;
 	private Fonte fonte;
-	private LocalDate data;
+	private String data;
 	private String codigo;
 	private Arquivo arquivo;
 	private Boolean sucesso;
@@ -41,7 +41,7 @@ public class Publicacao {
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Fonte fonte, String nome, LocalDate data, String codigo,
+	public Publicacao(Fonte fonte, String nome, String data, String codigo,
 			Arquivo arquivo, Boolean sucesso, Boolean anexo,
 			Long quantidadeTentativas, Publicacao arquivoAnexo) {
 		super();
@@ -67,7 +67,7 @@ public class Publicacao {
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Long id, Fonte fonte, String nome, LocalDate data,
+	public Publicacao(Long id, Fonte fonte, String nome, String data,
 			String codigo, Arquivo arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
 			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas, Publicacao arquivoAnexo) {
 		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
@@ -119,14 +119,14 @@ public class Publicacao {
 	/**
 	 * @return the data
 	 */
-	public LocalDate getData() {
+	public String getData() {
 		return data;
 	}
 
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(LocalDate data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 

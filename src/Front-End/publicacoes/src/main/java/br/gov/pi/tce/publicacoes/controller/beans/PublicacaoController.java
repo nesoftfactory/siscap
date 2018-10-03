@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -118,8 +119,8 @@ public class PublicacaoController extends BeanController{
 	 */
 	private Fonte consultarFontePorUrl(String url){
 		Fonte fonte = new Fonte();
-		fonte.setId(Long.valueOf(1));
-		fonte.setNome("Parnaiba");
+		fonte.setId(Long.valueOf(5));
+		fonte.setNome("Diário Oficial de Parnaíba");
 		fonte.setUrl(url);
 		return fonte;
 	}
@@ -182,7 +183,7 @@ public class PublicacaoController extends BeanController{
 			if (!isFeriado(date, fonte.getId())) {
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 				System.out.println(urlString + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
-				salvarPublicacao(fonte, "", diarios, date, "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, "codigo", "nome");
+				salvarPublicacao(fonte, "", diarios, convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, "codigo", "nome");
 			}
 		}
 	}
@@ -363,7 +364,7 @@ public class PublicacaoController extends BeanController{
 										publicacaoName = matcherTitleTag.group().replace("title=", "").replace("\"", "").replace("Ãš", "U").replace("EDIÃ‡ÃƒO", "EDIÇÃO").replace("_PESQUISÃVEL", "_PESQUISÁVEL");
 									}
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, diarios, date,
+									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, diarios, convertDateToString(date),
 											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, codigo, publicacaoName);// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 								} else {
 									Calendar c = Calendar.getInstance();
@@ -371,7 +372,7 @@ public class PublicacaoController extends BeanController{
 									String mes = String.format("%02d", c.get(Calendar.MONTH) + 1);
 									String ano = String.valueOf(c.get(Calendar.YEAR));
 									salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS + ano + mes + "/" + arquivoStr,
-											diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+											diarios, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 								}
 								LocalDate localDate = asLocalDate(date);
 								if (diasUteisList.contains(localDate)) {
@@ -422,13 +423,13 @@ public class PublicacaoController extends BeanController{
 									if (matcherPositive.find()) {
 										String arquivoAnexoStr = matcherPositive.group();
 										Arquivo arquivo = new Arquivo(arquivoAnexoStr, Long.valueOf(10), "tipo", URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, "conteudo".getBytes());
-										arquivoAnexo = new Publicacao(fonte, arquivoAnexoStr, asLocalDate(date), codigo, arquivo, Boolean.TRUE, Boolean.TRUE, Long.valueOf(1), null);
+										arquivoAnexo = new Publicacao(fonte, arquivoAnexoStr, convertDateToString(date), codigo, arquivo, Boolean.TRUE, Boolean.TRUE, Long.valueOf(1), null);
 										break;
 									}
 									
 									} while(true);
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, diarios, date, arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", arquivoAnexo, codigo, publicacaoName);//incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, diarios, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", arquivoAnexo, codigo, publicacaoName);//incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
 									LocalDate localDate = asLocalDate(date);
 									if (diasUteisList.contains(localDate)) {
 										diasUteisList.remove(localDate);
@@ -478,11 +479,11 @@ public class PublicacaoController extends BeanController{
 	 * @param isAnexo
 	 * @param mensagemErro
 	 */
-	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, List<Publicacao> diarios, Date dataPublicacao,
+	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, List<Publicacao> diarios, String dataPublicacao,
 			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, Publicacao arquivoAnexo, String codigo, String publicacaoName) {
 
 		Arquivo arquivo = new Arquivo(nomeArquivoPublicacao, Long.valueOf(10),"tipo", linkArquivoPublicacao, "conteudo".getBytes());
-		Publicacao publicacao = new Publicacao(fonte, publicacaoName, asLocalDate(dataPublicacao), codigo, arquivo, isSucesso, isAnexo,Long.valueOf(1), arquivoAnexo);
+		Publicacao publicacao = new Publicacao(fonte, publicacaoName, dataPublicacao, codigo, arquivo, isSucesso, isAnexo,Long.valueOf(1), arquivoAnexo);
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
 		if (publicacaoConsultada == null) {
 			diarios.add(publicacao);
@@ -568,7 +569,7 @@ public class PublicacaoController extends BeanController{
 					matcher = pdfPattern.matcher(linhaHTML);
 					while (matcher.find()) {
 						if (!isNull(date)) {
-							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, date, matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");
+							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, "codigo", "nome");
 							diarioEncontrado = Boolean.TRUE;
 							// Ao encontrar o pdf sai do loop mais externo
 							break buscaPDF;
@@ -580,7 +581,7 @@ public class PublicacaoController extends BeanController{
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 						System.out.println(URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group() + " - " + formatoDeData.format(date) + " - "
 								+ "Diario Não Encontrado");
-						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, date, matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, "codigo", "nome");
+						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, convertDateToString(date), matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, "codigo", "nome");
 					}
 				}
 				fonteHTML.close();
@@ -660,6 +661,12 @@ public class PublicacaoController extends BeanController{
 	public Date asDate(LocalDate localDate) {
 		return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	}
+	
+	public String convertDateToString(Date data) {
+		Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dataStr = formatter.format(data);
+		return dataStr;
+	}
 
 	/**
 	 *	Método utilizado para exibir no console alguns dados para realização de testes.
@@ -669,7 +676,7 @@ public class PublicacaoController extends BeanController{
 		SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 		for (Publicacao diario : diarios) {
 			System.out.println(diario.getCodigo() + " - " + diario.getNome() + " - " + diario.getArquivo().getLink() + " - "
-					+ formatoDeData.format(asDate(diario.getData())) + " - " + diario.getArquivo().getNome() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNome() : "Sem Anexo."));
+					+ diario.getData() + " - " + diario.getArquivo().getNome() + " - " + (!isNull(diario.getArquivoAnexo()) ? diario.getArquivoAnexo().getNome() : "Sem Anexo."));
 		}
 	}
 
@@ -736,7 +743,7 @@ public class PublicacaoController extends BeanController{
 //		}
 	}
 	
-//	public static void realizarDownload() {
+//	public void realizarDownload() {
 //		URL url;
 //		try {
 //			url = new URL("http://dom.parnaiba.pi.gov.br/assets/diarios/858e1f1d6fceedca3fd70610b4eb1097.pdf");

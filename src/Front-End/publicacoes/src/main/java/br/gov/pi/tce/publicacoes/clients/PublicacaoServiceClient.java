@@ -1,6 +1,12 @@
 package br.gov.pi.tce.publicacoes.clients;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +22,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
@@ -28,13 +35,6 @@ import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 @Local
 @Stateless(name="PublicacaoServiceClient")
 public class PublicacaoServiceClient{
-	
-//	private static final String PATH_GET_PUBLICACAO = "getPublicacao";
-//	private static final String PATH_ALTERAR = "alterar";
-//	private static final String PATH_CADASTRAR = "publicacoes/novo";
-//	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-//	private final String URL_SERVICE = "http://localhost:8080/apirestsiscap/rest/";
-//	private final String PATH_CONSULTA_TODOS = "publicacoes";
 	
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI_PUBLICACOES = "http://localhost:7788/publicacoes/";
@@ -75,32 +75,46 @@ public class PublicacaoServiceClient{
 	
 	public Publicacao cadastrarPublicacao(Publicacao publicacao) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
-//		try {
-//			dataOutput.addFormData("uploadedFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
-//					, arquivo.getSubmittedFileName());
-//		} catch (IOException e) {
-//			FacesContext.getCurrentInstance().addMessage(null, 
-//					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao recuperar o conteúdo do arquivo", 
-//							"Erro ao recuperar o conteúdo do arquivo"));
-//		}
+		dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
+				, "");
+//		dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
+//				, "teste.pdf");
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("fonte", publicacao.getFonte(), MediaType.APPLICATION_JSON_TYPE);
+		dataOutput.addFormData("fonte", publicacao.getFonte().getId(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("data", publicacao.getData(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("codigo", publicacao.getCodigo(), MediaType.TEXT_PLAIN_TYPE);
-//		dataOutput.addFormData("arquivo", publicacao.getArquivo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacao.getSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("possuiAnexo", publicacao.getPossuiAnexo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("quantidadeTentativas", publicacao.getQuantidadeTentativas(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("link", publicacao.getArquivo().getLink(), MediaType.TEXT_PLAIN_TYPE);
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
 		this.webTarget = this.client.target(URI_PUBLICACOES);
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Publicacao.class);
+	}
+	
+	public FileInputStream realizarDownload() {
+		URL url;
+		FileInputStream fileInputStream = null;
+		try {
+			url = new URL("http://www.casadodivinomestre.com.br/teste.pdf");
+			File file = new File("C:\\Temp\\arquivo-baixado3.pdf");
+			FileUtils.copyURLToFile(url, file);
+			fileInputStream = new FileInputStream(file);
+			//fileInputStream.close();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return fileInputStream;
 	}
 	
 //	public TipoFonte cadastrarTipoFonte(TipoFonte tipoFonte) throws Exception{
