@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +24,9 @@ import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaExcep
 @Service
 public class PublicacaoService {
 
+	private static final String PUBLICACAO_MENSAGEM_INCLUSAO = "Publicação incluída";
+	private static final String PUBLICACAO_MENSAGEM_ALTERACAO = "Publicação alterada";
+	
 	@Autowired
 	private PublicacaoRepository publicacaoRepository;
 	
@@ -41,27 +46,46 @@ public class PublicacaoService {
 		usuarioLogado = usuarioService.getUsuarioLogado();
 	}
 
-	private static final String PUBLICACAO_MENSAGEM_INCLUSAO = "Publicaçao incluída";
-	
 	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
-		atualizarArquivo(publicacao, partFile, link);
 		atualizaDadosAdicao(publicacao);
+		Publicacao publicacaoSalva = salvar(publicacao, partFile, link);
 
-		PublicacaoHistorico historico = atualizarHistorico(publicacao);
-		
-		Publicacao publicacaoSalva = salvar(publicacao);
-		publicacaoHistoricoRepository.save(historico);
+		return publicacaoSalva;
+	}
+
+	public Publicacao atualizar(Long id, Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
+		Publicacao publicacaoSalva = buscarPublicacaoPeloCodigo(id);
+		BeanUtils.copyProperties(publicacao, publicacaoSalva, "id", "arquivo", "dataCriacao", "usuarioCriacao");
+
+		publicacaoSalva = salvar(publicacao, partFile, link);
 		
 		return publicacaoSalva;
 	}
 
-	private PublicacaoHistorico atualizarHistorico(Publicacao publicacao) {
+	private Publicacao salvar(Publicacao publicacaoSalva, MultipartFile partFile, String link) throws IOException {
+		validarFonte(publicacaoSalva);
+
+		atualizarArquivo(publicacaoSalva, partFile, link);
+		atualizarDadosEdicao(publicacaoSalva);
+		
+		String mensagemLog = (publicacaoSalva.isAlterando() ? PUBLICACAO_MENSAGEM_ALTERACAO : 
+			PUBLICACAO_MENSAGEM_INCLUSAO);
+		
+		publicacaoSalva = publicacaoRepository.save(publicacaoSalva);
+		atualizarHistorico(publicacaoSalva, mensagemLog);
+		
+		return publicacaoSalva;
+	}
+
+	private PublicacaoHistorico atualizarHistorico(Publicacao publicacao, String mensagemLog) {
 		PublicacaoHistorico historico = new PublicacaoHistorico(publicacao, 
-				PUBLICACAO_MENSAGEM_INCLUSAO, true, usuarioLogado);
+				mensagemLog, true, usuarioLogado);
+		
+		publicacaoHistoricoRepository.save(historico);
 		
 		return historico;
 	}
-
+	
 	private void atualizarArquivo(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
 		Arquivo arquivo = null;
 		if (partFile != null) {
@@ -69,14 +93,7 @@ public class PublicacaoService {
 		}
 		publicacao.setArquivo(arquivo);
 	}
-
-	private Publicacao salvar(Publicacao publicacaoSalva) {
-		validarFonte(publicacaoSalva);
-		atualizarDadosEdicao(publicacaoSalva);
-		
-		return publicacaoRepository.save(publicacaoSalva);
-	}
-
+	
 	private void atualizarDadosEdicao(Publicacao publicacaoSalva) {
 		publicacaoSalva.setUsuarioAtualizacao(usuarioLogado);
 	}
@@ -94,4 +111,11 @@ public class PublicacaoService {
 	private void atualizaDadosAdicao(Publicacao publicacao) {
 		publicacao.setUsuarioCriacao(usuarioLogado);
 	}
+
+	private Publicacao buscarPublicacaoPeloCodigo(Long id) {
+		Publicacao publicacaoSalva = publicacaoRepository.findById(id).
+				orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return publicacaoSalva;
+	}
+
 }

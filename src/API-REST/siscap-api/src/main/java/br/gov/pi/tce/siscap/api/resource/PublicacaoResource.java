@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,7 @@ import br.gov.pi.tce.siscap.api.event.RecursoCriadoEvent;
 import br.gov.pi.tce.siscap.api.exceptionhandler.SiscapExceptionHandler.Erro;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
+import br.gov.pi.tce.siscap.api.repository.filter.PublicacaoFilter;
 import br.gov.pi.tce.siscap.api.service.PublicacaoService;
 import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaException;
 
@@ -49,12 +52,13 @@ public class PublicacaoResource {
 	private MessageSource messageSource;
 	
 	@GetMapping
-	public List<Publicacao> listar() {
-		return publicacaoRepository.findAll();
+	public List<Publicacao> pesquisar(PublicacaoFilter publicacaoFilter) {
+		return publicacaoRepository.filtrar(publicacaoFilter);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Publicacao> criar(@Valid Publicacao publicacao, @RequestParam MultipartFile partFile,
+	public ResponseEntity<Publicacao> criar(@Valid Publicacao publicacao, 
+			@RequestParam(required=false) MultipartFile partFile,
 			@RequestParam String link, HttpServletResponse response) throws IOException {
 		
 		Publicacao publicacaoSalva = publicacaoService.adicionar(publicacao, partFile, link);
@@ -69,6 +73,15 @@ public class PublicacaoResource {
 		
 		return publicacaoOptional.isPresent() ? 
 				ResponseEntity.ok(publicacaoOptional.get()) : ResponseEntity.notFound().build();
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Publicacao> atualizar(@PathVariable Long id, @Valid @RequestPart Publicacao publicacao, 
+			@RequestParam(required=false) MultipartFile partFile,
+			@RequestParam String link) throws IOException {
+		Publicacao publicacaoSalva = publicacaoService.atualizar(id, publicacao, partFile, link);
+		
+		return ResponseEntity.ok(publicacaoSalva);
 	}
 	
 	@DeleteMapping("/{id}")

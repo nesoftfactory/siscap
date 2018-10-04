@@ -13,6 +13,10 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="publicacao")
 public class Publicacao extends BaseEntity {
@@ -65,6 +69,8 @@ public class Publicacao extends BaseEntity {
 		this.codigo = codigo;
 	}
 
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true)
 	@ManyToOne(optional=true, cascade=CascadeType.ALL)
 	@JoinColumn(name="id_arquivo")
 	public Arquivo getArquivo() {

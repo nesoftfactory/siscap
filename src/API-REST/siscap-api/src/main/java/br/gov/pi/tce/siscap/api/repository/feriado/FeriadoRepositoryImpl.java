@@ -15,7 +15,7 @@ import br.gov.pi.tce.siscap.api.model.Feriado;
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.repository.filter.FeriadoFilter;
 
-public class FeriadoRepositoryImpl implements FeriadoRepositoryQuey {
+public class FeriadoRepositoryImpl implements FeriadoRepositoryQuery {
 	
 	@PersistenceContext
 	private EntityManager manager;
