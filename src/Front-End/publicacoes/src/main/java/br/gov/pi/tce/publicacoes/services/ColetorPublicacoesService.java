@@ -6,7 +6,6 @@ import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import br.gov.pi.tce.publicacoes.controller.beans.BeanController;
 import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
 
 /**
@@ -23,28 +22,26 @@ public class ColetorPublicacoesService {
 	private PublicacaoController publicacaoController;
 	
 	// URL das fontes dos diários oficiais
-	public final static String URL_FONTE_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br";
-	public final static String URL_FONTE_DIARIO_OFICIAL_TERESINA = "http://www.dom.teresina.pi.gov.br";
-	public final static String URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org";
-	public final static String URL_FONTE_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br";
+	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);//"http://www.diarioficialdosmunicipios.org";
+	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3);//"http://www.diariooficial.pi.gov.br";
+	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4);//"http://www.dom.teresina.pi.gov.br";
+	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5); //"http://dom.parnaiba.pi.gov.br";
 	
 	public final static int QUANTIDADE_DIAS = 5;
 
-	@Schedule(hour="00", minute = "47")
+	@Schedule(hour="01", minute = "11")
 	public void coletarDiarioOficialParnaiba() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		//PublicacaoController publicacaoController = new PublicacaoController();
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="00", minute = "49")
+	@Schedule(hour="01", minute = "13")
 	public void coletarDiarioOficialTeresina() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		//PublicacaoController publicacaoController = new PublicacaoController();
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
 	}
 	
@@ -53,16 +50,14 @@ public class ColetorPublicacoesService {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		//PublicacaoController publicacaoController = new PublicacaoController();
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="00", minute = "50")
+	@Schedule(hour="21", minute = "49")
 	public void coletarDiarioOficialPiaui() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
 		Date dataFinal = new Date();
-		//PublicacaoController publicacaoController = new PublicacaoController();
 		publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
 	}
 	

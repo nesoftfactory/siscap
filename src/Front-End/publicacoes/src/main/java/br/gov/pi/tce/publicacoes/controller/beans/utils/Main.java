@@ -7,57 +7,52 @@ import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
 public class Main {
 	
 	// URL das fontes dos diários oficiais
-	public final static String URL_FONTE_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br";
-	public final static String URL_FONTE_DIARIO_OFICIAL_TERESINA = "http://www.dom.teresina.pi.gov.br";
-	public final static String URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org";
-	public final static String URL_FONTE_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br";
+	public final static int URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = 2; //"http://www.diarioficialdosmunicipios.org";
+	public final static int URL_FONTE_DIARIO_OFICIAL_PIAUI = 3; //"http://www.diariooficial.pi.gov.br";
+	public final static int URL_FONTE_DIARIO_OFICIAL_TERESINA = 4; //"http://www.dom.teresina.pi.gov.br";
+	public final static int URL_FONTE_DIARIO_OFICIAL_PARNAIBA = 5; //"http://dom.parnaiba.pi.gov.br";
 
     public static void main(String[] args) {
 
-    	PublicacaoController coletorPublicacaoUtil = new PublicacaoController();
+    	PublicacaoController publicacaoController = new PublicacaoController();
     	//Parnaiba
-        //Date dataInicial =  coletorPublicacaoUtil.getData("01/01/2017 00:00:00");
-        Date dataInicial =  coletorPublicacaoUtil.getData("25/09/2018 00:00:00");
-        Date dataFinal = coletorPublicacaoUtil.getData("30/09/2018 23:59:59");        
+        //Date dataInicial =  publicacaoController.getData("01/01/2017 00:00:00");
+        Date dataInicial =  publicacaoController.getData("25/09/2018 00:00:00");
+        Date dataFinal = publicacaoController.getData("30/09/2018 23:59:59");        
     	//Teresina
-//        Date dataInicial =  coletorPublicacaoUtil.getData("07/01/2005 00:00:00");
-//        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
+//        Date dataInicial =  publicacaoController.getData("07/01/2005 00:00:00");
+//        Date dataFinal = publicacaoController.getData("19/09/2018 23:59:59");
         //Piaui
-//        Date dataInicial =  coletorPublicacaoUtil.getData("01/08/2018 00:00:00");
-//        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
+//        Date dataInicial =  publicacaoController.getData("01/08/2018 00:00:00");
+//        Date dataFinal = publicacaoController.getData("19/09/2018 23:59:59");
     	//Municipios
-//        Date dataInicial =  coletorPublicacaoUtil.getData("01/07/2018 00:00:00");
-//        Date dataFinal = coletorPublicacaoUtil.getData("19/09/2018 23:59:59");
+//        Date dataInicial =  publicacaoController.getData("01/07/2018 00:00:00");
+//        Date dataFinal = publicacaoController.getData("19/09/2018 23:59:59");
 
         // Vetor de url das fontes
-        String[] fontes = new String[]{
+        int[] fontes = new int[]{
 //                URL_FONTE_DIARIO_OFICIAL_PIAUI//,
 //                URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS//,
 //        		URL_FONTE_DIARIO_OFICIAL_TERESINA//,
         		URL_FONTE_DIARIO_OFICIAL_PARNAIBA
         };
 
-        for (String fonte : fontes) {
+        for (int fonte : fontes) {
             switch (fonte) {
                 case URL_FONTE_DIARIO_OFICIAL_PIAUI:
-                	coletorPublicacaoUtil.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
+                	publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
                     break;
                 case URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS:
-                	coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
+                	publicacaoController.getDiariosDOM(Long.valueOf(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS), dataInicial, dataFinal);
                     break;
                 case URL_FONTE_DIARIO_OFICIAL_TERESINA:
-                	coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
+                	publicacaoController.getDiariosDOM(Long.valueOf(URL_FONTE_DIARIO_OFICIAL_TERESINA), dataInicial, dataFinal);
                     break;
                 case URL_FONTE_DIARIO_OFICIAL_PARNAIBA:
-                	coletorPublicacaoUtil.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
+                	publicacaoController.getDiariosDOM(Long.valueOf(URL_FONTE_DIARIO_OFICIAL_PARNAIBA), dataInicial, dataFinal);
                     break;
             }
         }
-        
-//        Date a = new Date();
-//        System.out.println(a);
-//        a.setDate(a.getDate() + 10);  
-//        System.out.println(a);
-        
+                
     }
 }

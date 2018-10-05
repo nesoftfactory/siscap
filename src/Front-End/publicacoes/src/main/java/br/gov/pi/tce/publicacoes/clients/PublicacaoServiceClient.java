@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +23,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
+import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 
@@ -60,25 +59,12 @@ public class PublicacaoServiceClient{
 		}
 	}
 	
-	public List<Fonte> consultarTodasFontes(){
-		try {
-			this.webTarget = this.client.target(URI_FONTES);
-			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-			Response response = invocationBuilder.get();
-			List<Fonte> list = response.readEntity(new GenericType<List<Fonte>>() {});
-			return list;
-		}
-		catch (Exception e) {
-			throw e;
-		}
-	}
-	
-	public Publicacao cadastrarPublicacao(Publicacao publicacao) throws Exception{
+	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
-		dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
-				, "");
-//		dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
-//				, "teste.pdf");
+//		dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
+//				, "");
+		dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
+				, "teste.pdf");
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("fonte", publicacao.getFonte().getId(), MediaType.TEXT_PLAIN_TYPE);
@@ -87,7 +73,7 @@ public class PublicacaoServiceClient{
 		dataOutput.addFormData("sucesso", publicacao.getSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("possuiAnexo", publicacao.getPossuiAnexo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("quantidadeTentativas", publicacao.getQuantidadeTentativas(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("link", publicacao.getArquivo().getLink(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("link", arquivo.getLink(), MediaType.TEXT_PLAIN_TYPE);
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
@@ -116,14 +102,6 @@ public class PublicacaoServiceClient{
 		}
 		return fileInputStream;
 	}
-	
-//	public TipoFonte cadastrarTipoFonte(TipoFonte tipoFonte) throws Exception{
-//		this.webTarget = this.client.target(URI_TIPOS_FONTES);
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.post(Entity.entity(tipoFonte, RESPONSE_TYPE));
-//		trataRetorno(response);
-//		return response.readEntity(TipoFonte.class);
-//	}
 
 	public Publicacao alterarPublicacao(Publicacao publicacao) throws Exception{
 		this.webTarget = this.client.target(URI_PUBLICACOES).path(String.valueOf(publicacao.getId()));
@@ -132,14 +110,6 @@ public class PublicacaoServiceClient{
 		trataRetorno(response);
 		return response.readEntity(Publicacao.class);
 	}
-	
-//	public TipoFonte alterarTipoFonte(TipoFonte tipoFonte) throws Exception{
-//		this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(tipoFonte.getId()));
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.put(Entity.entity(tipoFonte, RESPONSE_TYPE));
-//		trataRetorno(response);
-//		return response.readEntity(TipoFonte.class);
-//	}
 
 	public Publicacao consultarPublicacaoPorCodigo(Long id){
 		this.webTarget = this.client.target(URI_PUBLICACOES).path(String.valueOf(id));
@@ -165,26 +135,6 @@ public class PublicacaoServiceClient{
 			return  tf;
 		}
 	}
-
-//	public String excluirFontePorCodigo(Long id){
-//		this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id));
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.delete();
-//		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
-//			return null;
-//		}	
-//		return response.readEntity(String.class);
-//	}
-	
-//	public String excluirTipoFontePorCodigo(Long id){
-//		this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(id));
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.delete();
-//		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
-//			return null;
-//		}	
-//		return response.readEntity(String.class);
-//	}
 	
 	private void trataRetorno(Response response) throws Exception {
 		if(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
@@ -199,44 +149,5 @@ public class PublicacaoServiceClient{
 			}
 		}
 	}
-	
-//	public PublicacaoServiceClient(){
-//		this.client = ClientBuilder.newClient();  
-//	}
-//	
-//	public List<Publicacao> consultarTodos(){
-//		try {
-//			this.webTarget = this.client.target(URL_SERVICE).path(PATH_CONSULTA_TODOS);
-//			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//			Response response = invocationBuilder.get();
-//			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {});
-//			return list;
-//		}
-//		catch (Exception e) {
-//			throw e;
-//		}
-//	}
-//	
-//	public Publicacao cadastrarPublicacao(Publicacao publicacao){
-//		this.webTarget = this.client.target(URL_SERVICE).path(PATH_CADASTRAR);
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.post(Entity.entity(publicacao, RESPONSE_TYPE));
-//		return response.readEntity(Publicacao.class);
-//	}
-//
-//	public Publicacao alterarPublicacao(Publicacao publicacao){
-//		this.webTarget = this.client.target(URL_SERVICE).path(PATH_ALTERAR);
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.put(Entity.entity(publicacao, RESPONSE_TYPE));
-//		return response.readEntity(Publicacao.class);
-//
-//	}
-//
-//	public Publicacao consultarPublicacaoPorCodigo(Long id){
-//		this.webTarget = this.client.target(URL_SERVICE).path(PATH_GET_PUBLICACAO).path(String.valueOf(id));
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.get();
-//		return response.readEntity(Publicacao.class);
-//	}
 
 }

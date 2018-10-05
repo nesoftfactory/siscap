@@ -11,7 +11,7 @@ public class PublicacaoAnexo {
 	private Long id;
 	private Publicacao publicacao;
 	private String nome;
-	private Arquivo arquivo;
+	private Long arquivo;
 	private boolean sucesso;
 
 	/**
@@ -19,7 +19,6 @@ public class PublicacaoAnexo {
 	 */
 	public PublicacaoAnexo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -28,7 +27,7 @@ public class PublicacaoAnexo {
 	 * @param arquivo
 	 * @param sucesso
 	 */
-	public PublicacaoAnexo(Publicacao publicacao, String nome, Arquivo arquivo, boolean sucesso) {
+	public PublicacaoAnexo(Publicacao publicacao, String nome, Long arquivo, boolean sucesso) {
 		super();
 		setPublicacao(publicacao);
 		setNome(nome);
@@ -43,7 +42,7 @@ public class PublicacaoAnexo {
 	 * @param arquivo
 	 * @param sucesso
 	 */
-	public PublicacaoAnexo(Long id, Publicacao publicacao, String nome, Arquivo arquivo, boolean sucesso) {
+	public PublicacaoAnexo(Long id, Publicacao publicacao, String nome, Long arquivo, boolean sucesso) {
 		this(publicacao, nome, arquivo, sucesso);
 		this.id = id;
 	}
@@ -93,14 +92,14 @@ public class PublicacaoAnexo {
 	/**
 	 * @return the arquivo
 	 */
-	public Arquivo getArquivo() {
+	public Long getArquivo() {
 		return arquivo;
 	}
 
 	/**
 	 * @param arquivo the arquivo to set
 	 */
-	public void setArquivo(Arquivo arquivo) {
+	public void setArquivo(Long arquivo) {
 		this.arquivo = arquivo;
 	}
 

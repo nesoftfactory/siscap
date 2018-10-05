@@ -1,6 +1,5 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -17,7 +16,7 @@ public class Publicacao {
 	private Fonte fonte;
 	private String data;
 	private String codigo;
-	private Arquivo arquivo;
+	private Long idArquivo;
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas;
@@ -28,7 +27,6 @@ public class Publicacao {
 	 */
 	public Publicacao() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -36,20 +34,20 @@ public class Publicacao {
 	 * @param nome
 	 * @param data
 	 * @param codigo
-	 * @param arquivo
+	 * @param idArquivo
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
 	public Publicacao(Fonte fonte, String nome, String data, String codigo,
-			Arquivo arquivo, Boolean sucesso, Boolean anexo,
+			Long idArquivo, Boolean sucesso, Boolean anexo,
 			Long quantidadeTentativas, Publicacao arquivoAnexo) {
 		super();
 		setFonte(fonte);
 		setNome(nome);
 		setData(data);
 		setCodigo(codigo);
-		setArquivo(arquivo);
+		setIdArquivo(idArquivo);
 		setSucesso(sucesso);
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
@@ -62,15 +60,15 @@ public class Publicacao {
 	 * @param nome
 	 * @param data
 	 * @param codigo
-	 * @param arquivo
+	 * @param idArquivo
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
 	public Publicacao(Long id, Fonte fonte, String nome, String data,
-			String codigo, Arquivo arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
+			String codigo, Long idArquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
 			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas, Publicacao arquivoAnexo) {
-		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
+		this(fonte, nome, data, codigo, idArquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
 		this.id = id;
 	}
 
@@ -201,16 +199,16 @@ public class Publicacao {
 	}
 
 	/**
-	 * @return the arquivo
+	 * @return the idArquivo
 	 */
-	public Arquivo getArquivo() {
-		return arquivo;
+	public Long getIdArquivo() {
+		return idArquivo;
 	}
 
 	/**
-	 * @param arquivo the arquivo to set
+	 * @param idArquivo the idArquivo to set
 	 */
-	public void setArquivo(Arquivo arquivo) {
-		this.arquivo = arquivo;
+	public void setIdArquivo(Long idArquivo) {
+		this.idArquivo = idArquivo;
 	}
 }
