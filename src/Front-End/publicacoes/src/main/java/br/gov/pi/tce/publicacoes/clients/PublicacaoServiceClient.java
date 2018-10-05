@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
+import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 
@@ -38,6 +40,7 @@ public class PublicacaoServiceClient{
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI_PUBLICACOES = "http://localhost:7788/publicacoes/";
 	private String URI_FONTES = "http://localhost:7788/fontes/";
+	private String URI_FERIADOS = "http://localhost:7788/feriados/";
 
 	private Client client;
 	private WebTarget webTarget;
@@ -132,6 +135,23 @@ public class PublicacaoServiceClient{
 		}	
 		else {
 			Fonte tf = response.readEntity(Fonte.class);
+			return  tf;
+		}
+	}
+	
+	public List<Feriado> consultarFeriadoPorFontePeriodo(Long idFonte, LocalDate periodoDe, LocalDate periodoAte){
+		this.webTarget = this.client.target(URI_FERIADOS).queryParam("idFonte", idFonte);
+		this.webTarget = this.client.target(URI_FERIADOS).queryParam("periodoDe", periodoDe);
+		this.webTarget = this.client.target(URI_FERIADOS).queryParam("periodoAte", periodoAte);
+//		this.webTarget = this.client.target(URI_FERIADOS).path(String.valueOf(idFonte)).path(periodoDe.toString()).path(periodoDe.toString());
+//		this.webTarget = this.client.target(URI_FERIADOS).path("3").path("07/09/2018").path("19/10/2018");
+		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Response response = invocationBuilder.get();
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			List<Feriado> tf = response.readEntity(new GenericType<List<Feriado>>() {});
 			return  tf;
 		}
 	}

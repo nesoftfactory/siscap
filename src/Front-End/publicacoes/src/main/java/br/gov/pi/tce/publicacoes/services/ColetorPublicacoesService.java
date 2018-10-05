@@ -29,7 +29,7 @@ public class ColetorPublicacoesService {
 	
 	public final static int QUANTIDADE_DIAS = 5;
 
-	@Schedule(hour="01", minute = "11")
+	@Schedule(hour="20", minute = "02")
 	public void coletarDiarioOficialParnaiba() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
@@ -37,7 +37,7 @@ public class ColetorPublicacoesService {
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="01", minute = "13")
+	@Schedule(hour="20", minute = "04")
 	public void coletarDiarioOficialTeresina() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
@@ -45,7 +45,7 @@ public class ColetorPublicacoesService {
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="00", minute = "52")
+	@Schedule(hour="18", minute = "40")
 	public void coletarDiarioOficialMunicipios() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);
@@ -53,7 +53,7 @@ public class ColetorPublicacoesService {
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="21", minute = "49")
+	@Schedule(hour="18", minute = "42")
 	public void coletarDiarioOficialPiaui() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);

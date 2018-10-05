@@ -1,7 +1,5 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import java.time.LocalDate;
-
 /**
  * Classe responsável por representar a entidade Feriado.
  * 
@@ -12,7 +10,7 @@ public class Feriado {
 	
 	private Long id;
 	private String nome;
-	private LocalDate data;
+	private String data;
 	private Fonte fonte;
 	private Boolean ativo;
 
@@ -20,7 +18,7 @@ public class Feriado {
 		super();
 	}
 	
-	public Feriado(String nome, LocalDate data, Fonte fonte, Boolean ativo) {
+	public Feriado(String nome, String data, Fonte fonte, Boolean ativo) {
 		super();
 		this.nome = nome;
 		this.data = data;
@@ -28,7 +26,7 @@ public class Feriado {
 		this.ativo = ativo;
 	}
 	
-	public Feriado(Long id, String nome, LocalDate data, Fonte fonte, Boolean ativo) {
+	public Feriado(Long id, String nome, String data, Fonte fonte, Boolean ativo) {
 		this(nome, data, fonte, ativo);
 		this.id = id;
 	}
@@ -64,14 +62,14 @@ public class Feriado {
 	/**
 	 * @return the data
 	 */
-	public LocalDate getData() {
+	public String getData() {
 		return data;
 	}
 
 	/**
 	 * @param data the data to set
 	 */
-	public void setData(LocalDate data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 

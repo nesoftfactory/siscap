@@ -16,7 +16,7 @@ public class Publicacao {
 	private Fonte fonte;
 	private String data;
 	private String codigo;
-	private Long idArquivo;
+	private Long arquivo;
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas;
@@ -40,14 +40,14 @@ public class Publicacao {
 	 * @param quantidadeTentativas
 	 */
 	public Publicacao(Fonte fonte, String nome, String data, String codigo,
-			Long idArquivo, Boolean sucesso, Boolean anexo,
+			Long arquivo, Boolean sucesso, Boolean anexo,
 			Long quantidadeTentativas, Publicacao arquivoAnexo) {
 		super();
 		setFonte(fonte);
 		setNome(nome);
 		setData(data);
 		setCodigo(codigo);
-		setIdArquivo(idArquivo);
+		setArquivo(arquivo);
 		setSucesso(sucesso);
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
@@ -60,15 +60,15 @@ public class Publicacao {
 	 * @param nome
 	 * @param data
 	 * @param codigo
-	 * @param idArquivo
+	 * @param arquivo
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
 	public Publicacao(Long id, Fonte fonte, String nome, String data,
-			String codigo, Long idArquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
+			String codigo, Long arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
 			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas, Publicacao arquivoAnexo) {
-		this(fonte, nome, data, codigo, idArquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
+		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
 		this.id = id;
 	}
 
@@ -199,16 +199,16 @@ public class Publicacao {
 	}
 
 	/**
-	 * @return the idArquivo
+	 * @return the arquivo
 	 */
-	public Long getIdArquivo() {
-		return idArquivo;
+	public Long getArquivo() {
+		return arquivo;
 	}
 
 	/**
-	 * @param idArquivo the idArquivo to set
+	 * @param arquivo the arquivo to set
 	 */
-	public void setIdArquivo(Long idArquivo) {
-		this.idArquivo = idArquivo;
+	public void setArquivo(Long arquivo) {
+		this.arquivo = arquivo;
 	}
 }

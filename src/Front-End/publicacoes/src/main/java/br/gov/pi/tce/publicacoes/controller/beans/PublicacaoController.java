@@ -33,6 +33,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import br.gov.pi.tce.publicacoes.clients.FeriadoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
+import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 
@@ -183,7 +184,9 @@ public class PublicacaoController extends BeanController{
 	 * @return
 	 */
 	private Boolean isFeriado(Date date, Long idFonte) {
-		return Boolean.TRUE;
+		List<Feriado> feriadoList = publicacaoServiceClient.consultarFeriadoPorFontePeriodo(idFonte, asLocalDate(date),
+				asLocalDate(date));
+		return (feriadoList != null && !feriadoList.isEmpty());
 	}
 
 	/**
