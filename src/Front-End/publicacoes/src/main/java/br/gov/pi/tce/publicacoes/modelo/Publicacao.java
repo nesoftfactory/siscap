@@ -20,7 +20,7 @@ public class Publicacao {
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas;
-	private Publicacao arquivoAnexo;//remover
+	//private Publicacao arquivoAnexo;//remover
 
 	/**
 	 * 
@@ -41,7 +41,7 @@ public class Publicacao {
 	 */
 	public Publicacao(Fonte fonte, String nome, String data, String codigo,
 			Long arquivo, Boolean sucesso, Boolean anexo,
-			Long quantidadeTentativas, Publicacao arquivoAnexo) {
+			Long quantidadeTentativas) {
 		super();
 		setFonte(fonte);
 		setNome(nome);
@@ -51,7 +51,7 @@ public class Publicacao {
 		setSucesso(sucesso);
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
-		setArquivoAnexo(arquivoAnexo);
+//		setArquivoAnexo(arquivoAnexo);
 	}
 
 	/**
@@ -67,8 +67,8 @@ public class Publicacao {
 	 */
 	public Publicacao(Long id, Fonte fonte, String nome, String data,
 			String codigo, Long arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
-			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas, Publicacao arquivoAnexo) {
-		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas, arquivoAnexo);
+			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas) {
+		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas);
 		this.id = id;
 	}
 
@@ -184,19 +184,19 @@ public class Publicacao {
 		this.quantidadeTentativas = quantidadeTentativas;
 	}
 	
-	/**
-	 * @return arquivoAnexo
-	 */
-	public Publicacao getArquivoAnexo() {
-		return arquivoAnexo;
-	}
-		
-	/**
-	 * @param arquivoAnexo
-	 */
-	public void setArquivoAnexo(Publicacao arquivoAnexo) {
-		this.arquivoAnexo = arquivoAnexo;
-	}
+//	/**
+//	 * @return arquivoAnexo
+//	 */
+//	public Publicacao getArquivoAnexo() {
+//		return arquivoAnexo;
+//	}
+//		
+//	/**
+//	 * @param arquivoAnexo
+//	 */
+//	public void setArquivoAnexo(Publicacao arquivoAnexo) {
+//		this.arquivoAnexo = arquivoAnexo;
+//	}
 
 	/**
 	 * @return the arquivo

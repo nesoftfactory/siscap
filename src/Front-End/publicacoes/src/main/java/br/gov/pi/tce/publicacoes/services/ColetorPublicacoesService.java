@@ -37,7 +37,7 @@ public class ColetorPublicacoesService {
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
 	}
 	
-	@Schedule(hour="20", minute = "04")
+	@Schedule(hour="12", minute = "00")
 	public void coletarDiarioOficialTeresina() {
 		Date dataInicial = new Date();
 		dataInicial.setDate(dataInicial.getDate() - QUANTIDADE_DIAS);

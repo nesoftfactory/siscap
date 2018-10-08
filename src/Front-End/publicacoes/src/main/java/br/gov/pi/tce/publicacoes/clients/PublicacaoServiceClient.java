@@ -28,6 +28,7 @@ import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
+import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 
 /**
  * @author Erick Guilherme Cavalcanti 
@@ -39,6 +40,7 @@ public class PublicacaoServiceClient{
 	
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI_PUBLICACOES = "http://localhost:7788/publicacoes/";
+	private String URI_PUBLICACOES_ANEXOS = "http://localhost:7788/publicacoes_anexos/";
 	private String URI_FONTES = "http://localhost:7788/fontes/";
 	private String URI_FERIADOS = "http://localhost:7788/feriados/";
 
@@ -85,6 +87,27 @@ public class PublicacaoServiceClient{
 		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Publicacao.class);
+	}
+	
+	public PublicacaoAnexo cadastrarPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo, Arquivo arquivo) throws Exception{
+		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
+//		dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
+//				, "");
+		dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
+				, "teste.pdf");
+		
+		dataOutput.addFormData("nome", publicacaoAnexo.getNome(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("publicacao", publicacaoAnexo.getPublicacao().getId(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("sucesso", publicacaoAnexo.isSucesso(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("link", arquivo.getLink(), MediaType.TEXT_PLAIN_TYPE);
+		
+		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
+		
+		this.webTarget = this.client.target(URI_PUBLICACOES_ANEXOS);
+		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
+		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
+		trataRetorno(response);
+		return response.readEntity(PublicacaoAnexo.class);
 	}
 	
 	public FileInputStream realizarDownload() {
@@ -140,10 +163,9 @@ public class PublicacaoServiceClient{
 	}
 	
 	public List<Feriado> consultarFeriadoPorFontePeriodo(Long idFonte, LocalDate periodoDe, LocalDate periodoAte){
-		this.webTarget = this.client.target(URI_FERIADOS).queryParam("idFonte", idFonte);
-		this.webTarget = this.client.target(URI_FERIADOS).queryParam("periodoDe", periodoDe);
-		this.webTarget = this.client.target(URI_FERIADOS).queryParam("periodoAte", periodoAte);
-//		this.webTarget = this.client.target(URI_FERIADOS).path(String.valueOf(idFonte)).path(periodoDe.toString()).path(periodoDe.toString());
+		this.webTarget = this.client.target(URI_FERIADOS).queryParam("idFonte", idFonte).queryParam("periodoDe", periodoDe).queryParam("periodoAte", periodoAte);
+//		this.webTarget = this.client.target(URI_FERIADOS).queryParam("periodoDe", periodoDe);
+//		this.webTarget = this.client.target(URI_FERIADOS).queryParam("periodoAte", periodoAte);
 //		this.webTarget = this.client.target(URI_FERIADOS).path("3").path("07/09/2018").path("19/10/2018");
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
