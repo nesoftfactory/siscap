@@ -57,7 +57,7 @@ public class PublicacaoService {
 		Publicacao publicacaoSalva = buscarPublicacaoPeloCodigo(id);
 		BeanUtils.copyProperties(publicacao, publicacaoSalva, "id", "arquivo", "dataCriacao", "usuarioCriacao");
 
-		publicacaoSalva = salvar(publicacao, partFile, link);
+		publicacaoSalva = salvar(publicacaoSalva, partFile, link);
 		
 		return publicacaoSalva;
 	}
