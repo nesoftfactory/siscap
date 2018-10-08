@@ -10,6 +10,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="publicacao_anexo")
 public class PublicacaoAnexo extends BaseEntity {
@@ -18,6 +22,11 @@ public class PublicacaoAnexo extends BaseEntity {
 	private String nome;
 	private Arquivo arquivo;
 	private boolean sucesso;
+	
+	
+	public PublicacaoAnexo() {
+		super();
+	}
 	
 	
 	public PublicacaoAnexo(Long id, LocalDateTime dataCriacao, Usuario usuarioCriacao, LocalDateTime dataAtualizacao, Usuario usuarioAtualizacao, String nome, boolean sucesso, Long idPublicacao, Long idArquivo) {
@@ -69,6 +78,9 @@ public class PublicacaoAnexo extends BaseEntity {
 		this.sucesso = sucesso;
 	}
 
+	
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true)
 	@ManyToOne(optional=true, cascade=CascadeType.ALL)
 	@JoinColumn(name="id_arquivo")
 	public Arquivo getArquivo() {

@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,14 +47,8 @@ public class PublicacaoAnexoService {
 	private static final String PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO = "Anexo de Publicaçao incluído";
 	
 	public PublicacaoAnexo adicionar(PublicacaoAnexo publicacaoAnexo, MultipartFile partFile, String link) throws IOException {
-		atualizarArquivo(publicacaoAnexo, partFile, link);
 		atualizaDadosAdicao(publicacaoAnexo);
-		
-		PublicacaoAnexo publicacaoAnexoSalvo = salvar(publicacaoAnexo);
-		
-		PublicacaoAnexoHistorico historico = atualizarHistoricoAdicao(publicacaoAnexoSalvo);
-		publicacaoAnexoHistoricoRepository.save(historico);
-		
+		PublicacaoAnexo publicacaoAnexoSalvo = salvar(publicacaoAnexo, partFile, link);
 		return publicacaoAnexoSalvo;
 	}
 
@@ -70,11 +67,17 @@ public class PublicacaoAnexoService {
 		publicacaoAnexo.setArquivo(arquivo);
 	}
 
-	private PublicacaoAnexo salvar(PublicacaoAnexo publicacaoAnexoSalvo) {
-		validarPublicacao(publicacaoAnexoSalvo);
-		atualizarDadosEdicao(publicacaoAnexoSalvo);
+	private PublicacaoAnexo salvar(PublicacaoAnexo publicacaoAnexo, MultipartFile partFile, String link) throws IOException {
+		atualizarArquivo(publicacaoAnexo, partFile, link);
 		
-		return publicacaoAnexoRepository.save(publicacaoAnexoSalvo);
+		validarPublicacao(publicacaoAnexo);
+		atualizarDadosEdicao(publicacaoAnexo);
+		PublicacaoAnexo publicacaoAnexoSalvo = publicacaoAnexoRepository.save(publicacaoAnexo);
+		
+		PublicacaoAnexoHistorico historico = atualizarHistoricoAdicao(publicacaoAnexoSalvo);
+		publicacaoAnexoHistoricoRepository.save(historico);
+		
+		return publicacaoAnexoSalvo;
 	}
 
 	private void atualizarDadosEdicao(PublicacaoAnexo publicacaoAnexoSalvo) {
@@ -93,5 +96,22 @@ public class PublicacaoAnexoService {
 
 	private void atualizaDadosAdicao(PublicacaoAnexo publicacaoAnexo) {
 		publicacaoAnexo.setUsuarioCriacao(usuarioLogado);
+	}
+
+	public PublicacaoAnexo atualizar(Long id, @Valid PublicacaoAnexo publicacaoAnexo, MultipartFile partFile,
+			String link) throws IOException {
+		PublicacaoAnexo publicacaoAnexoSalva = buscarPublicacaoAnexoPeloCodigo(id);
+		BeanUtils.copyProperties(publicacaoAnexo, publicacaoAnexoSalva, "id", "arquivo", "dataCriacao", "usuarioCriacao");
+
+		publicacaoAnexoSalva = salvar(publicacaoAnexo, partFile, link);
+		
+		return publicacaoAnexoSalva;
+	}
+	
+	
+	private PublicacaoAnexo buscarPublicacaoAnexoPeloCodigo(Long id) {
+		PublicacaoAnexo publicacaoAnexoSalva = publicacaoAnexoRepository.findById(id).
+				orElseThrow(() -> new EmptyResultDataAccessException(1));
+		return publicacaoAnexoSalva;
 	}
 }
