@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Feriados</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="msgs" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Cadastro de Feriados" style="margin-bottom:20px">
+							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								<p:outputLabel value="Nome" for="nome"/>
+								<p:inputText id="nome" value="#{feriadosController.feriado.nome}" required="true" />
+
+								<p:outputLabel value="Fonte" for="fonte"/>
+								<p:selectOneMenu id="fonte" value="#{feriadosController.feriado.fonte}" required="true" converter="fonteConverter">
+						            <f:selectItem itemLabel="Selecione" itemValue=""/>
+									<f:selectItems value="#{feriadosController.fontesParaSelectItems}" />
+						        </p:selectOneMenu>
+				        
+						        <p:outputLabel value="Data" for="data"/>
+									<p:calendar id="data" value="#{feriadosController.feriado.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
+
+							
+								<p:outputLabel value="Ativa (Sim/Não)" for="ativa"/>
+								<p:selectBooleanCheckbox id="ativa" value="#{feriadosController.feriado.ativo}"  />
+							</p:panelGrid>
+							<p:toolbar>
+								<p:toolbarGroup>
+ 									<p:commandButton value="Limpar" action="#{feriadosController.limpar()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										
+									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" update="@form"
+										action="#{feriadosController.salvar()}" >
+            						</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>	
+						     					
+						</p:panel>
+
+						<p:dataTable id="feriadosTable" var="feriado" value="#{feriadosController.feriados}" reflow="true" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Lista de Feriados
+                            </f:facet>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{feriado.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Fonte">
+                                <h:outputText value="#{feriado.fonte.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Data">
+                                <h:outputText value="#{feriado.data}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ativa (Sim/Não)">
+                           		  <h:outputText value="#{feriado.textoAtivo}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ações">
+								<p:commandButton icon="fa fa-edit" title="editar" process="feriadosTable"
+									action="#{feriadosController.editar(feriado)}" update="@form"/>
+									
+								<p:commandButton icon="fa fa-trash" title="excluir" update="feriadosTable" process="feriadosTable"
+									actionListener="#{feriadosController.excluir(feriado)}" >                						
+							        <p:confirm header="Confirmação" message="Confirma exclusão desse feriado?" icon="ui-icon-alert" />
+								</p:commandButton>
+						    </p:column>
+                        </p:dataTable>
+                        
+                   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					    </p:confirmDialog>
+                        
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

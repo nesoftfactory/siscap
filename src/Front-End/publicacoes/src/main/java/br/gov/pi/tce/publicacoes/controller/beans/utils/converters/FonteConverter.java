@@ -7,17 +7,17 @@ import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
-import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
+import br.gov.pi.tce.publicacoes.modelo.Fonte;
 
 
-@FacesConverter("tipoFonteConverter")
-public class TipoFonteConverter implements Converter {
+@FacesConverter("fonteConverter")
+public class FonteConverter implements Converter {
 	
 	//@Inject
 	private FonteServiceClient fonteServiceClient;
 	
 	
-	public TipoFonteConverter() {
+	public FonteConverter() {
 		super();
 		if(fonteServiceClient  == null) {
 			fonteServiceClient = new FonteServiceClient();
@@ -31,23 +31,19 @@ public class TipoFonteConverter implements Converter {
 			return "";
 		}
 		try {
-			TipoFonte tf = fonteServiceClient.consultarTipoFontePorCodigo(Long.valueOf(value)); 
-			return tf;
-		//}// catch (NumberFormatException ne) {
-			// Ocorre quando vem um texto (Ex. Selecione...)
-			// Nesse caso nao deve fazer nada aqui.
+			Fonte fonte = fonteServiceClient.consultarFontePorCodigo(Long.valueOf(value)); 
+			return fonte;
 		} catch (Exception e) {
 			throw new ConverterException(e);
 		}
-		//return null;
 	}
 
 	public String getAsString(FacesContext facesContext, UIComponent component,
 			Object value) {
 		try {
-			if (value instanceof TipoFonte) {
-				TipoFonte tipo = (TipoFonte) value;
-				return String.valueOf(tipo.getId());
+			if (value instanceof Fonte) {
+				Fonte fonte = (Fonte) value;
+				return String.valueOf(fonte.getId());
 			}
 		} catch (Exception e) {
 			throw new ConverterException(e);

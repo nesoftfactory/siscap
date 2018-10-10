@@ -26,11 +26,9 @@ public class FontesController extends BeanController {
 	@Inject
 	private FonteServiceClient fonteServiceClient;
 	
-	
 	private List<Fonte> fontes;
 	
 	private List<TipoFonte> tiposFontes = Collections.EMPTY_LIST;
-	
 
 	@PostConstruct
 	public void init() {
@@ -39,12 +37,9 @@ public class FontesController extends BeanController {
 		iniciaTiposFontes();
 	}
 	
-	
-	
 	public List<SelectItem> getTiposFontesParaSelectItems(){
 		return getSelectItens(tiposFontes, "nome");
 	}
-	
 	
 	private void iniciaTiposFontes() {
 		try {
@@ -55,7 +50,6 @@ public class FontesController extends BeanController {
 		}
 		
 	}
-
 
 	public void editar(Fonte fonteEditar) {
 		fonte = fonteEditar;
@@ -69,14 +63,10 @@ public class FontesController extends BeanController {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
 		}
 	}
-	
-	
-	
 
 	public void setTiposFontes(List<TipoFonte> tiposFontes) {
 		this.tiposFontes = tiposFontes;
 	}
-
 
 	public void limpar() {
 		fonte = new Fonte();

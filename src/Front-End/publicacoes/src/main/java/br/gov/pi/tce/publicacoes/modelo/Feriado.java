@@ -1,5 +1,9 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
+import java.text.SimpleDateFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Classe responsável por representar a entidade Feriado.
  * 
@@ -99,6 +103,11 @@ public class Feriado {
 	 */
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	@JsonIgnore
+	public String getTextoAtivo() {
+		return getAtivo() ? "Sim" : "Não";
 	}
 		
 }
