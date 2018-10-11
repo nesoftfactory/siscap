@@ -1,6 +1,5 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +10,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
+
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
@@ -20,6 +21,8 @@ import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 public class FontesController extends BeanController {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger LOGGER = Logger.getLogger(FontesController.class);
 
 	private Fonte fonte;
 	
@@ -32,6 +35,7 @@ public class FontesController extends BeanController {
 
 	@PostConstruct
 	public void init() {
+		LOGGER.info("Iniciando a classe");
 		limpar();
 		iniciaFontes();
 		iniciaTiposFontes();
