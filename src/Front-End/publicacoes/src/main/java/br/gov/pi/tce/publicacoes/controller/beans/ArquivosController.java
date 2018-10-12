@@ -1,5 +1,9 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -9,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -31,7 +36,7 @@ import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 public class ArquivosController extends BeanController {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DIRETORIO_RAIZ = "/src/main/arquivos";
+	private static final String DIRETORIO_RAIZ = System.getProperty("user.dir") + "/";
 
 	private Arquivo arquivo;
 	private Arquivo arquivoAnexo;
@@ -94,34 +99,41 @@ public class ArquivosController extends BeanController {
 		}
 		
 		try {
-			publicacaoServiceClient.cadastrarPublicacaoPorUpload(publicacao, arquivo, publicacaoAnexo, arquivoAnexo);
-			addMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Diário salvo com sucesso.");
 			
-		} catch (Exception e) {
-			throw new Exception(e);
+		publicacaoServiceClient.cadastrarPublicacaoPorUpload(publicacao, arquivo, publicacaoAnexo, arquivoAnexo);
+		publicacaoServiceClient.armazenarArquivo(arquivo);
+		if (!arquivoAnexo.getNome().isEmpty()) {
+			publicacaoServiceClient.armazenarArquivo(arquivoAnexo);
 		}
 		
+		addMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Diário salvo com sucesso.");
+			
+		} catch (Exception e) {
+		    throw new Exception(e);
+		}
+			
 		limpar();
 	}
 
-	public void uploadFile(FileUploadEvent event) {
+	public void uploadFile(FileUploadEvent event) throws IOException {
 		UploadedFile uploadedFile = event.getFile();
 		arquivo.setNome(uploadedFile.getFileName());
 		arquivo.setTamanho(uploadedFile.getSize());
 		arquivo.setTipo(uploadedFile.getContentType());
 		arquivo.setConteudo(uploadedFile.getContents());
-		arquivo.setLink(DIRETORIO_RAIZ +" /" + arquivo.getNome() + "." + arquivo.getTipo());
-    }
-	
-	public void uploadFileAnexo(FileUploadEvent event) {
+		arquivo.setLink(DIRETORIO_RAIZ + arquivo.getNome());
+		arquivo.setInputStream(uploadedFile.getInputstream());
+	   }    
+		
+	public void uploadFileAnexo(FileUploadEvent event) throws IOException {
 		UploadedFile uploadedFile = event.getFile();
 		arquivoAnexo.setNome(uploadedFile.getFileName());
 		arquivoAnexo.setTamanho(uploadedFile.getSize());
 		arquivoAnexo.setTipo(uploadedFile.getContentType());
 		arquivoAnexo.setConteudo(uploadedFile.getContents());
-		arquivoAnexo.setLink(DIRETORIO_RAIZ +" /" + arquivo.getNome() + "." + arquivo.getTipo());
+		arquivoAnexo.setLink(DIRETORIO_RAIZ + arquivoAnexo.getNome());
+		arquivoAnexo.setInputStream(uploadedFile.getInputstream());
     }
-	
 	
 	public Publicacao getPublicacao() {
 		return publicacao;
