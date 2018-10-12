@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.gov.pi.tce.publicacoes.clients.FeriadoServiceClient;
+import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 
@@ -25,6 +26,9 @@ public class FeriadosController extends BeanController {
 	
 	@Inject
 	private FeriadoServiceClient feriadoServiceClient;
+	
+	@Inject
+	private FonteServiceClient fonteServiceClient;
 	
 	private List<Feriado> feriados;
 	
@@ -43,7 +47,7 @@ public class FeriadosController extends BeanController {
 	
 	private void iniciaFontes() {
 		try {
-			fontes = feriadoServiceClient.consultarTodasFontes();
+			fontes = fonteServiceClient.consultarTodasFontes();
 		}
 		catch (Exception e) {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
@@ -141,7 +145,6 @@ public class FeriadosController extends BeanController {
 	public void setFeriado(Feriado feriado) {
 		this.feriado = feriado;
 	}
-
 
 	public void setFeriados(List<Feriado> feriados) {
 		this.feriados = feriados;
