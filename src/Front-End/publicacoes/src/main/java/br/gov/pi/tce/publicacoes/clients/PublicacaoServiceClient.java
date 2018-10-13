@@ -2,6 +2,7 @@ package br.gov.pi.tce.publicacoes.clients;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,6 +12,9 @@ import java.util.Map;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.validation.ValidationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -43,6 +47,7 @@ public class PublicacaoServiceClient{
 	private String URI_PUBLICACOES_ANEXOS = "http://localhost:7788/publicacoes_anexos/";
 	private String URI_FONTES = "http://localhost:7788/fontes/";
 	private String URI_FERIADOS = "http://localhost:7788/feriados/";
+	private static final int BUFFER_SIZE = 6124;
 
 	private Client client;
 	private WebTarget webTarget;
@@ -62,6 +67,32 @@ public class PublicacaoServiceClient{
 		catch (Exception e) {
 			throw e;
 		}
+	}
+	
+	public void cadastrarPublicacaoPorUpload (Publicacao publicacao, Arquivo arquivo, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
+		
+		List<Publicacao> publicacoes = consultarTodasPublicacoes();
+		
+		for (Publicacao publicacaoElement : publicacoes) {
+	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
+	        	throw new ValidationException("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+	        }
+	        
+	        if (publicacaoElement.getCodigo().equals(publicacao.getCodigo())) {
+	        	throw new ValidationException("Este código já existe em outra publicacão. Por favor use outro código para esta publicação.");
+	        }
+	        
+	        if (publicacaoElement.getFonte().equals(publicacao.getFonte()) && publicacaoElement.getData().equals(publicacao.getData())) {
+	        	throw new ValidationException("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+	        }
+	    }
+		
+		publicacao.setSucesso(true);
+		publicacao.setQuantidadeTentativas((long) 1);
+		publicacao = cadastrarPublicacao(publicacao,  arquivo);
+		publicacaoAnexo.setPublicacao(publicacao);
+		publicacaoAnexo.setSucesso(true);
+		cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
 	}
 	
 	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo) throws Exception{
@@ -109,6 +140,33 @@ public class PublicacaoServiceClient{
 		trataRetorno(response);
 		return response.readEntity(PublicacaoAnexo.class);
 	}
+	
+	public void armazenarArquivo(Arquivo arquivo) {
+		try {
+			
+			File result = new File(arquivo.getLink());
+			FileOutputStream fileOutputStream = new FileOutputStream(result);
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int bulk;
+
+		    while (true) {
+		    	bulk = arquivo.getInputStream().read(buffer);
+		        if (bulk < 0) {
+		        	break;
+		        }
+		        
+		        fileOutputStream.write(buffer, 0, bulk);
+		        fileOutputStream.flush();
+		    }
+
+		    fileOutputStream.close();
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+		    FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR, "The files were not uploaded!", "");
+		       FacesContext.getCurrentInstance().addMessage(null, error);
+		} 
+	} 
 	
 	public FileInputStream realizarDownload() {
 		URL url;

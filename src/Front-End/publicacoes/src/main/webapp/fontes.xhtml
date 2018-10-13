@@ -28,8 +28,8 @@
 						        <p:outputLabel value="URL" for="url"/>
 								<p:inputText id="url" value="#{fontesController.fonte.url}" required="true" />
 								
-								<p:outputLabel value="Ativa (Sim/Não)" for="ativa"/>
-								<p:selectBooleanCheckbox id="ativa" value="#{fontesController.fonte.ativo}"  />
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{fontesController.fonte.ativo}"  />
 							</p:panelGrid>
 							<p:toolbar>
 								<p:toolbarGroup>
@@ -62,7 +62,7 @@
                                 <h:outputText value="#{fonte.url}" />
                             </p:column>
                             
-                            <p:column headerText="Ativa (Sim/Não)">
+                            <p:column headerText="Ativo (Sim/Não)">
                            		  <h:outputText value="#{fonte.textoAtivo}" />
                             </p:column>
                             

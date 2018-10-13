@@ -18,30 +18,35 @@
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
 								<p:inputText id="nome" value="#{feriadosController.feriado.nome}" required="true" />
-
-								<p:outputLabel value="Fonte" for="fonte"/>
-								<p:selectOneMenu id="fonte" value="#{feriadosController.feriado.fonte}" required="true" converter="fonteConverter">
-						            <f:selectItem itemLabel="Selecione" itemValue=""/>
-									<f:selectItems value="#{feriadosController.fontesParaSelectItems}" />
-						        </p:selectOneMenu>
-				        
+						        
+						        <p:outputLabel value="Fontes" for="fontes" />
+        						<p:selectManyCheckbox id="fontes"  value="#{feriadosController.feriado.fontes}" layout="grid" columns="1">
+        							<f:selectItems value="#{feriadosController.fontesParaSelectItems}" var="fonte" itemLabel="#{fonte.nome}" itemValue="#{fonte}" />
+    							</p:selectManyCheckbox>
+        				
 						        <p:outputLabel value="Data" for="data"/>
 									<p:calendar id="data" value="#{feriadosController.feriado.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
-
 							
-								<p:outputLabel value="Ativa (Sim/Não)" for="ativa"/>
-								<p:selectBooleanCheckbox id="ativa" value="#{feriadosController.feriado.ativo}"  />
-							</p:panelGrid>
-							<p:toolbar>
-								<p:toolbarGroup>
- 									<p:commandButton value="Limpar" action="#{feriadosController.limpar()}" process="@this" update="@form"
-										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
-										
-									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" update="@form"
-										action="#{feriadosController.salvar()}" >
-            						</p:commandButton>
-								</p:toolbarGroup>
-							</p:toolbar>	
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativa"/>
+									<p:selectBooleanCheckbox id="ativa" value="#{feriadosController.feriado.ativo}"  />
+								
+								<p:outputLabel value="Feriado para todas as fontes? (Sim/Não)" for="geral"/>
+									<p:selectBooleanCheckbox id="geral" value="#{feriadosController.feriado.geral}"/>
+								
+								<p:outputLabel value="Feriado em data fixa? (Sim/Não)" for="fixo"/>
+									<p:selectBooleanCheckbox id="fixo" value="#{feriadosController.feriado.fixo}"  />
+									
+								</p:panelGrid>
+							
+								<p:toolbar>
+									<p:toolbarGroup>
+ 										<p:commandButton value="Limpar" action="#{feriadosController.limpar()}" process="@this" update="@form"
+											icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" update="@form"
+											action="#{feriadosController.salvar()}" >
+            							</p:commandButton>
+									</p:toolbarGroup>
+								</p:toolbar>	
 						     					
 						</p:panel>
 
@@ -53,15 +58,25 @@
                                 <h:outputText value="#{feriado.nome}" />
                             </p:column>
 
-                            <p:column headerText="Fonte">
-                                <h:outputText value="#{feriado.fonte.nome}" />
+                            <p:column headerText="Fontes">
+                                <ui:repeat var="fonte" value="#{feriado.fontes}">
+            						<h:outputText value="#{fonte.nome}" />
+        						</ui:repeat>
                             </p:column>
 
                             <p:column headerText="Data">
                                 <h:outputText value="#{feriado.data}" />
                             </p:column>
                             
-                            <p:column headerText="Ativa (Sim/Não)">
+                            <p:column headerText="Feriado em todas as fontes? (Sim/Não)">
+                           		  <h:outputText value="#{feriado.textoGeral}" />
+                            </p:column>
+                            
+                            <p:column headerText="Feriado em data fixa? (Sim/Não)">
+                           		  <h:outputText value="#{feriado.textoFixo}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ativo (Sim/Não)">
                            		  <h:outputText value="#{feriado.textoAtivo}" />
                             </p:column>
                             

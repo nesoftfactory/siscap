@@ -56,11 +56,6 @@ public class FeriadoServiceClient{
 		}
 	}
 	
-	public List<Fonte> consultarTodasFontes(){
-		FonteServiceClient fonteServiceClient = new FonteServiceClient();
-		return fonteServiceClient.consultarTodasFontes();
-	}
-	
 	public List<Feriado> consultarTodosFeriados() throws Exception{
 		try {
 			Response response = chamadaAPI(null).get();

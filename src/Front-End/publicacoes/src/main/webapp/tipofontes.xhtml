@@ -19,8 +19,8 @@
 								<p:outputLabel value="Nome" for="nome"/>
 								<p:inputText id="nome" value="#{tipoFontesController.tipoFonte.nome}" required="true" />
 								
-								<p:outputLabel value="Ativa (Sim/Não)" for="ativa"/>
-								<p:selectBooleanCheckbox id="ativa" value="#{tipoFontesController.tipoFonte.ativo}"  />
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{tipoFontesController.tipoFonte.ativo}"  />
 																				
 							</p:panelGrid>
 							<p:toolbar>
@@ -44,7 +44,7 @@
                                 <h:outputText value="#{tipoFonte.nome}" />
                             </p:column>
                             
-                             <p:column headerText="Ativa (Sim/Não)">
+                             <p:column headerText="Ativo (Sim/Não)">
                            		  <h:outputText value="#{tipoFonte.textoAtivo}" />
                             </p:column>
                             

@@ -22,8 +22,11 @@ public class DataConverter implements Converter {
 		try {
 			// Tratamento para data
 			String[] dataSplit = value.split("/");
-			return (dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]);
-
+			if (dataSplit[2].length() == 2) {
+				return ("20"+dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]);
+			} else {
+				return (dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]);
+			}
 		} catch (Exception e) {
 			throw new ConverterException(e);
 		}
