@@ -57,7 +57,7 @@ public class PublicacaoHistorico  {
 		this.mensagem = mensagem;
 	}
 	
-	public boolean isSucesso() {
+	public boolean getSucesso() {
 		return sucesso;
 	}
 

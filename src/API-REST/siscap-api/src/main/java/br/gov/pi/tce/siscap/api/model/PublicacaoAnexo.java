@@ -70,7 +70,7 @@ public class PublicacaoAnexo extends BaseEntity {
 
 	
 
-	public boolean isSucesso() {
+	public boolean getSucesso() {
 		return sucesso;
 	}
 
