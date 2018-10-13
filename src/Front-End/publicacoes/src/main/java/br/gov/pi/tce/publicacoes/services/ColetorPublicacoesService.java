@@ -7,9 +7,6 @@ import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
-
 import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
 
 /**

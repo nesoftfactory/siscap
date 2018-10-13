@@ -3,6 +3,7 @@ package br.gov.pi.tce.publicacoes.modelo;
 import java.util.Date;
 
 /**
+ * 
  * Classe responsável por representar a entidade Publicacao.
  * 
  * 

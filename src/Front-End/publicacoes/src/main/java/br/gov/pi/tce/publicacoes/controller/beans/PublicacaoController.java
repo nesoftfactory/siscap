@@ -25,9 +25,9 @@ import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.core.GenericEntity;
+//import javax.ws.rs.core.GenericEntity;
 
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
+//import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;

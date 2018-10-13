@@ -1,6 +1,5 @@
 package br.gov.pi.tce.publicacoes.controller.beans.utils;
 
-//import java.util.Date;
 //import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
 
 public class Main {
