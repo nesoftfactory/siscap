@@ -1,5 +1,7 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
+import java.io.InputStream;
+
 /**
  * Classe responsável por representar a entidade Arquivo.
  * 
@@ -14,12 +16,13 @@ public class Arquivo {
 	private String tipo;
 	private String link;
 	private byte[] conteudo;
-
+    private InputStream inputStream;
 	/**
 	 * 
 	 */
 	public Arquivo() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -134,4 +137,13 @@ public class Arquivo {
 	public void setConteudo(byte[] conteudo) {
 		this.conteudo = conteudo;
 	}
+
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+	
 }
