@@ -17,12 +17,12 @@ public class Arquivo {
 	private String link;
 	private byte[] conteudo;
     private InputStream inputStream;
+    
 	/**
 	 * 
 	 */
 	public Arquivo() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -138,10 +138,16 @@ public class Arquivo {
 		this.conteudo = conteudo;
 	}
 
+	/**
+	 * @return the inputStream
+	 */
 	public InputStream getInputStream() {
 		return inputStream;
 	}
 
+	/**
+	 * @param inputStream the inputStream to set
+	 */
 	public void setInputStream(InputStream inputStream) {
 		this.inputStream = inputStream;
 	}
