@@ -52,8 +52,6 @@ public class TipoFonte
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
 	
-	
-	
 	public Boolean getAtivo() {
 		return ativo;
 	}

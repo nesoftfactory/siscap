@@ -19,6 +19,8 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	private Usuario usuarioLogado;
+	
 	public Usuario atualizar(Long id, Usuario usuario) {
 		Usuario usuarioSalvo = buscarUsuarioPeloCodigo(id);
 		BeanUtils.copyProperties(usuario, usuarioSalvo, "id", "dataCriacao", "usuarioCriacao");
@@ -104,9 +106,12 @@ public class UsuarioService {
 
 	
 	public Usuario getUsuarioLogado() {
-		//TODO Depois verificar como ajusta para pegar o usuário da sessão
-		//return buscarUsuarioPeloCodigo(2L);
-		return usuarioRepository.findAll().get(0);
+		if (this.usuarioLogado == null) {
+			//TODO Depois verificar como ajusta para pegar o usuário da sessão
+			//return buscarUsuarioPeloCodigo(2L);
+			this.usuarioLogado = usuarioRepository.findAll().get(0);
+		}
+		return this.usuarioLogado;
 	}
 	
 }

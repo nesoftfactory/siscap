@@ -3,8 +3,6 @@ package br.gov.pi.tce.siscap.api.service;
 import java.io.IOException;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,7 +13,6 @@ import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoHistorico;
-import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
@@ -39,13 +36,6 @@ public class PublicacaoService {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	private Usuario usuarioLogado;
-	
-	@PostConstruct
-	public void setarUsuarioLogado() {
-		usuarioLogado = usuarioService.getUsuarioLogado();
-	}
-
 	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
 		atualizaDadosAdicao(publicacao);
 		Publicacao publicacaoSalva = salvar(publicacao, partFile, link);
@@ -79,7 +69,7 @@ public class PublicacaoService {
 
 	private PublicacaoHistorico atualizarHistorico(Publicacao publicacao, String mensagemLog) {
 		PublicacaoHistorico historico = new PublicacaoHistorico(publicacao, 
-				mensagemLog, true, usuarioLogado);
+				mensagemLog, true, usuarioService.getUsuarioLogado());
 		
 		publicacaoHistoricoRepository.save(historico);
 		
@@ -89,13 +79,13 @@ public class PublicacaoService {
 	private void atualizarArquivo(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
 		Arquivo arquivo = null;
 		if (partFile != null) {
-			arquivo = new Arquivo(partFile, link, usuarioLogado);
+			arquivo = new Arquivo(partFile, link, usuarioService.getUsuarioLogado());
 		}
 		publicacao.setArquivo(arquivo);
 	}
 	
 	private void atualizarDadosEdicao(Publicacao publicacaoSalva) {
-		publicacaoSalva.setUsuarioAtualizacao(usuarioLogado);
+		publicacaoSalva.setUsuarioAtualizacao(usuarioService.getUsuarioLogado());
 	}
 
 	private void validarFonte(Publicacao publicacaoSalva) {
@@ -109,7 +99,7 @@ public class PublicacaoService {
 	}
 
 	private void atualizaDadosAdicao(Publicacao publicacao) {
-		publicacao.setUsuarioCriacao(usuarioLogado);
+		publicacao.setUsuarioCriacao(usuarioService.getUsuarioLogado());
 	}
 
 	private Publicacao buscarPublicacaoPeloCodigo(Long id) {

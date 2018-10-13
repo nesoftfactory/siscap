@@ -13,7 +13,7 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:panel header="Cadastro de fontes" style="margin-bottom:20px">
+						<p:panel header="Cadastro de Fontes" style="margin-bottom:20px">
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
@@ -28,8 +28,8 @@
 						        <p:outputLabel value="URL" for="url"/>
 								<p:inputText id="url" value="#{fontesController.fonte.url}" required="true" />
 								
-								<p:outputLabel value="Ativa (Sim/Não)" for="ativa"/>
-								<p:selectBooleanCheckbox id="ativa" value="#{fontesController.fonte.ativo}"  />
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{fontesController.fonte.ativo}"  />
 							</p:panelGrid>
 							<p:toolbar>
 								<p:toolbarGroup>
@@ -60,6 +60,10 @@
 
                             <p:column headerText="URL">
                                 <h:outputText value="#{fonte.url}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ativo (Sim/Não)">
+                           		  <h:outputText value="#{fonte.textoAtivo}" />
                             </p:column>
                             
                             <p:column headerText="Ações">
