@@ -3,6 +3,7 @@ package br.gov.pi.tce.publicacoes.modelo;
 import java.io.InputStream;
 
 /**
+ * 
  * Classe responsável por representar a entidade Arquivo.
  * 
  * @author Erick Guilherme Cavalcanti

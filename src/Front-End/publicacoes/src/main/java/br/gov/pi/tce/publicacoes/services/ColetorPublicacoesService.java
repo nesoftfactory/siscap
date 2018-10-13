@@ -7,6 +7,8 @@ import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.apache.log4j.Logger;
+
 import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
 
 /**
@@ -30,48 +32,46 @@ public class ColetorPublicacoesService {
 	
 	public final static int QUANTIDADE_DIAS = 5;
 	
-	//static final Logger logger = LogManager.getLogger(ColetorPublicacoesService.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-	//logger.info("Iniciando procedimentos");
-
-	@Schedule(hour="14", minute = "07")
+	@Schedule(hour="17", minute = "16")
 	public void coletarDiarioOficialParnaiba() {
-		//logger.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
+		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, QUANTIDADE_DIAS);
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
-		//logger.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
+		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="13", minute = "54")
+	@Schedule(hour="17", minute = "18")
 	public void coletarDiarioOficialTeresina() {
-		//logger.info("Iniciando a Coleta do Diario Oficial de Teresina");
+		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, QUANTIDADE_DIAS);
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
-		//logger.info("Finalizando a Coleta do Diario Oficial de Teresina");
+		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	@Schedule(hour="00", minute = "49")
+	@Schedule(hour="17", minute = "20")
 	public void coletarDiarioOficialMunicipios() {
-		//logger.info("Iniciando a Coleta do Diario Oficial dos Municipios");
+		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data,QUANTIDADE_DIAS);
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
 		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
-		//logger.info("Finalizando a Coleta do Diario Oficial dos Municipios");
+		LOGGER.info("Finalizando a Coleta do Diario Oficial dos Municipios");
 	}
 	
-	@Schedule(hour="18", minute = "42")
+	@Schedule(hour="17", minute = "22")
 	public void coletarDiarioOficialPiaui() {
-		//logger.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
+		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data,QUANTIDADE_DIAS);
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
 		publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
-		//logger.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");
+		LOGGER.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");
 	}
 	
 	private Date getData00Horas00Minutos00SeguntosMenosQuatidadeDias(Date data, int quatidadeDias){

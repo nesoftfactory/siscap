@@ -26,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
@@ -49,6 +50,8 @@ public class PublicacaoServiceClient{
 	private String URI_FONTES = "http://localhost:7788/fontes/";
 	private String URI_FERIADOS = "http://localhost:7788/feriados/";
 	private static final int BUFFER_SIZE = 6124;
+	
+	private static final Logger LOGGER = Logger.getLogger(PublicacaoServiceClient.class);
 
 	private Client client;
 	private WebTarget webTarget;
@@ -66,6 +69,7 @@ public class PublicacaoServiceClient{
 			return list;
 		}
 		catch (Exception e) {
+			LOGGER.error("Erro ao consultar todas as publicacoes");
 			throw e;
 		}
 	}
@@ -183,22 +187,13 @@ public class PublicacaoServiceClient{
 			fileInputStream = new FileInputStream(file);
 			//fileInputStream.close();
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return fileInputStream;
 	}
 
-//	public Publicacao alterarPublicacao(Publicacao publicacao) throws Exception{
-//		this.webTarget = this.client.target(URI_PUBLICACOES).path(String.valueOf(publicacao.getId()));
-//		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-//		Response response = invocationBuilder.put(Entity.entity(publicacao, RESPONSE_TYPE));
-//		trataRetorno(response);
-//		return response.readEntity(Publicacao.class);
-//	}
 	public Publicacao alterarPublicacao(Publicacao publicacao, Arquivo arquivo) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
@@ -286,6 +281,7 @@ public class PublicacaoServiceClient{
 				throw new Exception(msg);
 			}
 			else {
+				LOGGER.error("Erro interno.");
 				throw new Exception("Erro interno.");
 			}
 		}

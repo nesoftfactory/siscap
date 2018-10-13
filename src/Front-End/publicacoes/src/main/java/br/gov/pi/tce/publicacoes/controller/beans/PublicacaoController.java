@@ -25,9 +25,8 @@ import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-//import javax.ws.rs.core.GenericEntity;
 
-//import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
+import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
@@ -47,6 +46,8 @@ import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 public class PublicacaoController extends BeanController{
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger LOGGER = Logger.getLogger(PublicacaoController.class);
 	
 	// URL das fontes dos diários oficiais
 	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);
@@ -90,6 +91,8 @@ public class PublicacaoController extends BeanController{
 				dateFormat.setLenient(false);
 				return dateFormat.parse(date.trim());
 			} catch (ParseException pe) {
+//				LOGGER.error("Erro ao converter Data");
+//				LOGGER.error(pe.getMessage());
 			}
 		}
 		return null;
@@ -129,37 +132,52 @@ public class PublicacaoController extends BeanController{
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomTeresina), arquivoList,
 						dataInicial, dataFinal, diasUteisList);
 				if (isFinalPaginacao == null) {
-					System.out.println("Erro na fonte:" + idFonte + " - pagina - " + pageDomTeresina);
+					LOGGER.error("Erro na fonte:" + idFonte + " - pagina - " + pageDomTeresina);
 					isFinalPaginacao = Boolean.FALSE;
 				}
 			}
+			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
 		} else if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(idFonte)) {
 			for (pageDomParnaiba = 1; isFinalPaginacao.equals(Boolean.FALSE); pageDomParnaiba++) {
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomParnaiba), arquivoList,
 						dataInicial, dataFinal, diasUteisList);
 				if (isFinalPaginacao == null) {
-					System.out.println("Erro na fonte:" + idFonte + " - pagina - " + pageDomParnaiba);
+					LOGGER.error("Erro na fonte:" + idFonte + " - pagina - " + pageDomParnaiba);
 					isFinalPaginacao = Boolean.FALSE;
 				}
 			}
+			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
 		} else if (URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS.equals(idFonte)) {
 			List<String> listaMesAnoHtml = getListaMesAnoHtml(dataInicial, dataFinal);
 			for (String mesAnoHtml : listaMesAnoHtml) {
 				List<String> listHtmls = getPaginasAnoMesDiarioOficialMunicipios(
 						URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS + mesAnoHtml);
 				for (String html : listHtmls) {
-					isFinalPaginacao = getPaginasDiariosDOM(fonte, html, arquivoList, dataInicial,
-							dataFinal, diasUteisList);
+					isFinalPaginacao = getPaginasDiariosDOM(fonte, html, arquivoList, dataInicial, dataFinal,
+							diasUteisList);
 				}
 			}
+			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
+		} else {
+			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
 		}
 
+	}
+
+	/**
+	 * Metodo resposnavel por salvar as publicacoes inexistentes
+	 * 
+	 * @param idFonte
+	 * @param diasUteisList
+	 * @param fonte
+	 */
+	private void salvarPublicacaoInexistente(Long idFonte, List<LocalDate> diasUteisList, Fonte fonte) {
 		for (LocalDate localDate : diasUteisList) {
 			Date date = asDate(localDate);
 			Boolean isFeriado = isFeriado(date, fonte.getId());
 			if (!isFeriado) {
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
-				System.out.println(idFonte + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
+				LOGGER.info(idFonte + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
 				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 			}
 		}
@@ -214,16 +232,16 @@ public class PublicacaoController extends BeanController{
 			}
 
 			if (erroUrlFonte) {
-				System.out.println("A Fonte " + fonte.getUrl() + " não foi Encontrada.");
+				LOGGER.error("Erro: A Fonte " + fonte.getUrl() + " não foi Encontrada.");
 			} else {
 				isFinalPaginacao = lerPaginaDiarioDOM(fonte, pageDom, arquivoList, htmlCompleto,
 						isFinalPaginacao, regexForDate, regexForPDF, dataInicial, dataFinal, diasUteisList);
 			}
 
 		} catch (MalformedURLException excecao) {
-			excecao.printStackTrace();
+			LOGGER.error(excecao.getMessage());
 		} catch (IOException excecao) {
-			excecao.printStackTrace();
+			LOGGER.error(excecao.getMessage());
 		}
 
 		return isFinalPaginacao;
@@ -256,9 +274,10 @@ public class PublicacaoController extends BeanController{
 				}
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();// não encontrou o html
+			LOGGER.error("Erro: HTML da página não foi encontrado.");
+			LOGGER.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 
 		return listHtmls;
@@ -387,22 +406,24 @@ public class PublicacaoController extends BeanController{
 									}
 									
 									do {
-									linhaHTML = fonteHTML.readLine();
-									Matcher matcherPositive = Pattern.compile("[0-9A-Za-z\\s|-]+.(pdf)").matcher(linhaHTML);
-									Matcher matcherNegative = Pattern.compile("--").matcher(linhaHTML);
+										linhaHTML = fonteHTML.readLine();
+										Matcher matcherPositive = Pattern.compile("[0-9A-Za-z\\s|-]+.(pdf)")
+												.matcher(linhaHTML);
+										Matcher matcherNegative = Pattern.compile("--").matcher(linhaHTML);
 
-									if (matcherNegative.find()) {
-										break;
-									}
-									
-									if (matcherPositive.find()) {
-										String arquivoAnexoStr = matcherPositive.group();
-										arquivoAnexo = new Arquivo(arquivoAnexoStr, Long.valueOf(10), "tipo", URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, "conteudo".getBytes());
-										publicacaoAnexo = new PublicacaoAnexo(null, arquivoAnexoStr, arquivoAnexo.getId(), true);
-										break;
-									}
-									
-									} while(true);
+										if (matcherNegative.find()) {
+											break;
+										}
+
+										if (matcherPositive.find()) {
+											String arquivoAnexoStr = matcherPositive.group();
+											arquivoAnexo = new Arquivo(arquivoAnexoStr, Long.valueOf(10), "tipo",
+													URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, "conteudo".getBytes());
+											publicacaoAnexo = new PublicacaoAnexo(null, arquivoAnexoStr,
+													arquivoAnexo.getId(), true);
+											break;
+										}
+									} while (true);
 									
 									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.valueOf(publicacaoAnexo!=null), "Sucesso", publicacaoAnexo, arquivoAnexo, codigo, publicacaoName);
 									LocalDate localDate = asLocalDate(date);
@@ -482,9 +503,8 @@ public class PublicacaoController extends BeanController{
 				}
 			}
 		} catch (Exception e) {
-//				 TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Deu Erro.");
+			LOGGER.error("Erro ao Criar/Atualizar Publicacao.");
+			LOGGER.error(e.getMessage());
 		}
 	}
 	
@@ -549,17 +569,16 @@ public class PublicacaoController extends BeanController{
 				if (!diarioEncontrado) {
 					if (!isFeriado(date, fonte.getId())) {
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
-						System.out.println(URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group() + " - " + formatoDeData.format(date) + " - "
-								+ "Diario Não Encontrado");
+						LOGGER.info(URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group() + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
 						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 					}
 				}
 				fonteHTML.close();
 
 			} catch (MalformedURLException excecao) {
-				excecao.printStackTrace();
+				LOGGER.error(excecao.getMessage());
 			} catch (IOException excecao) {
-				excecao.printStackTrace();
+				LOGGER.error(excecao.getMessage());
 			}
 		}
 	}
@@ -649,7 +668,8 @@ public class PublicacaoController extends BeanController{
 			Date dataParseada = formatoData.parse(dataStr);
 			data = dataParseada;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error("Erro ao converter String no formato dd/MM/yyyy em Data.");
+			LOGGER.error(e.getMessage());
 		}
 		return data;
 	}
@@ -667,7 +687,8 @@ public class PublicacaoController extends BeanController{
 			Date dataParseada = formatoData.parse(dataStr);
 			data = dataParseada;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error("Erro ao converter String no formato dd/MM/yyyy HH:mm:ss em Data.");
+			LOGGER.error(e.getMessage());
 		}
 		return data;
 	}
