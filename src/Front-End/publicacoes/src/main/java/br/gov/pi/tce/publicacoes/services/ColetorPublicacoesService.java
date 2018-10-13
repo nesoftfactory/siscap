@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
+import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
  * Classe responsável por executar o agendamento das coletas das publicações nos sites.
@@ -34,13 +35,14 @@ public class ColetorPublicacoesService {
 	
 	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-	@Schedule(hour="17", minute = "16")
+	@Schedule(hour="18", minute = "34")
 	public void coletarDiarioOficialParnaiba() {
+		Propriedades propriedades = Propriedades.getInstance();
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, QUANTIDADE_DIAS);
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_PARNAIBA, dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(Long.valueOf(propriedades.getValor("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").toString()), dataInicial, dataFinal);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
@@ -64,7 +66,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial dos Municipios");
 	}
 	
-	@Schedule(hour="17", minute = "22")
+	@Schedule(hour="18", minute = "36")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
 		Date data = new Date();

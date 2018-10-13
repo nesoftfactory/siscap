@@ -91,8 +91,6 @@ public class PublicacaoController extends BeanController{
 				dateFormat.setLenient(false);
 				return dateFormat.parse(date.trim());
 			} catch (ParseException pe) {
-//				LOGGER.error("Erro ao converter Data");
-//				LOGGER.error(pe.getMessage());
 			}
 		}
 		return null;
@@ -136,7 +134,7 @@ public class PublicacaoController extends BeanController{
 					isFinalPaginacao = Boolean.FALSE;
 				}
 			}
-			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
+			salvarPublicacaoInexistente(diasUteisList, fonte);
 		} else if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(idFonte)) {
 			for (pageDomParnaiba = 1; isFinalPaginacao.equals(Boolean.FALSE); pageDomParnaiba++) {
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomParnaiba), arquivoList,
@@ -146,7 +144,7 @@ public class PublicacaoController extends BeanController{
 					isFinalPaginacao = Boolean.FALSE;
 				}
 			}
-			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
+			salvarPublicacaoInexistente(diasUteisList, fonte);
 		} else if (URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS.equals(idFonte)) {
 			List<String> listaMesAnoHtml = getListaMesAnoHtml(dataInicial, dataFinal);
 			for (String mesAnoHtml : listaMesAnoHtml) {
@@ -157,9 +155,9 @@ public class PublicacaoController extends BeanController{
 							diasUteisList);
 				}
 			}
-			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
+			salvarPublicacaoInexistente(diasUteisList, fonte);
 		} else {
-			salvarPublicacaoInexistente(idFonte, diasUteisList, fonte);
+			salvarPublicacaoInexistente(diasUteisList, fonte);
 		}
 
 	}
@@ -167,17 +165,16 @@ public class PublicacaoController extends BeanController{
 	/**
 	 * Metodo resposnavel por salvar as publicacoes inexistentes
 	 * 
-	 * @param idFonte
 	 * @param diasUteisList
 	 * @param fonte
 	 */
-	private void salvarPublicacaoInexistente(Long idFonte, List<LocalDate> diasUteisList, Fonte fonte) {
+	private void salvarPublicacaoInexistente(List<LocalDate> diasUteisList, Fonte fonte) {
 		for (LocalDate localDate : diasUteisList) {
 			Date date = asDate(localDate);
 			Boolean isFeriado = isFeriado(date, fonte.getId());
 			if (!isFeriado) {
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
-				LOGGER.info(idFonte + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
+				LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
 				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 			}
 		}
@@ -569,8 +566,8 @@ public class PublicacaoController extends BeanController{
 				if (!diarioEncontrado) {
 					if (!isFeriado(date, fonte.getId())) {
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
-						LOGGER.info(URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group() + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
-						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
+						LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
+						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 					}
 				}
 				fonteHTML.close();
