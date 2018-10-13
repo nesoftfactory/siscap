@@ -81,7 +81,7 @@ public class Publicacao extends BaseEntity {
 		this.arquivo = arquivo;
 	}
 
-	public Boolean isSucesso() {
+	public Boolean getSucesso() {
 		return sucesso;
 	}
 
@@ -90,7 +90,7 @@ public class Publicacao extends BaseEntity {
 	}
 
 	@Column(name="possui_anexo")
-	public Boolean isPossuiAnexo() {
+	public Boolean getPossuiAnexo() {
 		return possuiAnexo;
 	}
 

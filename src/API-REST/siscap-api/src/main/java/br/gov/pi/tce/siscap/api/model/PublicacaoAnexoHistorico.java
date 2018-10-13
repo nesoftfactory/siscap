@@ -59,7 +59,7 @@ public class PublicacaoAnexoHistorico  {
 	
 	
 
-	public boolean isSucesso() {
+	public boolean getSucesso() {
 		return sucesso;
 	}
 
