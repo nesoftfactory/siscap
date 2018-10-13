@@ -3,7 +3,6 @@ package br.gov.pi.tce.siscap.api.service;
 import java.io.IOException;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -16,7 +15,6 @@ import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexo;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexoHistorico;
-import br.gov.pi.tce.siscap.api.model.Usuario;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
@@ -37,13 +35,6 @@ public class PublicacaoAnexoService {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	private Usuario usuarioLogado;
-	
-	@PostConstruct
-	public void setarUsuarioLogado() {
-		usuarioLogado = usuarioService.getUsuarioLogado();
-	}
-
 	private static final String PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO = "Anexo de Publicaçao incluído";
 	
 	public PublicacaoAnexo adicionar(PublicacaoAnexo publicacaoAnexo, MultipartFile partFile, String link) throws IOException {
@@ -54,7 +45,7 @@ public class PublicacaoAnexoService {
 
 	private PublicacaoAnexoHistorico atualizarHistoricoAdicao(PublicacaoAnexo publicacaoAnexo) {
 		PublicacaoAnexoHistorico historico = new PublicacaoAnexoHistorico(publicacaoAnexo, 
-				PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO, true, usuarioLogado);
+				PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO, true, usuarioService.getUsuarioLogado());
 		
 		return historico;
 	}
@@ -62,7 +53,7 @@ public class PublicacaoAnexoService {
 	private void atualizarArquivo(PublicacaoAnexo publicacaoAnexo, MultipartFile partFile, String link) throws IOException {
 		Arquivo arquivo = null;
 		if (partFile != null) {
-			arquivo = new Arquivo(partFile, link, usuarioLogado);
+			arquivo = new Arquivo(partFile, link, usuarioService.getUsuarioLogado());
 		}
 		publicacaoAnexo.setArquivo(arquivo);
 	}
@@ -81,7 +72,7 @@ public class PublicacaoAnexoService {
 	}
 
 	private void atualizarDadosEdicao(PublicacaoAnexo publicacaoAnexoSalvo) {
-		publicacaoAnexoSalvo.setUsuarioAtualizacao(usuarioLogado);
+		publicacaoAnexoSalvo.setUsuarioAtualizacao(usuarioService.getUsuarioLogado());
 	}
 
 	private void validarPublicacao(PublicacaoAnexo publicacaoAnexoSalvo) {
@@ -95,7 +86,7 @@ public class PublicacaoAnexoService {
 	}
 
 	private void atualizaDadosAdicao(PublicacaoAnexo publicacaoAnexo) {
-		publicacaoAnexo.setUsuarioCriacao(usuarioLogado);
+		publicacaoAnexo.setUsuarioCriacao(usuarioService.getUsuarioLogado());
 	}
 
 	public PublicacaoAnexo atualizar(Long id, @Valid PublicacaoAnexo publicacaoAnexo, MultipartFile partFile,
