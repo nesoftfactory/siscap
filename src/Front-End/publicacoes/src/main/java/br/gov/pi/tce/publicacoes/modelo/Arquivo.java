@@ -22,9 +22,7 @@ public class Arquivo {
 	 */
 	public Arquivo() {
 		super();
-		
 		// TODO Auto-generated constructor stub
-		
 	}
 
 	/**
