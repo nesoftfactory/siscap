@@ -49,10 +49,10 @@ public class PublicacaoController extends BeanController{
 	private static final long serialVersionUID = 1L;
 	
 	// URL das fontes dos diários oficiais
-	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2); //"http://www.diarioficialdosmunicipios.org";
-	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3); //"http://www.diariooficial.pi.gov.br";
-	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4); //"http://www.dom.teresina.pi.gov.br";
-	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5); //"http://dom.parnaiba.pi.gov.br";
+	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);
+	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3);
+	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4);
+	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5);
 
 	// URL das fontes utiliziadas na coleta dos diários oficiais
 	public final static String URL_COLETA_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br/home?d=";
@@ -122,15 +122,12 @@ public class PublicacaoController extends BeanController{
 
 		List<LocalDate> diasUteisList = getDiasUteis(dataInicial, dataFinal);
 
-		// Lista do objeto Fontes em que consta a data e o nome do pdf
-		List<Publicacao> diarios = new ArrayList<Publicacao>();
-		
 		Fonte fonte = consultarFontePorIdFonte(idFonte);
 
 		if (URL_FONTE_DIARIO_OFICIAL_TERESINA.equals(idFonte)) {
 			for (pageDomTeresina = 1; isFinalPaginacao.equals(Boolean.FALSE); pageDomTeresina++) {
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomTeresina), arquivoList,
-						diarios, dataInicial, dataFinal, diasUteisList);
+						dataInicial, dataFinal, diasUteisList);
 				if (isFinalPaginacao == null) {
 					System.out.println("Erro na fonte:" + idFonte + " - pagina - " + pageDomTeresina);
 					isFinalPaginacao = Boolean.FALSE;
@@ -139,7 +136,7 @@ public class PublicacaoController extends BeanController{
 		} else if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(idFonte)) {
 			for (pageDomParnaiba = 1; isFinalPaginacao.equals(Boolean.FALSE); pageDomParnaiba++) {
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomParnaiba), arquivoList,
-						diarios, dataInicial, dataFinal, diasUteisList);
+						dataInicial, dataFinal, diasUteisList);
 				if (isFinalPaginacao == null) {
 					System.out.println("Erro na fonte:" + idFonte + " - pagina - " + pageDomParnaiba);
 					isFinalPaginacao = Boolean.FALSE;
@@ -151,7 +148,7 @@ public class PublicacaoController extends BeanController{
 				List<String> listHtmls = getPaginasAnoMesDiarioOficialMunicipios(
 						URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS + mesAnoHtml);
 				for (String html : listHtmls) {
-					isFinalPaginacao = getPaginasDiariosDOM(fonte, html, arquivoList, diarios, dataInicial,
+					isFinalPaginacao = getPaginasDiariosDOM(fonte, html, arquivoList, dataInicial,
 							dataFinal, diasUteisList);
 				}
 			}
@@ -163,7 +160,7 @@ public class PublicacaoController extends BeanController{
 			if (!isFeriado) {
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 				System.out.println(idFonte + " - " + formatoDeData.format(date) + " - " + "Diario Não Encontrado");
-				salvarPublicacao(fonte, "", diarios, convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "");
+				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 			}
 		}
 	}
@@ -186,14 +183,13 @@ public class PublicacaoController extends BeanController{
 	 * @param urlString
 	 * @param pageDom
 	 * @param arquivoList
-	 * @param diarios
 	 * @param dataInicial
 	 * @param dataFinal
 	 * @param diasUteisList
 	 * @return
 	 */
 	private Boolean getPaginasDiariosDOM(Fonte fonte, String pageDom, List<String> arquivoList,
-			List<Publicacao> diarios, Date dataInicial, Date dataFinal, List<LocalDate> diasUteisList) {
+			Date dataInicial, Date dataFinal, List<LocalDate> diasUteisList) {
 
 		String htmlCompleto = "";
 		Boolean isFinalPaginacao = null;
@@ -220,7 +216,7 @@ public class PublicacaoController extends BeanController{
 			if (erroUrlFonte) {
 				System.out.println("A Fonte " + fonte.getUrl() + " não foi Encontrada.");
 			} else {
-				isFinalPaginacao = lerPaginaDiarioDOM(fonte, pageDom, arquivoList, diarios, htmlCompleto,
+				isFinalPaginacao = lerPaginaDiarioDOM(fonte, pageDom, arquivoList, htmlCompleto,
 						isFinalPaginacao, regexForDate, regexForPDF, dataInicial, dataFinal, diasUteisList);
 			}
 
@@ -272,7 +268,6 @@ public class PublicacaoController extends BeanController{
 	 * @param urlString
 	 * @param pageDom
 	 * @param arquivoList
-	 * @param diarios
 	 * @param htmlCompleto
 	 * @param isFinalPaginacao
 	 * @param regexForDate
@@ -284,7 +279,7 @@ public class PublicacaoController extends BeanController{
 	 * @throws IOException
 	 */
 	private Boolean lerPaginaDiarioDOM(Fonte fonte, String pageDom, List<String> arquivoList,
-			List<Publicacao> diarios, String htmlCompleto, Boolean isFinalPaginacao, String regexForDate,
+			String htmlCompleto, Boolean isFinalPaginacao, String regexForDate,
 			String regexForPDF, Date dataInicial, Date dataFinal, List<LocalDate> diasUteisList)
 			throws MalformedURLException, IOException {
 
@@ -343,15 +338,15 @@ public class PublicacaoController extends BeanController{
 										publicacaoName = matcherTitleTag.group().replace("title=", "").replace("\"", "").replace("Ãš", "U").replace("EDIÃ‡ÃƒO", "EDIÇÃO").replace("_PESQUISÃVEL", "_PESQUISÁVEL");
 									}
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, diarios, convertDateToString(date),
-											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, codigo, publicacaoName);// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, convertDateToString(date),
+											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, codigo, publicacaoName);
 								} else {
 									Calendar c = Calendar.getInstance();
 									c.setTime(date);
 									String mes = String.format("%02d", c.get(Calendar.MONTH) + 1);
 									String ano = String.valueOf(c.get(Calendar.YEAR));
 									salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS + ano + mes + "/" + arquivoStr,
-											diarios, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", arquivoStr);// incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+											convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", arquivoStr);
 								}
 								LocalDate localDate = asLocalDate(date);
 								if (diasUteisList.contains(localDate)) {
@@ -409,7 +404,7 @@ public class PublicacaoController extends BeanController{
 									
 									} while(true);
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, diarios, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.valueOf(publicacaoAnexo!=null), "Sucesso", publicacaoAnexo, arquivoAnexo, codigo, publicacaoName);//incluirDiarioOficial(urlFonte, diarios, date, arquivoStr);
+									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.valueOf(publicacaoAnexo!=null), "Sucesso", publicacaoAnexo, arquivoAnexo, codigo, publicacaoName);
 									LocalDate localDate = asLocalDate(date);
 									if (diasUteisList.contains(localDate)) {
 										diasUteisList.remove(localDate);
@@ -449,7 +444,6 @@ public class PublicacaoController extends BeanController{
 	 * 
 	 * @param fonte
 	 * @param linkArquivoPublicacao
-	 * @param diarios
 	 * @param dataPublicacao
 	 * @param nomeArquivoPublicacao
 	 * @param isSucesso
@@ -459,42 +453,54 @@ public class PublicacaoController extends BeanController{
 	 * @param codigo
 	 * @param publicacaoName
 	 */
-	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, List<Publicacao> diarios, String dataPublicacao,
+	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, String dataPublicacao,
 			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo, String codigo, String publicacaoName) {
 
 		Arquivo arquivo = new Arquivo(nomeArquivoPublicacao, Long.valueOf(10),"tipo", linkArquivoPublicacao, "conteudo".getBytes());
 		Publicacao publicacao = new Publicacao(fonte, publicacaoName, dataPublicacao, codigo, arquivo.getId(), isSucesso, isAnexo,Long.valueOf(1));
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
-		if (publicacaoConsultada == null) {
-			diarios.add(publicacao);
-			try {
+		try {
+			if (publicacaoConsultada == null) {
 				publicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao, arquivo);
-				if(publicacaoAnexo!=null) {
+				if (publicacaoAnexo != null) {
 					publicacaoAnexo.setPublicacao(publicacao);
 					publicacaoAnexo = publicacaoServiceClient.cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
 				}
-			} catch (Exception e) {
+			} else {
+				if (!publicacaoConsultada.getSucesso()) {
+					// se quantidade for igual a 3 ou mais - atualizar que não vai buscar mais
+					// (status) e futuramente gerar notificacao
+					publicacaoConsultada.setQuantidadeTentativas(publicacaoConsultada.getQuantidadeTentativas() + 1);
+					publicacaoConsultada.setNome(publicacao.getNome());
+					publicacaoConsultada.setFonte(publicacao.getFonte());
+					publicacaoConsultada.setData(publicacao.getData());
+					publicacaoConsultada.setCodigo(publicacao.getCodigo());
+					publicacaoConsultada.setSucesso(publicacao.getSucesso());
+					publicacaoConsultada.setPossuiAnexo(publicacao.getPossuiAnexo());
+					publicacaoConsultada.setQuantidadeTentativas(publicacao.getQuantidadeTentativas());
+					publicacaoServiceClient.alterarPublicacao(publicacaoConsultada, arquivo);
+				}
+			}
+		} catch (Exception e) {
 //				 TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("Deu Erro.");
-			}
-		} else {
-			if (!publicacao.getSucesso()) {
-				//se quantidade for igual a 3 ou mais  - atualizar que não vai buscar mais (status) e futuramente gerar notificacao
-				publicacao.setQuantidadeTentativas(publicacaoConsultada.getQuantidadeTentativas() + 1);
-				//publicacaoServiceClient.alterarPublicacao(publicacao);
-			}
+			e.printStackTrace();
+			System.out.println("Deu Erro.");
 		}
 	}
 	
 	/**
-	 * Método resposável por chamar a API para consultar publicação por Fonte, Data e NomeArquivo.
+	 * Método resposável por chamar a API para consultar publicação por Fonte, Data e Nome.
 	 * 
 	 * @param publicacao
 	 * @return publicacaoConsultada
 	 */
-	private Publicacao consultarPublicacaoPorFonteDataNomeArquivo(Publicacao publicacao){
-		Publicacao publicacaoConsultada = null;//new Publicacao();
+	private Publicacao consultarPublicacaoPorFonteDataNomeArquivo(Publicacao publicacao) {
+		Publicacao publicacaoConsultada = null;
+		List<Publicacao> publicacaolist = publicacaoServiceClient.consultarPublicacaoPorFonteDataNome(
+				publicacao.getFonte().getId(), asLocalDate(convertStringToDate(publicacao.getData())), publicacao.getNome());
+		if (publicacaolist != null && !publicacaolist.isEmpty()) {
+			publicacaoConsultada = publicacaolist.get(0);
+		}
 		return publicacaoConsultada;
 	}
 
@@ -505,9 +511,6 @@ public class PublicacaoController extends BeanController{
 	 * @param dataFinal
 	 */
 	public void getDiariosEmDiarioOficialPI(Date dataInicial, Date dataFinal) {
-
-		// Lista do objeto Fontes em que consta a data e o nome do pdf
-		List<Publicacao> diarios = new ArrayList<Publicacao>();
 
 		List<LocalDate> localDateList = getDiasUteis(dataInicial, dataFinal);
 		for (LocalDate localDate : localDateList) {
@@ -536,7 +539,7 @@ public class PublicacaoController extends BeanController{
 					matcher = pdfPattern.matcher(linhaHTML);
 					while (matcher.find()) {
 						if (!isNull(date)) {
-							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", matcher.group());
+							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", matcher.group());
 							diarioEncontrado = Boolean.TRUE;
 							// Ao encontrar o pdf sai do loop mais externo
 							break buscaPDF;
@@ -548,7 +551,7 @@ public class PublicacaoController extends BeanController{
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 						System.out.println(URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group() + " - " + formatoDeData.format(date) + " - "
 								+ "Diario Não Encontrado");
-						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), diarios, convertDateToString(date), matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "");
+						salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 					}
 				}
 				fonteHTML.close();
@@ -631,6 +634,24 @@ public class PublicacaoController extends BeanController{
 		Format formatter = new SimpleDateFormat("dd/MM/yyyy");
 		String dataStr = formatter.format(data);
 		return dataStr;
+	}
+	
+	/**
+	 * Converte uma string no formato dd/MM/yyyy em data.
+	 * 
+	 * @param dataStr
+	 * @return data
+	 */
+	public Date convertStringToDate(String dataStr) {
+		Date data = null;
+		try {
+			SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
+			Date dataParseada = formatoData.parse(dataStr);
+			data = dataParseada;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 	/**

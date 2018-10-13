@@ -53,8 +53,7 @@ public class PublicacaoServiceClient{
 	private WebTarget webTarget;
 	
 	public PublicacaoServiceClient(){
-		this.client = ClientBuilder.newClient();
-		
+		this.client = ClientBuilder.newClient();  
 	}
 	
 	public List<Publicacao> consultarTodasPublicacoes(){

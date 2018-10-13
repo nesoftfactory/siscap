@@ -20,7 +20,6 @@ public class Publicacao {
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas;
-	//private Publicacao arquivoAnexo;//remover
 
 	/**
 	 * 
@@ -51,7 +50,6 @@ public class Publicacao {
 		setSucesso(sucesso);
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
-//		setArquivoAnexo(arquivoAnexo);
 	}
 
 	/**
@@ -183,20 +181,6 @@ public class Publicacao {
 	public void setQuantidadeTentativas(Long quantidadeTentativas) {
 		this.quantidadeTentativas = quantidadeTentativas;
 	}
-	
-//	/**
-//	 * @return arquivoAnexo
-//	 */
-//	public Publicacao getArquivoAnexo() {
-//		return arquivoAnexo;
-//	}
-//		
-//	/**
-//	 * @param arquivoAnexo
-//	 */
-//	public void setArquivoAnexo(Publicacao arquivoAnexo) {
-//		this.arquivoAnexo = arquivoAnexo;
-//	}
 
 	/**
 	 * @return the arquivo
