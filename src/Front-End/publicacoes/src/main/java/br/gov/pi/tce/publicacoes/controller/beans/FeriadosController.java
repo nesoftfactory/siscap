@@ -103,6 +103,10 @@ public class FeriadosController extends BeanController {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
+				if (feriado.getGeral()) {
+					feriado.setFontes(fontes);
+				}
+				
 				if (feriado.getId() == null) {
 					feriadoServiceClient.cadastrarFeriado(feriado);
 				}	

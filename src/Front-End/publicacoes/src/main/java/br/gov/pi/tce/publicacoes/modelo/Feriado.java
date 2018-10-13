@@ -1,6 +1,7 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,23 +16,28 @@ public class Feriado {
 	private Long id;
 	private String nome;
 	private String data;
-	private Fonte fonte;
+	private List<Fonte> fontes;
 	private Boolean ativo;
+	private Boolean geral;
+	private Boolean fixo;
 
 	public Feriado() {
 		super();
 	}
 	
-	public Feriado(String nome, String data, Fonte fonte, Boolean ativo) {
+	public Feriado(String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean geral, Boolean fixo) {
 		super();
-		this.nome = nome;
-		this.data = data;
-		this.fonte = fonte;
-		this.ativo = ativo;
+		setNome(nome);
+		setData(data);
+		setData(data);
+		setFontes(fontes);
+		setAtivo(ativo);
+		setGeral(geral);
+		setFixo(fixo);
 	}
 	
-	public Feriado(Long id, String nome, String data, Fonte fonte, Boolean ativo) {
-		this(nome, data, fonte, ativo);
+	public Feriado(Long id, String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean geral, Boolean fixo) {
+		this(nome, data, fontes, ativo, geral, fixo);
 		this.id = id;
 	}
 
@@ -78,17 +84,17 @@ public class Feriado {
 	}
 
 	/**
-	 * @return the fonte
+	 * @return the fontes
 	 */
-	public Fonte getFonte() {
-		return fonte;
+	public List<Fonte> getFontes() {
+		return fontes;
 	}
 
 	/**
 	 * @param fonte the fonte to set
 	 */
-	public void setFonte(Fonte fonte) {
-		this.fonte = fonte;
+	public void setFontes(List<Fonte> fontes) {
+		this.fontes = fontes;
 	}
 
 	/**
@@ -105,9 +111,47 @@ public class Feriado {
 		this.ativo = ativo;
 	}
 	
+	/**
+	 * @return geral
+	 */
+	public Boolean getGeral() {
+		return geral;
+	}
+
+	/**
+	 * @param geral
+	 */
+	public void setGeral(Boolean geral) {
+		this.geral = geral;
+	}
+
+	/**
+	 * @return fixo
+	 */
+	public Boolean getFixo() {
+		return fixo;
+	}
+
+	/**
+	 * @param fixo
+	 */
+	public void setFixo(Boolean fixo) {
+		this.fixo = fixo;
+	}
+
 	@JsonIgnore
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
+	}
+	
+	@JsonIgnore
+	public String getTextoGeral() {
+		return getGeral() ? "Sim" : "Não";
+	}
+	
+	@JsonIgnore
+	public String getTextoFixo() {
+		return getFixo() ? "Sim" : "Não";
 	}
 		
 }
