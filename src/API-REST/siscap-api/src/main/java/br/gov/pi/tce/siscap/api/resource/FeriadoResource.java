@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.resource;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,6 +69,14 @@ public class FeriadoResource {
 		
 		return feriadoOptional.isPresent() ? 
 				ResponseEntity.ok(feriadoOptional.get()) : ResponseEntity.notFound().build();
+	}
+	
+	@GetMapping("/verifica/{data}")
+	public ResponseEntity<Boolean> isFeriado(@PathVariable LocalDate data, 
+			@RequestParam Long idFonte) {
+		List<Long> ids = feriadoRepository.buscarPorDataEFonte(data, idFonte);
+		
+		return ResponseEntity.ok(!ids.isEmpty());
 	}
 	
 	@DeleteMapping("/{id}")

@@ -62,10 +62,4 @@ public class Fonte extends BaseEntity {
 	public boolean isInativa( ) {
 		return !this.ativo;
 	}
-	
-	@JsonIgnore
-	@Transient
-	public boolean isInativo( ) {
-		return !this.ativo;
-	}
 }

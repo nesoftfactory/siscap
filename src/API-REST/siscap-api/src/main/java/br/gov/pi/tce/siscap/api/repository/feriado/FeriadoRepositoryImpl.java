@@ -41,7 +41,11 @@ public class FeriadoRepositoryImpl implements FeriadoRepositoryQuery {
 		if (feriadoFilter.getIdFonte() != null) {
 			Fonte fonte = new Fonte();
 			fonte.setId(feriadoFilter.getIdFonte());
-			predicates.add(builder.equal(root.get("fonte"), fonte));
+			
+			Predicate fonteInformada = builder.isMember(fonte, root.get("fontes"));
+			Predicate todasAsFontes = builder.equal(root.get("todasFontes"), true);
+			
+			predicates.add(builder.or(fonteInformada, todasAsFontes));
 		}
 		
 		if (feriadoFilter.getPeriodoDe() != null) {

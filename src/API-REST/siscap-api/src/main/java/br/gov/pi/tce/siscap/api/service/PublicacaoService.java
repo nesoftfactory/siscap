@@ -92,7 +92,7 @@ public class PublicacaoService {
 		if (publicacaoSalva.getFonte() != null && publicacaoSalva.getFonte().getId() != null) {
 			Optional<Fonte> fonteOptional = fonteRepository.findById(publicacaoSalva.getFonte().getId());
 
-			if (!fonteOptional.isPresent() || fonteOptional.get().isInativo()) {
+			if (!fonteOptional.isPresent() || fonteOptional.get().isInativa()) {
 				throw new FonteInexistenteOuInativaException();
 			}
 		}

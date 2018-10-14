@@ -52,11 +52,13 @@ public class FeriadoService {
 	}
 	
 	private void validarFonte(Feriado feriado) {
-		if (feriado.getFonte() != null && feriado.getFonte().getId() != null) {
-			Optional<Fonte> fonteOptional = fonteRepository.findById(feriado.getFonte().getId());
-
-			if (!fonteOptional.isPresent() || fonteOptional.get().isInativo()) {
-				throw new FonteInexistenteOuInativaException();
+		for (Fonte fonte : feriado.getFontes()) {
+			if (fonte.getId() != null) {
+				Optional<Fonte> fonteOptional = fonteRepository.findById(fonte.getId());
+				
+				if (!fonteOptional.isPresent() || fonteOptional.get().isInativa()) {
+					throw new FonteInexistenteOuInativaException();
+				}
 			}
 		}
 	}

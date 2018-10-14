@@ -1,10 +1,13 @@
 package br.gov.pi.tce.siscap.api.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -18,8 +21,10 @@ public class Feriado extends BaseEntity {
 	
 	private String nome;
 	private LocalDate data;
-	private Fonte fonte;
+	private List<Fonte> fontes;
 	private Boolean ativo;
+	private Boolean fixo;
+	private Boolean todasFontes;
 
 	@NotNull
 	@Size(min=3, max=50)
@@ -40,16 +45,6 @@ public class Feriado extends BaseEntity {
 		this.data = data;
 	}
 
-	@ManyToOne(optional=true)
-	@JoinColumn(name="id_fonte")
-	public Fonte getFonte() {
-		return fonte;
-	}
-
-	public void setFonte(Fonte fonte) {
-		this.fonte = fonte;
-	}
-
 	@NotNull
 	public Boolean getAtivo() {
 		return ativo;
@@ -63,6 +58,35 @@ public class Feriado extends BaseEntity {
 	@Transient
 	public boolean isInativa( ) {
 		return !this.ativo;
+	}
+
+	@ManyToMany
+	@JoinTable(name="feriado_fonte"
+				, joinColumns=@JoinColumn(name="id_feriado")
+				, inverseJoinColumns=@JoinColumn(name="id_fonte"))
+	public List<Fonte> getFontes() {
+		return fontes;
+	}
+
+	public void setFontes(List<Fonte> fontes) {
+		this.fontes = fontes;
+	}
+
+	public Boolean getFixo() {
+		return fixo;
+	}
+
+	public void setFixo(Boolean fixo) {
+		this.fixo = fixo;
+	}
+
+	@Column(name="todas_fontes")
+	public Boolean getTodasFontes() {
+		return todasFontes;
+	}
+
+	public void setTodasFontes(Boolean todasFontes) {
+		this.todasFontes = todasFontes;
 	}
 	
 }
