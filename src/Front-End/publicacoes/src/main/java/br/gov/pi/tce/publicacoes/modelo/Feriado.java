@@ -18,26 +18,26 @@ public class Feriado {
 	private String data;
 	private List<Fonte> fontes;
 	private Boolean ativo;
-	private Boolean geral;
+	private Boolean todasFontes;
 	private Boolean fixo;
 
 	public Feriado() {
 		super();
 	}
 	
-	public Feriado(String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean geral, Boolean fixo) {
+	public Feriado(String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean todasFontes, Boolean fixo) {
 		super();
 		setNome(nome);
 		setData(data);
 		setData(data);
 		setFontes(fontes);
 		setAtivo(ativo);
-		setGeral(geral);
+		setTodasFontes(todasFontes);
 		setFixo(fixo);
 	}
 	
-	public Feriado(Long id, String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean geral, Boolean fixo) {
-		this(nome, data, fontes, ativo, geral, fixo);
+	public Feriado(Long id, String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean todasFontes, Boolean fixo) {
+		this(nome, data, fontes, ativo, todasFontes, fixo);
 		this.id = id;
 	}
 
@@ -112,17 +112,17 @@ public class Feriado {
 	}
 	
 	/**
-	 * @return geral
+	 * @return todasFontes
 	 */
-	public Boolean getGeral() {
-		return geral;
+	public Boolean getTodasFontes() {
+		return todasFontes;
 	}
 
 	/**
-	 * @param geral
+	 * @param todasFontes
 	 */
-	public void setGeral(Boolean geral) {
-		this.geral = geral;
+	public void setTodasFontes(Boolean todasFontes) {
+		this.todasFontes = todasFontes;
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class Feriado {
 	}
 	
 	@JsonIgnore
-	public String getTextoGeral() {
-		return getGeral() ? "Sim" : "Não";
+	public String getTextoTodasFontes() {
+		return getTodasFontes() ? "Sim" : "Não";
 	}
 	
 	@JsonIgnore
