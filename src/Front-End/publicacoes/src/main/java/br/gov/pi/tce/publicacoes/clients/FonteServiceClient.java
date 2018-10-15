@@ -63,6 +63,7 @@ public class FonteServiceClient {
 		}
 	}
 	
+	
 	public List<Fonte> consultarTodasFontes(){
 		try {
 			Response response = chamadaFontesAPI(null).get();

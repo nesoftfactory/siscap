@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Publicações</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<p:growl id="msgs" showDetail="true" />
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Cadastro de Fontes" style="margin-bottom:20px">
+							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								<p:outputLabel value="Nome" for="nome"/>
+							 	<p:inputText id="nome" value="#{consultaPublicacaoController.nome}"  /> 
+
+								<p:outputLabel value="Fonte" for="fonte"/>
+								<p:selectOneMenu id="fonte" value="#{consultaPublicacaoController.fonte}" converter="fonteConverter">
+						            <f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{consultaPublicacaoController.fontesParaSelectItems}" />
+						        </p:selectOneMenu>
+						        
+						        
+						        <p:outputLabel value="Data Inicio" for="dataInicio" mask="99/99/9999"/>
+							 	<p:inputMask id="dataInicio"  value="#{consultaPublicacaoController.dataInicio}"  mask="99/99/9999"/>
+							 	
+							 	<p:outputLabel value="Data Fim" for="dataFim"/>
+							 	<p:inputMask id="dataFim"  value="#{consultaPublicacaoController.dataFim}"  mask="99/99/9999"/>
+							 	
+							 	<p:outputLabel value="Sucesso (Sim/Não)" for="sucesso"/>
+								<p:selectBooleanCheckbox id="sucesso" value="#{consultaPublicacaoController.sucesso}"  />
+								
+							</p:panelGrid>
+							<p:toolbar>
+								<p:toolbarGroup>
+ 									<p:commandButton value="Limpar" action="#{consultaPublicacaoController.limpar()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										
+									<p:commandButton id="btn_add" value="Consultar" icon="fa fa-search White" iconPos="right" update="@form"
+										action="#{consultaPublicacaoController.consultar()}" >
+            						</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>	
+						</p:panel>
+						
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10">
+                            <f:facet name="header">
+                                Lista de Publicações
+                            </f:facet>
+
+                            <p:column headerText="Fonte">
+                                <h:outputText value="#{publicacao.fonte.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{publicacao.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Data">
+                                <h:outputText value="#{publicacao.data}" />
+                            </p:column>
+                            
+                            <p:column headerText="Sucesso (Sim/Não)">
+                           		  <h:outputText value="#{publicacao.textoSucesso}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tentativas">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Arquivo da publicação">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Histórico da publicação">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Nome Anexo">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Arquivo do Anexo">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Histórico do Anexo">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

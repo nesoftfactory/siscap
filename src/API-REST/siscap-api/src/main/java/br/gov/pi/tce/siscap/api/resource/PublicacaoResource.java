@@ -32,6 +32,7 @@ import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
 import br.gov.pi.tce.siscap.api.repository.filter.PublicacaoFilter;
 import br.gov.pi.tce.siscap.api.service.PublicacaoService;
+import br.gov.pi.tce.siscap.api.service.exception.FiltroPublicacaoDataInvalidaException;
 import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaException;
 
 @RestController
@@ -51,7 +52,7 @@ public class PublicacaoResource {
 	private MessageSource messageSource;
 	
 	@GetMapping
-	public List<Publicacao> pesquisar(PublicacaoFilter publicacaoFilter) {
+	public List<Publicacao> pesquisar(PublicacaoFilter publicacaoFilter) throws Exception {
 		return publicacaoRepository.filtrar(publicacaoFilter);
 	}
 	
@@ -95,6 +96,16 @@ public class PublicacaoResource {
 	@ExceptionHandler(FonteInexistenteOuInativaException.class)
 	public ResponseEntity<Object> handleFonteInexistenteOuInativaException(FonteInexistenteOuInativaException ex) {
 		String mensagemUsuario = messageSource.getMessage("fonte.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		
+		return ResponseEntity.badRequest().body(erros);
+	}
+	
+	
+	@ExceptionHandler(FiltroPublicacaoDataInvalidaException.class)
+	public ResponseEntity<Object> handleFiltroPublicacaoDataInvalidoException(FiltroPublicacaoDataInvalidaException ex) {
+		String mensagemUsuario = messageSource.getMessage("publicacao.filtro.data.invalido", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		

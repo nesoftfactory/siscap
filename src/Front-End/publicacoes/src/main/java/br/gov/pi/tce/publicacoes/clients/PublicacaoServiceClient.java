@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +74,23 @@ public class PublicacaoServiceClient{
 			throw e;
 		}
 	}
+	
+	
+	public List<Publicacao> consultarPublicacoes(String nomeFonte, String dataInicio, String dataFim, Long idFonte, Boolean sucesso) throws Exception{
+		try {
+			
+			this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("nome", nomeFonte).queryParam("idFonte", idFonte.toString());
+			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+			Response response = invocationBuilder.get();
+			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {});
+			return list;
+		}
+		catch (Exception e) {
+			LOGGER.error("Erro ao consultar todas as publicacoes");
+			throw e;
+		}
+	}
+	
 	
 	public void cadastrarPublicacaoPorUpload (Publicacao publicacao, Arquivo arquivo, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
 		
@@ -263,6 +281,33 @@ public class PublicacaoServiceClient{
 		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("fonte", idFonte).queryParam("data", data).queryParam("nome", nome);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			List<Publicacao> tf = response.readEntity(new GenericType<List<Publicacao>>() {});
+			return  tf;
+		}
+	}
+	
+	
+	
+	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim, Boolean sucesso) throws Exception{
+		LocalDate dtInicio = null;
+		LocalDate dtFim = null;
+		if(dataInicio != null || dataFim != null) {
+			try {
+				dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+				dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			}
+			catch (Exception e) {
+				throw new Exception("Data Inválida");
+			}
+		}
+		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("fonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso);
+		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Response response = invocationBuilder.get();
+		trataRetorno(response);
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
 		}	

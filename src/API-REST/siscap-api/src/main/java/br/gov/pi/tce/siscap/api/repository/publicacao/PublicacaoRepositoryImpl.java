@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.repository.filter.PublicacaoFilter;
+import br.gov.pi.tce.siscap.api.service.exception.FiltroPublicacaoDataInvalidaException;
 
 public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 	
@@ -46,12 +47,24 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 			predicates.add(builder.equal(root.get("fonte"), fonte));
 		}
 		
+		
+		if (StringUtils.isNotEmpty(publicacaoFilter.getNome())) {
+			predicates.add(builder.equal(root.get("nome"), publicacaoFilter.getNome()));
+		}
+		
+		if (publicacaoFilter.getSucesso() != null && publicacaoFilter.getSucesso().booleanValue()) {
+			predicates.add(builder.equal(root.get("sucesso"), publicacaoFilter.getSucesso()));
+		}
+		
 		if (publicacaoFilter.getData() != null) {
 			predicates.add(builder.equal(root.get("data"), publicacaoFilter.getData()));
 		}
 		
-		if (StringUtils.isNotEmpty(publicacaoFilter.getNome())) {
-			predicates.add(builder.equal(root.get("nome"), publicacaoFilter.getNome()));
+		else if (publicacaoFilter.getDataInicio() != null && publicacaoFilter.getDataFim() != null) {
+			if(publicacaoFilter.getDataInicio().isAfter(publicacaoFilter.getDataFim())) {
+				throw new FiltroPublicacaoDataInvalidaException();
+			}
+			predicates.add(builder.between(root.get("data"), publicacaoFilter.getDataInicio(), publicacaoFilter.getDataFim()));
 		}
 		
 

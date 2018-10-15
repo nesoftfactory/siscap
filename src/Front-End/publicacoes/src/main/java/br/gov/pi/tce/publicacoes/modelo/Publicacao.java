@@ -2,6 +2,8 @@ package br.gov.pi.tce.publicacoes.modelo;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 
  * Classe responsável por representar a entidade Publicacao.
@@ -20,7 +22,7 @@ public class Publicacao {
 	private Long arquivo;
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
-	private Long quantidadeTentativas;
+	private Long quantidadeTentativas = 0L;
 
 	/**
 	 * 
@@ -195,5 +197,11 @@ public class Publicacao {
 	 */
 	public void setArquivo(Long arquivo) {
 		this.arquivo = arquivo;
+	}
+	
+	
+	@JsonIgnore
+	public String getTextoSucesso() {
+		return getSucesso() ? "Sim" : "Não";
 	}
 }
