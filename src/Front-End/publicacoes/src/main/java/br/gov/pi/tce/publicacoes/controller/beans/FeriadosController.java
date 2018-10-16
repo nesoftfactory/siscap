@@ -103,8 +103,8 @@ public class FeriadosController extends BeanController {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
-				if (feriado.getGeral()) {
-					feriado.setFontes(fontes);
+				if (feriado.getTodasFontes()) {
+					feriado.setFontes(Collections.EMPTY_LIST);
 				}
 				
 				if (feriado.getId() == null) {
@@ -141,6 +141,13 @@ public class FeriadosController extends BeanController {
 		}
 	}
 
+	public String getTodasAsFontes(Feriado feriado) {
+		String fontesInformation = "";
+		if (feriado.getFontes().size() == 0) {
+			fontesInformation = "Todas as Fontes";
+		}
+		return fontesInformation;
+	}
 	
 	public Feriado getFeriado() {
 		return feriado;

@@ -76,22 +76,6 @@ public class PublicacaoServiceClient{
 	}
 	
 	
-	public List<Publicacao> consultarPublicacoes(String nomeFonte, String dataInicio, String dataFim, Long idFonte, Boolean sucesso) throws Exception{
-		try {
-			
-			this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("nome", nomeFonte).queryParam("idFonte", idFonte.toString());
-			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
-			Response response = invocationBuilder.get();
-			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {});
-			return list;
-		}
-		catch (Exception e) {
-			LOGGER.error("Erro ao consultar todas as publicacoes");
-			throw e;
-		}
-	}
-	
-	
 	public void cadastrarPublicacaoPorUpload (Publicacao publicacao, Arquivo arquivo, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
 		
 		List<Publicacao> publicacoes = consultarTodasPublicacoes();
