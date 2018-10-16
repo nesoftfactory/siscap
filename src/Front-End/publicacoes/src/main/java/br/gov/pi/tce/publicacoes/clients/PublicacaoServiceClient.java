@@ -6,7 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -105,18 +110,18 @@ public class PublicacaoServiceClient{
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
-			dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"),
-					"teste.pdf");
+//			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
+			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 		}
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("fonte", publicacao.getFonte().getId(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("data", publicacao.getData(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("data", asLocalDate(convertStringToDate(publicacao.getData())), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("codigo", publicacao.getCodigo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacao.getSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("possuiAnexo", publicacao.getPossuiAnexo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("quantidadeTentativas", publicacao.getQuantidadeTentativas(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("link", arquivo.getLink(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("link", encodeString(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE);
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
@@ -132,14 +137,14 @@ public class PublicacaoServiceClient{
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
-			dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"),
-					"teste.pdf");
+//			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
+			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 		}
 		
 		dataOutput.addFormData("nome", publicacaoAnexo.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("publicacao", publicacaoAnexo.getPublicacao().getId(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacaoAnexo.isSucesso(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("link", arquivo.getLink(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("link", encodeString(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE);
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
@@ -149,6 +154,24 @@ public class PublicacaoServiceClient{
 		trataRetorno(response);
 		return response.readEntity(PublicacaoAnexo.class);
 	}
+	
+	public String encodeString(String palavra) {
+        char one;
+        StringBuffer n = new StringBuffer(palavra.length());
+        for (int i = 0; i < palavra.length(); i++) {
+            one = palavra.charAt(i);
+            switch (one) {
+                case ' ':
+                    n.append('%');
+                    n.append('2');
+                    n.append('0');
+                    break;
+                default:
+                    n.append(one);
+            }
+        }
+        return n.toString();
+    }
 	
 	public void armazenarArquivo(Arquivo arquivo) {
 		try {
@@ -177,12 +200,13 @@ public class PublicacaoServiceClient{
 		} 
 	} 
 	
-	public FileInputStream realizarDownload() {
+	public FileInputStream realizarDownload(String linkArquivo) {
 		URL url;
 		FileInputStream fileInputStream = null;
 		try {
-			url = new URL("http://www.casadodivinomestre.com.br/teste.pdf");
-			File file = new File("C:\\Temp\\arquivo-baixado3.pdf");
+//			url = new URL("http://www.casadodivinomestre.com.br/teste.pdf");
+			url = new URL(encodeString(linkArquivo));
+			File file = new File("/temp/temp.pdf");
 			FileUtils.copyURLToFile(url, file);
 			fileInputStream = new FileInputStream(file);
 			//fileInputStream.close();
@@ -199,18 +223,18 @@ public class PublicacaoServiceClient{
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
-			dataOutput.addFormData("partFile", realizarDownload(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"),
-					"teste.pdf");
+//			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
+			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 		}
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("fonte", publicacao.getFonte().getId(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("data", publicacao.getData(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("data", asLocalDate(convertStringToDate(publicacao.getData())), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("codigo", publicacao.getCodigo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacao.getSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("possuiAnexo", publicacao.getPossuiAnexo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("quantidadeTentativas", publicacao.getQuantidadeTentativas(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("link", arquivo.getLink(), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("link", encodeString(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE);
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
@@ -260,7 +284,7 @@ public class PublicacaoServiceClient{
 	}
 	
 	public List<Publicacao> consultarPublicacaoPorFonteDataNome(Long idFonte, LocalDate data, String nome){
-		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("fonte", idFonte).queryParam("data", data).queryParam("nome", nome);
+		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("idFonte", idFonte).queryParam("data", data).queryParam("nome", nome);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
@@ -285,6 +309,35 @@ public class PublicacaoServiceClient{
 				throw new Exception("Erro interno.");
 			}
 		}
+	}
+	
+	/**
+	 * Converte uma string no formato dd/MM/yyyy em data.
+	 * 
+	 * @param dataStr
+	 * @return data
+	 */
+	public Date convertStringToDate(String dataStr) {
+		Date data = null;
+		try {
+			SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
+			Date dataParseada = formatoData.parse(dataStr);
+			data = dataParseada;
+		} catch (ParseException e) {
+			LOGGER.error("Erro ao converter String no formato dd/MM/yyyy em Data.");
+			LOGGER.error(e.getMessage());
+		}
+		return data;
+	}
+	
+	/**
+	 * Converte um Date em LocalDate.
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public LocalDate asLocalDate(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
 }

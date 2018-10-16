@@ -25,52 +25,47 @@ public class ColetorPublicacoesService {
 	@Inject
 	private PublicacaoController publicacaoController;
 	
-	// URL das fontes dos diários oficiais
-	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);
-	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3);
-	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4);
-	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5);
-	
-	public final static int QUANTIDADE_DIAS = 5;
-	
 	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-	@Schedule(hour="18", minute = "34")
+	@Schedule(hour="00", minute = "53")
 	public void coletarDiarioOficialParnaiba() {
-		Propriedades propriedades = Propriedades.getInstance();
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
+		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
-		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, QUANTIDADE_DIAS);
+		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(Long.valueOf(propriedades.getValor("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").toString()), dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"), dataInicial, dataFinal);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="17", minute = "18")
+	@Schedule(hour="00", minute = "54")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
+		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
-		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, QUANTIDADE_DIAS);
+		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_TERESINA, dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"), dataInicial, dataFinal);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	@Schedule(hour="17", minute = "20")
+	@Schedule(hour="01", minute = "21")
 	public void coletarDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
+		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
-		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data,QUANTIDADE_DIAS);
+		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS, dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), dataInicial, dataFinal);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial dos Municipios");
 	}
 	
-	@Schedule(hour="18", minute = "36")
+	@Schedule(hour="00", minute = "57")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
+		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
-		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data,QUANTIDADE_DIAS);
+		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
 		publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");

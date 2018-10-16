@@ -20,6 +20,14 @@ public class Propriedades {
 	public Object getValor(String propriedade) {
 		return properties.getProperty(propriedade);
 	}
+	
+	public Long getValorLong(String propriedade) {
+		return Long.valueOf(properties.getProperty(propriedade).toString());
+	}
+	
+	public int getValorInt(String propriedade) {
+		return Integer.valueOf(properties.getProperty(propriedade).toString()).intValue();
+	}
 
 	public static Propriedades getInstance() {
 		return propriedades; 
