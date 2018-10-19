@@ -21,6 +21,13 @@ public class Usuario extends BaseEntity {
 	}
 	
 	
+	public Usuario(String nome, String login, Boolean admin, Boolean ativo) {
+		this.nome = nome;
+		this.login = login;
+		this.admin = admin;
+		this.ativo = ativo;
+	}
+	
 	
 	
 	public Usuario(Long id, String nome, String login, Boolean admin, Boolean ativo) {
