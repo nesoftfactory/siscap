@@ -10,7 +10,7 @@ import br.gov.pi.tce.siscap.api.model.teste.steps.CountriesSearchSteps;
 @RunWith(SerenityRunner.class)
 public class SerenityTest {
    @Steps
-   CountriesSearchSteps countriesSearchSteps;
+   CountriesSearchSteps countriesSearchSteps; 
 
    @Test
    public void verifyThatWeCanFindUnitedStatesOfAmericaCountryUsingTheCodeUS() {
