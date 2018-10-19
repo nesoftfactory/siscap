@@ -23,6 +23,32 @@ public class BaseEntity {
 	private Usuario usuarioCriacao;
 	private LocalDateTime dataAtualizacao;
 	private Usuario usuarioAtualizacao;
+	
+	
+	public BaseEntity() {
+		super();
+	}
+	
+	public BaseEntity(Long id) {
+		super();
+		this.id = id;
+	}
+	
+	
+
+	public BaseEntity(Long id, LocalDateTime dataCriacao, Usuario usuarioCriacao, LocalDateTime dataAtualizacao,
+			Usuario usuarioAtualizacao) {
+		super();
+		this.id = id;
+		this.dataCriacao = dataCriacao;
+		this.usuarioCriacao = usuarioCriacao;
+		this.dataAtualizacao = dataAtualizacao;
+		this.usuarioAtualizacao = usuarioAtualizacao;
+	}
+
+
+
+
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
