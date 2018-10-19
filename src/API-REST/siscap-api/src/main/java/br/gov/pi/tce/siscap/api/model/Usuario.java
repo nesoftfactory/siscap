@@ -14,6 +14,26 @@ public class Usuario extends BaseEntity {
 	private Boolean admin = false;
 	private Boolean ativo = false;
 	
+	
+	
+	public Usuario() {
+		super();
+	}
+	
+	
+	
+	
+	public Usuario(Long id, String nome, String login, Boolean admin, Boolean ativo) {
+		super(id);
+		this.nome = nome;
+		this.login = login;
+		this.admin = admin;
+		this.ativo = ativo;
+	}
+
+
+
+
 	@NotNull
 	@Size(min=3, max=50)
 	public String getNome() {
