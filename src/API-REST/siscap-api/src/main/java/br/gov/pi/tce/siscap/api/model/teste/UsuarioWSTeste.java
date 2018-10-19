@@ -1,6 +1,5 @@
 package br.gov.pi.tce.siscap.api.model.teste;
 
-import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
@@ -13,10 +12,26 @@ import br.gov.pi.tce.siscap.api.model.Usuario;
 public class UsuarioWSTeste {
 	
 	
+	@Test
+	public void criarUsuarioNovo() {
+		
+	}
 	
 	
 	@Test
-	public void deveRetornarGetUsuarioPeloId() {
+	public void criarUsuarioQueJaExiste() {
+		
+	}
+	
+	@Test
+	public void alterarUsuario() {
+		
+	}
+	
+	
+	
+	@Test
+	public void retornarUsuarioPeloId() {
 		JsonPath path = given()
 				.header("Accept", "application/json")
 				.get("http://localhost:7788/usuarios/9")
@@ -29,5 +44,17 @@ public class UsuarioWSTeste {
 		
 		assertEquals(usuarioEsperado1, usuario1);
 	}
+	
+	
+	@Test
+	public void deletarUsuario() {
+		
+	}
+	
+	
+	
+	
+	
+	
 
 }
