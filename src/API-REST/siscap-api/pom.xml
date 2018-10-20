@@ -152,7 +152,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <includes>
-                        <include>**/*.java</include>
+                        <include>br.gov.pi.tce.siscap.api.model.teste/*.java</include>
                     </includes>
                 </configuration>
                 <executions>
