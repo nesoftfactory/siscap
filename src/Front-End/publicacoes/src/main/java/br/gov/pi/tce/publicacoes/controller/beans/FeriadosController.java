@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -75,6 +76,7 @@ public class FeriadosController extends BeanController {
 
 	public void limpar() {
 		feriado = new Feriado();
+		feriado.setFontes(Collections.EMPTY_LIST);
 	}
 
 	public List<Feriado> getFeriados() {
@@ -160,6 +162,24 @@ public class FeriadosController extends BeanController {
 	public void setFeriados(List<Feriado> feriados) {
 		this.feriados = feriados;
 	}
- 
+	
+	public void desabilitarFontes() {
+		if (feriado.getTodasFontes()) {
+			feriado.setFontes(Collections.EMPTY_LIST);
+		}
+	}
+	
+	public void habilitaTodasFontes() {
+		if (feriado.getTodasFontes()) {
+			feriado.setFontes(Collections.EMPTY_LIST);
+		} else {
+			if (feriado.getFontes().size() == fontes.size()) {
+				feriado.setTodasFontes(true);
+				feriado.setFontes(Collections.EMPTY_LIST);
+			}
+		}
+		
+	}
+
 
 }

@@ -101,7 +101,7 @@ public class PublicacaoServiceClient{
 		
 		publicacao.setSucesso(true);
 		publicacao.setQuantidadeTentativas((long) 1);
-		publicacao = cadastrarPublicacao(publicacao,  arquivo);
+		publicacao = cadastrarPublicacao(publicacao, arquivo);
 		publicacaoAnexo.setPublicacao(publicacao);
 		publicacaoAnexo.setSucesso(true);
 		cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
