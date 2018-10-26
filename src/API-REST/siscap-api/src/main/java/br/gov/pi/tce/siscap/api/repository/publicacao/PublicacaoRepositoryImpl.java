@@ -12,9 +12,12 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
+import br.gov.pi.tce.siscap.api.model.PublicacaoAnexo;
+import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoRepository;
 import br.gov.pi.tce.siscap.api.repository.filter.PublicacaoFilter;
 import br.gov.pi.tce.siscap.api.service.exception.FiltroPublicacaoDataInvalidaException;
 
@@ -22,6 +25,10 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 	
 	@PersistenceContext
 	private EntityManager manager;
+	
+	@Autowired
+	private PublicacaoAnexoRepository publicacaoAnexoRepository;
+	
 
 	@Override
 	public List<Publicacao> filtrar(PublicacaoFilter publicacaoFilter) {
@@ -35,7 +42,21 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 		criteriaQuery.where(predicates);
 		
 		TypedQuery<Publicacao> query = manager.createQuery(criteriaQuery);
-		return query.getResultList();
+		List<Publicacao> publicacoes = query.getResultList();
+		for (Publicacao publicacao : publicacoes) {
+			if(publicacao.getPossuiAnexo()) {
+				publicacao.setPublicacaoAnexo(getPublicacaoAnexo(publicacao.getId()));
+			}
+		}
+		return publicacoes;
+	}
+
+	private PublicacaoAnexo getPublicacaoAnexo(Long idPublicacao) {
+		List<PublicacaoAnexo> anexos = publicacaoAnexoRepository.buscarPorIdPublicacao(idPublicacao);
+		if(!anexos.isEmpty()) {
+			return anexos.get(0);
+		}
+		return null;
 	}
 
 	private Predicate[] criarRestriscoes(PublicacaoFilter publicacaoFilter, CriteriaBuilder builder, Root<Publicacao> root) {

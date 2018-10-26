@@ -12,6 +12,9 @@ public interface PublicacaoAnexoRepository extends JpaRepository<PublicacaoAnexo
 	
 	@Query("SELECT new br.gov.pi.tce.siscap.api.model.PublicacaoAnexo(pa.id, pa.dataCriacao, pa.usuarioCriacao, pa.dataAtualizacao, pa.usuarioAtualizacao,pa.nome, pa.sucesso, pa.publicacao.id, pa.arquivo.id)  FROM PublicacaoAnexo pa WHERE pa.publicacao.id = :idPublicacao")
 	List<PublicacaoAnexo> buscarPorIdPublicacao(@Param("idPublicacao") Long idPublicacao);
+	
+	
+	
 
 }
 

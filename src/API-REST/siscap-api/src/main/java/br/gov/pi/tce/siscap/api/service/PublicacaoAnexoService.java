@@ -68,6 +68,10 @@ public class PublicacaoAnexoService {
 		PublicacaoAnexoHistorico historico = atualizarHistoricoAdicao(publicacaoAnexoSalvo);
 		publicacaoAnexoHistoricoRepository.save(historico);
 		
+		Optional<Publicacao> publicacaoOptional = publicacaoRepository.findById(publicacaoAnexoSalvo.getPublicacao().getId());
+		Publicacao publicacao = publicacaoOptional.get();
+		publicacao.setPossuiAnexo(true);
+		publicacaoRepository.save(publicacao);
 		return publicacaoAnexoSalvo;
 	}
 

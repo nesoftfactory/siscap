@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -30,6 +31,9 @@ public class Publicacao extends BaseEntity {
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private int quantidadeTentativas;
+	
+	@Transient
+	private PublicacaoAnexo publicacaoAnexo;
 
 	@NotNull
 	@Size(min=3, max=50)
@@ -106,5 +110,17 @@ public class Publicacao extends BaseEntity {
 	public void setQuantidadeTentativas(int quantidadeTentativas) {
 		this.quantidadeTentativas = quantidadeTentativas;
 	}
+
+	
+	@Transient
+	public PublicacaoAnexo getPublicacaoAnexo() {
+		return publicacaoAnexo;
+	}
+
+	public void setPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo) {
+		this.publicacaoAnexo = publicacaoAnexo;
+	}
+	
+	
 
 }
