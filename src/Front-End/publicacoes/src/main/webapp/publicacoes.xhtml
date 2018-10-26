@@ -13,9 +13,17 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:panel header="Cadastro de Fontes" style="margin-bottom:20px">
+						<p:panel header="Consulta de Publicações" style="margin-bottom:20px">
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
+								
+								 <p:outputLabel value="Data Inicio" for="dataInicio" mask="99/99/9999"/>
+							 	 <p:inputMask id="dataInicio"  value="#{consultaPublicacaoController.dataInicio}"  mask="99/99/9999" required="true"/>
+							 	
+							 	<p:outputLabel value="Data Fim" for="dataFim"/>
+							 	<p:inputMask id="dataFim"  value="#{consultaPublicacaoController.dataFim}"  mask="99/99/9999" required="true"/>
+								
+								
 								<p:outputLabel value="Nome" for="nome"/>
 							 	<p:inputText id="nome" value="#{consultaPublicacaoController.nome}"  /> 
 
@@ -26,11 +34,7 @@
 						        </p:selectOneMenu>
 						        
 						        
-						        <p:outputLabel value="Data Inicio" for="dataInicio" mask="99/99/9999"/>
-							 	<p:inputMask id="dataInicio"  value="#{consultaPublicacaoController.dataInicio}"  mask="99/99/9999"/>
-							 	
-							 	<p:outputLabel value="Data Fim" for="dataFim"/>
-							 	<p:inputMask id="dataFim"  value="#{consultaPublicacaoController.dataFim}"  mask="99/99/9999"/>
+						       
 							 	
 							 	<p:outputLabel value="Sucesso (Sim/Não)" for="sucesso"/>
 								<p:selectBooleanCheckbox id="sucesso" value="#{consultaPublicacaoController.sucesso}"  />
@@ -62,7 +66,9 @@
                             </p:column>
 
                             <p:column headerText="Data">
-                                <h:outputText value="#{publicacao.data}" />
+                                <h:outputText value="#{publicacao.data}" >
+                                	<f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>	
                             </p:column>
                             
                             <p:column headerText="Sucesso (Sim/Não)">
@@ -74,23 +80,27 @@
                             </p:column>
                             
                             <p:column headerText="Arquivo da publicação">
-                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                           		  <h:outputText value="Download" rendered="#{publicacao.arquivo != null}"/>
+                           		  <h:outputText value="Upload Publicação" rendered="#{publicacao.arquivo == null}"/>
                             </p:column>
                             
                             <p:column headerText="Histórico da publicação">
-                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                           		  <h:outputText value="Histórico" />
                             </p:column>
                             
                             <p:column headerText="Nome Anexo">
-                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                           		  <h:outputText value="#{publicacao.publicacaoAnexo.nome}" rendered="#{publicacao.possuiAnexo}"/>
                             </p:column>
                             
                             <p:column headerText="Arquivo do Anexo">
-                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                           		  <h:outputText value="Download" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null}"/>
+                           		  <h:outputText value="Upload de Anexo" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo == null}"/>
+                           		  <h:outputText value="Não se aplica" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>
                             
                             <p:column headerText="Histórico do Anexo">
-                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                           		  <h:outputText value="Histórico de Anexo" rendered="#{publicacao.possuiAnexo}"/>
+                           		  <h:outputText value="Não se aplica" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>
                         </p:dataTable>
                     </div>

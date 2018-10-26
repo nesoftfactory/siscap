@@ -303,14 +303,16 @@ public class PublicacaoServiceClient{
 	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim, Boolean sucesso) throws Exception{
 		LocalDate dtInicio = null;
 		LocalDate dtFim = null;
-		if(dataInicio != null || dataFim != null) {
-			try {
-				dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			}
-			catch (Exception e) {
-				throw new Exception("Data Inválida");
-			}
+		if(dataInicio == null || dataFim == null) {
+			throw new Exception("Data Inicio e Data Fim são obrigatórios");
+		}
+		
+		try {
+			dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		}
+		catch (Exception e) {
+			throw new Exception("Data Inválida");
 		}
 		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("fonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);

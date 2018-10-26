@@ -23,6 +23,9 @@ public class Publicacao {
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas = 0L;
+	
+	
+	private PublicacaoAnexo publicacaoAnexo;
 
 	/**
 	 * 
@@ -53,6 +56,16 @@ public class Publicacao {
 		setSucesso(sucesso);
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
+	}
+	
+	
+	
+	public PublicacaoAnexo getPublicacaoAnexo() {
+		return publicacaoAnexo;
+	}
+
+	public void setPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo) {
+		this.publicacaoAnexo = publicacaoAnexo;
 	}
 
 	/**
@@ -204,4 +217,7 @@ public class Publicacao {
 	public String getTextoSucesso() {
 		return getSucesso() ? "Sim" : "Não";
 	}
+	
+	
+	
 }
