@@ -105,8 +105,12 @@ public class FeriadosController extends BeanController {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
-				if (feriado.getTodasFontes()) {
+				if ((feriado.getTodasFontes()) && (feriado.getFontes().size() > 0)) {
 					feriado.setFontes(Collections.EMPTY_LIST);
+				}
+				
+				if ((feriado.getFontes().size() == 0) && (feriado.getTodasFontes() == false)) { 
+					feriado.setTodasFontes(true);
 				}
 				
 				if (feriado.getId() == null) {
