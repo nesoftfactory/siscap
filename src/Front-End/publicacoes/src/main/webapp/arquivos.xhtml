@@ -46,7 +46,9 @@
 							
 							<p:fileUpload fileUploadListener="#{arquivosController.uploadFile}" mode="advanced" 
 								label="Selecione o arquivo PDF" auto="true" required="true"
-								 update="arquivo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." allowTypes="/(\.|\/)(pdf)$/" invalidFileMessage="São permitidas somente arquivos em PDF" >				
+								 update="arquivo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." 
+								 allowTypes="/(\.|\/)(pdf)$/" invalidFileMessage="São permitidas somente arquivos em PDF" 
+								 sizeLimit="3145728" invalidSizeMessage="O tamanho máximo permitido é de 300MB." >				
 							</p:fileUpload>
 							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">			
@@ -61,7 +63,9 @@
 							
 							<p:fileUpload fileUploadListener="#{arquivosController.uploadFileAnexo}" mode="advanced" 
 								label="Selecione o arquivo anexo PDF" auto="true"
-								 update="arquivoAnexo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." allowTypes="/(\.|\/)(pdf)$/" invalidFileMessage="São permitidas somente arquivos em PDF" >				
+								 update="arquivoAnexo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." 
+								 allowTypes="/(\.|\/)(pdf)$/" invalidFileMessage="São permitidas somente arquivos em PDF" 
+								 sizeLimit="3145728" invalidSizeMessage="O tamanho máximo permitido é de 300MB.">				
 							</p:fileUpload>
 							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">			
