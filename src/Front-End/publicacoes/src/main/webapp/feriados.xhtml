@@ -58,7 +58,7 @@
                             <f:facet name="header">
                                 Lista de Feriados
                             </f:facet>
-                            <p:column headerText="Nome">
+                            <p:column headerText="Nome"  filterBy="#{feriado.nome}" sortBy="#{feriado.nome}" >
                                 <h:outputText value="#{feriado.nome}" />
                             </p:column>
 
@@ -69,7 +69,7 @@
         						</ui:repeat>
                             </p:column>
 
-                            <p:column headerText="Data">
+                            <p:column headerText="Data" filterBy="#{feriado.data}">
                                 <h:outputText value="#{feriado.data}" />
                             </p:column>
                             
