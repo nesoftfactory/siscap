@@ -54,7 +54,8 @@
 						     					
 						</p:panel>
 
-						<p:dataTable id="feriadosTable" var="feriado" value="#{feriadosController.feriados}" reflow="true" paginator="true" rows="10">
+						<p:dataTable id="feriadosTable" var="feriado" value="#{feriadosController.feriados}" reflow="true" paginator="true" rows="10" widgetVar="feriadosTable"
+                 emptyMessage="Não foram encontrados feriados com estas informações de busca.">
                             <f:facet name="header">
                                 Lista de Feriados
                             </f:facet>
@@ -69,20 +70,44 @@
         						</ui:repeat>
                             </p:column>
 
-                            <p:column headerText="Data" filterBy="#{feriado.data}">
+                            <p:column headerText="Data" filterBy="#{feriado.data}" sortBy="#{feriado.data}">
                                 <h:outputText value="#{feriado.data}" />
                             </p:column>
                             
-                            <p:column headerText="Feriado em todas as fontes? (Sim/Não)">
+                            <p:column headerText="Feriado em todas as fontes? (Sim/Não)" filterBy="#{feriado.todasFontes}" filterMatchMode="equals">
+                           		  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>
                            		  <h:outputText value="#{feriado.textoTodasFontes}" />
                             </p:column>
                             
-                            <p:column headerText="Feriado em data fixa? (Sim/Não)">
-                           		  <h:outputText value="#{feriado.textoFixo}" />
+                            <p:column headerText="Feriado em data fixa? (Sim/Não)" filterBy="#{feriado.fixo}" filterMatchMode="equals">
+	                            <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							    </f:facet>
+	                            <h:outputText value="#{feriado.textoFixo}" />
                             </p:column>
                             
-                            <p:column headerText="Ativo (Sim/Não)">
-                           		  <h:outputText value="#{feriado.textoAtivo}" />
+                            <p:column headerText="O Feriado está Ativo? (Sim/Não)" filterBy="#{feriado.ativo}" filterMatchMode="equals">
+	                            <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							    </f:facet>
+	                           	<h:outputText value="#{feriado.textoAtivo}" />
                             </p:column>
                             
                             <p:column headerText="Ações">
