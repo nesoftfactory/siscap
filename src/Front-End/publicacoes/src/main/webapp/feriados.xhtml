@@ -59,7 +59,7 @@
                             <f:facet name="header">
                                 Lista de Feriados
                             </f:facet>
-                            <p:column headerText="Nome"  filterBy="#{feriado.nome}" sortBy="#{feriado.nome}" >
+                            <p:column headerText="Nome" filterBy="#{feriado.nome}" sortBy="#{feriado.nome}" >
                                 <h:outputText value="#{feriado.nome}" />
                             </p:column>
 
@@ -76,7 +76,7 @@
                             
                             <p:column headerText="Feriado em todas as fontes? (Sim/Não)" filterBy="#{feriado.todasFontes}" filterMatchMode="equals">
                            		  <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()" value="">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
@@ -88,7 +88,7 @@
                             
                             <p:column headerText="Feriado em data fixa? (Sim/Não)" filterBy="#{feriado.fixo}" filterMatchMode="equals">
 	                            <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()" value="">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
@@ -100,7 +100,7 @@
                             
                             <p:column headerText="O Feriado está Ativo? (Sim/Não)" filterBy="#{feriado.ativo}" filterMatchMode="equals">
 	                            <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()" value="true">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />

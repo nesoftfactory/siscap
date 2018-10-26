@@ -36,15 +36,24 @@
 							</p:toolbar>					     					
 						</p:panel>
 
-						<p:dataTable id="tipoFontesTable" var="tipoFonte" value="#{tipoFontesController.tipoFontes}" reflow="true" paginator="true" rows="10">
+						<p:dataTable id="tipoFontesTable" var="tipoFonte" value="#{tipoFontesController.tipoFontes}" reflow="true" paginator="true" rows="10" widgetVar="tipoFontesTable"
+                 emptyMessage="Não foram encontrados tipo fontes com estas informações de busca.">
                             <f:facet name="header">
                                 Lista de Tipos de Fontes
                             </f:facet>
-                            <p:column headerText="Nome">
+                            <p:column headerText="Nome" filterBy="#{tipoFonte.nome}" sortBy="#{tipoFonte.nome}">
                                 <h:outputText value="#{tipoFonte.nome}" />
                             </p:column>
                             
-                             <p:column headerText="Ativo (Sim/Não)">
+                             <p:column headerText="O Tipo Fonte está Ativo? (Sim/Não)" filterBy="#{feriado.ativo}" filterMatchMode="equals">
+                             	  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('tipoFontesTable').filter()" value="true">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>	
                            		  <h:outputText value="#{tipoFonte.textoAtivo}" />
                             </p:column>
                             

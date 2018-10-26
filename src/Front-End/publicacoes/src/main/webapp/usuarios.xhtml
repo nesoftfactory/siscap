@@ -41,27 +41,42 @@
 								</p:toolbarGroup>
 							</p:toolbar>	
 							
-
-						     					
 						</p:panel>
 
-						<p:dataTable id="usuariosTable" var="usuario" value="#{usuariosController.usuarios}" reflow="true" paginator="true" rows="10">
+						<p:dataTable id="usuariosTable" var="usuario" value="#{usuariosController.usuarios}" reflow="true" paginator="true" rows="10" widgetVar="usuariosTable"
+                 emptyMessage="Não foram encontrados usuários com estas informações de busca.">>
                             <f:facet name="header">
                                 Lista de Usuários
                             </f:facet>
-                            <p:column headerText="Nome">
+                            <p:column headerText="Nome" filterBy="#{usuario.nome}" sortBy="#{usuario.nome}">
                                 <h:outputText value="#{usuario.nome}" />
                             </p:column>
 
-                            <p:column headerText="Login">
+                            <p:column headerText="Login" filterBy="#{usuario.login}" sortBy="#{usuario.login}">
                                 <h:outputText value="#{usuario.login}" />
                             </p:column>
                             
-                            <p:column headerText="Administrador (Sim/Não)">
+                            <p:column headerText="Administrador (Sim/Não)" filterBy="#{usuario.admin}" filterMatchMode="equals">
+                            		<f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('usuariosTable').filter()" value="">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>
                             	 <h:outputText value="#{usuario.textoAdmin}" />
                             </p:column>
                             
-                            <p:column headerText="Ativo (Sim/Não)">
+                            <p:column headerText="O usuário está Ativo? (Sim/Não)" filterBy="#{usuario.ativo}" filterMatchMode="equals">
+                            	  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('usuariosTable').filter()" value="true">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>
                            		  <h:outputText value="#{usuario.textoAtivo}" />
                             </p:column>
                             

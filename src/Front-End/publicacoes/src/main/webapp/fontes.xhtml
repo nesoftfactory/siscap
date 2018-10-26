@@ -46,23 +46,32 @@
 						     					
 						</p:panel>
 
-						<p:dataTable id="fontesTable" var="fonte" value="#{fontesController.fontes}" reflow="true" paginator="true" rows="10">
+						<p:dataTable id="fontesTable" var="fonte" value="#{fontesController.fontes}" reflow="true" paginator="true" rows="10"  widgetVar="fontesTable"
+                 emptyMessage="Não foram encontradas fontes com estas informações de busca.">
                             <f:facet name="header">
                                 Lista de Fontes
                             </f:facet>
-                            <p:column headerText="Nome">
+                            <p:column headerText="Nome" filterBy="#{fonte.nome}" sortBy="#{fonte.nome}">
                                 <h:outputText value="#{fonte.nome}" />
                             </p:column>
 
-                            <p:column headerText="Tipo">
+                            <p:column headerText="Tipo" filterBy="#{fonte.tipoFonte.nome}" sortBy="#{fonte.tipoFonte.nome}">
                                 <h:outputText value="#{fonte.tipoFonte.nome}" />
                             </p:column>
 
-                            <p:column headerText="URL">
+                            <p:column headerText="URL" filterBy="#{fonte.url}" sortBy="#{fonte.url}">
                                 <h:outputText value="#{fonte.url}" />
                             </p:column>
                             
-                            <p:column headerText="Ativo (Sim/Não)">
+                            <p:column headerText="A fonte está Ativa? (Sim/Não)" filterBy="#{fonte.ativo}" filterMatchMode="equals">
+                            	  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('fontesTable').filter()" value="true">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>	
                            		  <h:outputText value="#{fonte.textoAtivo}" />
                             </p:column>
                             
