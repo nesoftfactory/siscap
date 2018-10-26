@@ -52,30 +52,39 @@
 							</p:toolbar>	
 						</p:panel>
 						
-						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10">
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesTable"
+                 emptyMessage="Não foram encontradas publicações com estas informações de busca.">
                             <f:facet name="header">
                                 Lista de Publicações
                             </f:facet>
 
-                            <p:column headerText="Fonte">
+                            <p:column headerText="Fonte" filterBy="#{publicacao.fonte.nome}" sortBy="#{publicacao.fonte.nome}">
                                 <h:outputText value="#{publicacao.fonte.nome}" />
                             </p:column>
 
-                            <p:column headerText="Nome">
+                            <p:column headerText="Nome" filterBy="#{publicacao.nome}" sortBy="#{publicacao.nome}">
                                 <h:outputText value="#{publicacao.nome}" />
                             </p:column>
 
-                            <p:column headerText="Data">
+                            <p:column headerText="Data" filterBy="#{publicacao.data}" sortBy="#{publicacao.data}">
                                 <h:outputText value="#{publicacao.data}" >
                                 	<f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>	
                             </p:column>
                             
-                            <p:column headerText="Sucesso (Sim/Não)">
+                            <p:column headerText="Sucesso (Sim/Não)" filterBy="#{publicacao.sucesso}" filterMatchMode="equals">
+                            	  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('publicacoesTable').filter()" value="">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>
                            		  <h:outputText value="#{publicacao.textoSucesso}" />
                             </p:column>
                             
-                            <p:column headerText="Tentativas">
+                            <p:column headerText="Tentativas" filterBy="#{publicacao.quantidadeTentativas}" sortBy="#{publicacao.quantidadeTentativas}">
                            		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
                             </p:column>
                             
@@ -88,7 +97,7 @@
                            		  <h:outputText value="Histórico" />
                             </p:column>
                             
-                            <p:column headerText="Nome Anexo">
+                            <p:column headerText="Nome Anexo" filterBy="#{publicacao.publicacaoAnexo.nome}" sortBy="#{publicacao.publicacaoAnexo.nome}">
                            		  <h:outputText value="#{publicacao.publicacaoAnexo.nome}" rendered="#{publicacao.possuiAnexo}"/>
                             </p:column>
                             
