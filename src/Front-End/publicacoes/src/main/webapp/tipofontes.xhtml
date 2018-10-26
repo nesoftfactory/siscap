@@ -14,10 +14,10 @@
 				<div class="ui-g-12">
                     <div class="card card-w-title">
 						<p:panel header="Cadastro de tipos de fontes" style="margin-bottom:20px">
-							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
-								<p:inputText id="nome" value="#{tipoFontesController.tipoFonte.nome}" required="true" />
+								<p:inputText id="nome" value="#{tipoFontesController.tipoFonte.nome}" required="true" style="width:300px;"/>
 								
 								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
 								<p:selectBooleanCheckbox id="ativo" value="#{tipoFontesController.tipoFonte.ativo}"  />

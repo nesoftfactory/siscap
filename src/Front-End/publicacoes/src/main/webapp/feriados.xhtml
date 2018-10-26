@@ -18,7 +18,7 @@
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
-								<p:inputText id="nome" value="#{feriadosController.feriado.nome}" required="true" />
+								<p:inputText id="nome" value="#{feriadosController.feriado.nome}" required="true" style="width:300px;" />
 								
 								<p:outputLabel value="Feriado para todas as fontes? (Sim/Não)" for="todasFontes"/>
 									<p:selectBooleanCheckbox id="todasFontes" value="#{feriadosController.feriado.todasFontes}">
@@ -26,7 +26,7 @@
 									</p:selectBooleanCheckbox>	
 		
 								<p:outputLabel value="Data" for="data"/>
-									<p:calendar id="data" value="#{feriadosController.feriado.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
+									<p:calendar id="data" value="#{feriadosController.feriado.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter"/>
 							
 						        <p:outputLabel value="Fontes" for="fontes" />
         						<p:selectManyCheckbox id="fontes" value="#{feriadosController.feriado.fontes}" layout="grid" columns="1" converter="fonteConverter">
