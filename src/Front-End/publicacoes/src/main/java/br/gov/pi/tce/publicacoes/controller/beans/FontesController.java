@@ -135,8 +135,26 @@ public class FontesController extends BeanController {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 	}
-
 	
+	public void inativar(Fonte fonte) {
+		try {
+			if (fonte == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			}
+			else {
+				//fonteServiceClient.inativarFonte(fonte);
+				//provisoriamente, mudar quando consertar API Inativar
+				fonte.setAtivo(false);
+				fonteServiceClient.alterarFonte(fonte);
+				iniciaFontes();
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+			}
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+		}
+	}
+
 	public Fonte getFonte() {
 		return fonte;
 	}

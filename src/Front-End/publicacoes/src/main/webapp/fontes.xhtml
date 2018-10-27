@@ -40,10 +40,7 @@
 										action="#{fontesController.salvar()}" >
             						</p:commandButton>
 								</p:toolbarGroup>
-							</p:toolbar>	
-							
-
-						     					
+							</p:toolbar>				
 						</p:panel>
 
 						<p:dataTable id="fontesTable" var="fonte" value="#{fontesController.fontes}" reflow="true" paginator="true" rows="10"  widgetVar="fontesTable"
@@ -65,7 +62,7 @@
                             
                             <p:column headerText="A fonte está Ativa? (Sim/Não)" filterBy="#{fonte.ativo}" filterMatchMode="equals">
                             	  <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('fontesTable').filter()" value="true">
+							    	<p:selectOneButton onchange="PF('fontesTable').filter()">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
@@ -79,9 +76,9 @@
 								<p:commandButton icon="fa fa-edit" title="editar" process="fontesTable"
 									action="#{fontesController.editar(fonte)}" update="@form"/>
 									
-								<p:commandButton icon="fa fa-trash" title="excluir" update="fontesTable" process="fontesTable"
-									actionListener="#{fontesController.excluir(fonte)}" >                						
-							        <p:confirm header="Confirmação" message="Confirma exclusão dessa fonte?" icon="ui-icon-alert" />
+								<p:commandButton icon="fa fa-trash" title="inativar" update="@form" process="fontesTable"
+									actionListener="#{fontesController.inativar(fonte)}" >                						
+							        <p:confirm header="Confirmação" message="Confirma a inativação dessa fonte?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>

@@ -14,6 +14,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
+import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 
 @Local
@@ -23,6 +24,7 @@ public class FonteServiceClient {
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI_FONTES = "http://localhost:7788/fontes/";
 	private String URI_TIPOS_FONTES = "http://localhost:7788/tiposfonte/";
+	private String URI_ATIVO ="/ativo";
 
 	private Client client;
 	private WebTarget webTarget;
@@ -31,20 +33,28 @@ public class FonteServiceClient {
 		this.client = ClientBuilder.newClient();  
 	}
 	
-	private Invocation.Builder chamadaFontesAPI(Long id) {
+	private Invocation.Builder chamadaFontesAPI(Long id, Boolean inativar) {
 		if (id == null) {
 			this.webTarget = this.client.target(URI_FONTES);
 		} else {
-			this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id));
+			if (inativar) {
+				this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id)+URI_ATIVO);
+			} else {
+				this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id));
+			}
 		}
 		return this.webTarget.request(RESPONSE_TYPE);
 	}
 	
-	private Invocation.Builder chamadaTipoFontesAPI(Long id) {
+	private Invocation.Builder chamadaTipoFontesAPI(Long id, Boolean inativar) {
 		if (id == null) {
 			this.webTarget = this.client.target(URI_TIPOS_FONTES);
 		} else {
-			this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(id));
+			if (inativar) {
+				this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(id)+URI_ATIVO);
+			} else {
+				this.webTarget = this.client.target(URI_TIPOS_FONTES).path(String.valueOf(id));
+			}
 		}
 		return this.webTarget.request(RESPONSE_TYPE);
 	}
@@ -66,7 +76,7 @@ public class FonteServiceClient {
 	
 	public List<Fonte> consultarTodasFontes(){
 		try {
-			Response response = chamadaFontesAPI(null).get();
+			Response response = chamadaFontesAPI(null, false).get();
 			List<Fonte> list = response.readEntity(new GenericType<List<Fonte>>() {});
 			return list;
 		}
@@ -76,19 +86,19 @@ public class FonteServiceClient {
 	}
 	
 	public Fonte cadastrarFonte(Fonte fonte) throws Exception{
-		Response response = chamadaFontesAPI(null).post(Entity.entity(fonte, RESPONSE_TYPE));
+		Response response = chamadaFontesAPI(null, false).post(Entity.entity(fonte, RESPONSE_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Fonte.class);
 	}
 	
 	public Fonte alterarFonte(Fonte fonte) throws Exception{
-		Response response = chamadaFontesAPI(fonte.getId()).put(Entity.entity(fonte, RESPONSE_TYPE));
+		Response response = chamadaFontesAPI(fonte.getId(), false).put(Entity.entity(fonte, RESPONSE_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Fonte.class);
 	}
 	
 	public Fonte consultarFontePorCodigo(Long id){
-		Response response = chamadaFontesAPI(id).get();
+		Response response = chamadaFontesAPI(id, false).get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
 		}	
@@ -98,16 +108,28 @@ public class FonteServiceClient {
 	}
 	
 	public String excluirFontePorCodigo(Long id){
-		Response response = chamadaFontesAPI(id).delete();
+		Response response = chamadaFontesAPI(id, false).delete();
 		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
 			return null;
 		}	
 		return response.readEntity(String.class);
 	}
 	
+	public Fonte inativarFonte(Fonte fonte) throws Exception{
+		Response response = chamadaTipoFontesAPI(fonte.getId(), true).put(Entity.entity(fonte, RESPONSE_TYPE));
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			Fonte f = response.readEntity(Fonte.class);
+			return f;
+		}
+		
+	}
+	
 	public List<TipoFonte> consultarTodasTipoFontes(){
 		try {
-			Response response = chamadaTipoFontesAPI(null).get();
+			Response response = chamadaTipoFontesAPI(null, false).get();
 			List<TipoFonte> list = response.readEntity(new GenericType<List<TipoFonte>>() {});
 			return list;
 		}
@@ -117,19 +139,19 @@ public class FonteServiceClient {
 	}
 	
 	public TipoFonte cadastrarTipoFonte(TipoFonte tipoFonte) throws Exception{
-		Response response = chamadaTipoFontesAPI(null).post(Entity.entity(tipoFonte, RESPONSE_TYPE));
+		Response response = chamadaTipoFontesAPI(null, false).post(Entity.entity(tipoFonte, RESPONSE_TYPE));
 		trataRetorno(response);
 		return response.readEntity(TipoFonte.class);
 	}
 	
 	public TipoFonte alterarTipoFonte(TipoFonte tipoFonte) throws Exception{
-		Response response = chamadaTipoFontesAPI(tipoFonte.getId()).put(Entity.entity(tipoFonte, RESPONSE_TYPE));
+		Response response = chamadaTipoFontesAPI(tipoFonte.getId(), false).put(Entity.entity(tipoFonte, RESPONSE_TYPE));
 		trataRetorno(response);
 		return response.readEntity(TipoFonte.class);
 	}
 	
 	public TipoFonte consultarTipoFontePorCodigo(Long id){
-		Response response = chamadaTipoFontesAPI(id).get();
+		Response response = chamadaTipoFontesAPI(id, false).get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
 		}	
@@ -140,11 +162,18 @@ public class FonteServiceClient {
 	}
 
 	public String excluirTipoFontePorCodigo(Long id){
-		Response response = chamadaTipoFontesAPI(id).delete();
+		Response response = chamadaTipoFontesAPI(id, false).delete();
 		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
 			return null;
 		}	
 		return response.readEntity(String.class);
+	}
+
+	public TipoFonte inativarTipoFonte(TipoFonte tipoFonte) throws Exception{
+		Response response = chamadaTipoFontesAPI(tipoFonte.getId(), true).put(Entity.entity(tipoFonte, RESPONSE_TYPE));
+		trataRetorno(response);
+		return response.readEntity(TipoFonte.class);
+		
 	}
 
 }

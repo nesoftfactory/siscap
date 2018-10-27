@@ -45,9 +45,9 @@
                                 <h:outputText value="#{tipoFonte.nome}" />
                             </p:column>
                             
-                             <p:column headerText="O Tipo Fonte está Ativo? (Sim/Não)" filterBy="#{feriado.ativo}" filterMatchMode="equals">
+                             <p:column headerText="O Tipo Fonte está Ativo? (Sim/Não)" filterBy="#{tipoFonte.ativo}" filterMatchMode="equals">
                              	  <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('tipoFontesTable').filter()" value="true">
+							    	<p:selectOneButton onchange="PF('tipoFontesTable').filter()">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
@@ -61,9 +61,9 @@
 								<p:commandButton icon="fa fa-edit" title="editar" process="tipoFontesTable"
 									action="#{tipoFontesController.editar(tipoFonte)}" update="@form"/>
 									
-								<p:commandButton icon="fa fa-trash" title="excluir" update="tipoFontesTable" process="tipoFontesTable"
-									actionListener="#{tipoFontesController.excluir(tipoFonte)}" >                						
-							        <p:confirm header="Confirmação" message="Confirma exclusão desse tipo de fonte?" icon="ui-icon-alert" />
+								<p:commandButton icon="fa fa-trash" title="inativar" update="@form" process="tipoFontesTable"
+									actionListener="#{tipoFontesController.inativar(tipoFonte)}" >                						
+							        <p:confirm header="Confirmação" message="Confirma a inativação desse tipo de fonte?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>

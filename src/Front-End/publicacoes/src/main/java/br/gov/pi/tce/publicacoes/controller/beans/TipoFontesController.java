@@ -126,5 +126,24 @@ public class TipoFontesController extends BeanController {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 		}
 	}
+	
+	public void inativar(TipoFonte tipoFonte) {
+		try {
+			if (tipoFonte == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			}
+			else {
+				//fonteServiceClient.inativarTipoFonte(tipoFonte);
+				//provisoriamente, mudar quando consertar API Inativar
+				tipoFonte.setAtivo(false);
+				fonteServiceClient.alterarTipoFonte(tipoFonte);
+				iniciaTipoFontes();
+				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+			}
+		}
+		catch (Exception e) {
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+		}
+	}
 
 }
