@@ -5,15 +5,20 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
+import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 
@@ -45,6 +50,13 @@ public class ConsultaPublicacaoController extends BeanController {
 	@Inject
 	private FonteServiceClient fonteServiceClient;
 	
+	@Inject
+	private ArquivoServiceClient arquivoServiceClient;
+	
+	private static final String HEADER_CONTENT_DISPOSITION = "Content-disposition";
+	private static final String ATTACHMENT_FILENAME = "attachment; filename=";
+
+	
 
 
 	@PostConstruct
@@ -57,7 +69,12 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 	public void consultar() {
 		try {
-			publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso);
+			if(dataInicio == null || dataFim == null) {
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
+			}
+			else {
+				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso);
+			}
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
@@ -189,6 +206,29 @@ public class ConsultaPublicacaoController extends BeanController {
 		this.dataFim = "";		
 		this.sucesso = null;
 		
+	}
+	
+	
+	public void downloadArquivo(){
+		
+		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+		Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getArquivo());
+		
+		
+		ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
+		HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
+		
+		response.reset();
+		response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
+		try {
+			response.getOutputStream().write(arquivo.getConteudo());
+			response.flushBuffer();
+			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.download.sucesso");
+		} catch (Exception e) {
+			LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
+			LOGGER.error(e.getMessage());
+		}
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
  

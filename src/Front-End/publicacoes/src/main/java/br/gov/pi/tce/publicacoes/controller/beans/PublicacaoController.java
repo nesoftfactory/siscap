@@ -25,10 +25,14 @@ import java.util.regex.Pattern;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
@@ -75,9 +79,12 @@ public class PublicacaoController extends BeanController{
 	@Inject
 	private PublicacaoServiceClient publicacaoServiceClient;
 	
+	
+	
+	
 	@EJB
 	private NotificacaoService notificacao;
-
+	
 	/**
 	 * @param date
 	 * @return
@@ -702,6 +709,7 @@ public class PublicacaoController extends BeanController{
 		}
 		return data;
 	}
+	
 
 //	public void upload() {
 //		Part arquivo = null;

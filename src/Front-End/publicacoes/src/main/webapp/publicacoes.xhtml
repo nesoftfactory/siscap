@@ -17,7 +17,7 @@
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								
-								 <p:outputLabel value="Data Inicio" for="dataInicio" mask="99/99/9999"/>
+								 <p:outputLabel value="Data Inicio" for="dataInicio" />
 							 	 <p:inputMask id="dataInicio"  value="#{consultaPublicacaoController.dataInicio}"  mask="99/99/9999" required="true"/>
 							 	
 							 	<p:outputLabel value="Data Fim" for="dataFim"/>
@@ -32,9 +32,6 @@
 						            <f:selectItem itemLabel="Selecione" itemValue="" />
 									<f:selectItems value="#{consultaPublicacaoController.fontesParaSelectItems}" />
 						        </p:selectOneMenu>
-						        
-						        
-						       
 							 	
 							 	<p:outputLabel value="Sucesso (Sim/Não)" for="sucesso"/>
 								<p:selectBooleanCheckbox id="sucesso" value="#{consultaPublicacaoController.sucesso}"  />
@@ -72,25 +69,17 @@
                                 </h:outputText>	
                             </p:column>
                             
-                            <p:column headerText="Sucesso (Sim/Não)" filterBy="#{publicacao.sucesso}" filterMatchMode="equals">
-                            	  <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('publicacoesTable').filter()" value="">
-							        	<f:converter converterId="javax.faces.Boolean" />
-							            <f:selectItem itemLabel="Todos" itemValue="" />
-							            <f:selectItem itemLabel="Sim" itemValue="true" />
-							            <f:selectItem itemLabel="Não" itemValue="false" />
-							        </p:selectOneButton>
-							      </f:facet>
+                            <p:column headerText="Sucesso (Sim/Não)" >
                            		  <h:outputText value="#{publicacao.textoSucesso}" />
                             </p:column>
                             
-                            <p:column headerText="Tentativas" filterBy="#{publicacao.quantidadeTentativas}" sortBy="#{publicacao.quantidadeTentativas}">
+                            <p:column headerText="Tentativas" filterBy="#{publicacao.quantidadeTentativas}">
                            		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
                             </p:column>
                             
                             <p:column headerText="Arquivo da publicação">
-                           		  <h:outputText value="Download" rendered="#{publicacao.arquivo != null}"/>
-                           		  <h:outputText value="Upload Publicação" rendered="#{publicacao.arquivo == null}"/>
+                            	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null}" />
+                           		  <h:commandLink value="Upload" action="#{consultaPublicacaoController.uploadArquivo()}" rendered="#{publicacao.arquivo == null}"/>
                             </p:column>
                             
                             <p:column headerText="Histórico da publicação">
