@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -34,6 +35,8 @@ import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
+import br.gov.pi.tce.publicacoes.services.NotificacaoService;
+import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
  * 
@@ -71,6 +74,9 @@ public class PublicacaoController extends BeanController{
 	
 	@Inject
 	private PublicacaoServiceClient publicacaoServiceClient;
+	
+	@EJB
+	private NotificacaoService notificacao;
 
 	/**
 	 * @param date
@@ -120,6 +126,9 @@ public class PublicacaoController extends BeanController{
 		int pageDomParnaiba = 1;
 		Boolean isFinalPaginacao = Boolean.FALSE;
 		List<String> arquivoList = new ArrayList<String>();
+		
+		Propriedades propriedades = Propriedades.getInstance();
+		notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 
 		List<LocalDate> diasUteisList = getDiasUteis(dataInicial, dataFinal);
 
@@ -175,7 +184,9 @@ public class PublicacaoController extends BeanController{
 			if (!isFeriado) {
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 				LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
+				Propriedades propriedades = Propriedades.getInstance();
 				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
+				notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 			}
 		}
 	}
@@ -567,7 +578,9 @@ public class PublicacaoController extends BeanController{
 					if (!isFeriado(date, fonte.getId())) {
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 						LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
+						Propriedades propriedades = Propriedades.getInstance();
 						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
+						notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 					}
 				}
 				fonteHTML.close();

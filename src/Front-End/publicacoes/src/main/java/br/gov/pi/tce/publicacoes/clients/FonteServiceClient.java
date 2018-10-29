@@ -14,7 +14,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
-import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 
 @Local

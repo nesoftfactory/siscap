@@ -21,6 +21,10 @@ public class Propriedades {
 		return properties.getProperty(propriedade);
 	}
 	
+	public String getValorString(String propriedade) {
+		return properties.getProperty(propriedade).toString();
+	}
+	
 	public Long getValorLong(String propriedade) {
 		return Long.valueOf(properties.getProperty(propriedade).toString());
 	}
