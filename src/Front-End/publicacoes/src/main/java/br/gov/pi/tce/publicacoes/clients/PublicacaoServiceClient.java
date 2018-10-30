@@ -113,7 +113,7 @@ public class PublicacaoServiceClient{
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
 //			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
-			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 		}
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
@@ -140,7 +140,7 @@ public class PublicacaoServiceClient{
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
 //			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
-			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 		}
 		
 		dataOutput.addFormData("nome", publicacaoAnexo.getNome(), MediaType.TEXT_PLAIN_TYPE);
@@ -206,12 +206,11 @@ public class PublicacaoServiceClient{
 		URL url;
 		FileInputStream fileInputStream = null;
 		try {
-//			url = new URL("http://www.casadodivinomestre.com.br/teste.pdf");
 			url = new URL(encodeString(linkArquivo));
-			File file = new File("/temp/temp.pdf");
+			File file = new File(linkArquivo);
 			FileUtils.copyURLToFile(url, file);
 			fileInputStream = new FileInputStream(file);
-			//fileInputStream.close();
+			fileInputStream.close();
 		} catch (MalformedURLException e) {
 			LOGGER.error(e.getMessage());
 		} catch (IOException e) {

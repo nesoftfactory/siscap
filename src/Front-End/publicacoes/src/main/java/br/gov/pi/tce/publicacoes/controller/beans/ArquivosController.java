@@ -36,7 +36,7 @@ import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 public class ArquivosController extends BeanController {
 
 	private static final long serialVersionUID = 1L;
-	private static final String DIRETORIO_RAIZ = System.getProperty("user.dir") + "/";
+	private static final String DIRETORIO_RAIZ = "file://" + System.getProperty("user.dir") + "/";
 
 	private Arquivo arquivo;
 	private Arquivo arquivoAnexo;
@@ -97,6 +97,10 @@ public class ArquivosController extends BeanController {
 		} else {
 			publicacao.setPossuiAnexo(true);
 		}
+		
+		// Tratamento para data
+		String[] dataSplit = publicacao.getData().split("-");
+		publicacao.setData(dataSplit[2]+"/"+dataSplit[1]+"/"+dataSplit[0]);
 		
 		try {
 			
