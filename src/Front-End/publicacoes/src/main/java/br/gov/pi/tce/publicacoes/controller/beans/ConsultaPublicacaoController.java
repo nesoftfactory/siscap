@@ -70,7 +70,7 @@ public class ConsultaPublicacaoController extends BeanController {
 	public void consultar() {
 		try {
 			if(dataInicio == null || dataFim == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "");
 			}
 			else {
 				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso);
@@ -191,7 +191,11 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 	private void iniciaPublicacoes() {
 		try {
+			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.download.sucesso");
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
 			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes();
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
 		}
 		catch (Exception e) {
 			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
@@ -223,12 +227,32 @@ public class ConsultaPublicacaoController extends BeanController {
 		try {
 			response.getOutputStream().write(arquivo.getConteudo());
 			response.flushBuffer();
-			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.download.sucesso");
 		} catch (Exception e) {
 			LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
 			LOGGER.error(e.getMessage());
 		}
 		FacesContext.getCurrentInstance().responseComplete();
+	}
+	
+	public void downloadArquivoAnexo(){
+		
+		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+		if(publicacao != null && publicacao.getPossuiAnexo()) {
+			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getPublicacaoAnexo().getArquivo());
+			ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
+			HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
+			response.reset();
+			response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
+			try {
+				response.getOutputStream().write(arquivo.getConteudo());
+				response.flushBuffer();
+			} catch (Exception e) {
+				LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
+				LOGGER.error(e.getMessage());
+			}
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+		
 	}
 	
  

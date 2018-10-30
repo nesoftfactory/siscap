@@ -78,7 +78,7 @@
                             </p:column>
                             
                             <p:column headerText="Arquivo da publicação">
-                            	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null}" />
+                            	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null}" immediate="true"/>
                            		  <h:commandLink value="Upload" action="#{consultaPublicacaoController.uploadArquivo()}" rendered="#{publicacao.arquivo == null}"/>
                             </p:column>
                             
@@ -91,8 +91,8 @@
                             </p:column>
                             
                             <p:column headerText="Arquivo do Anexo">
-                           		  <h:outputText value="Download" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null}"/>
-                           		  <h:outputText value="Upload de Anexo" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo == null}"/>
+                           		  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null}" />
+                           		  <h:commandLink value="Upload de Anexo" action="#{consultaPublicacaoController.uploadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo == null}"/>
                            		  <h:outputText value="Não se aplica" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>
                             

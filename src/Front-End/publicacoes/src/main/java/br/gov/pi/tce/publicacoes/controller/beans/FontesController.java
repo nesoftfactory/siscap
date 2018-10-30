@@ -115,7 +115,7 @@ public class FontesController extends BeanController {
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  e.getMessage(), e.getMessage());
 		}
 	}
 	
