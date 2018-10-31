@@ -1,9 +1,6 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -13,17 +10,12 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.ValidationException;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
 
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import br.gov.pi.tce.publicacoes.controller.beans.BeanController;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
@@ -84,13 +76,15 @@ public class ArquivosController extends BeanController {
 	public void salvar() throws Exception {
 		
 		if (arquivo.getNome().isEmpty()) {
-			throw new ValidationException("Arquivo de diário não informado.");
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, "Arquivo de diário não informado.");
+			//throw new ValidationException("Arquivo de diário não informado.");
 		}
 		
 		if (publicacaoAnexo.getNome().isEmpty()) {
 			
 			if (!arquivoAnexo.getNome().isEmpty()) {
-				throw new ValidationException("O nome da publicação do arquivo anexo não foi informado.");
+				registrarMensagem(FacesMessage.SEVERITY_ERROR, "O nome da publicação do arquivo anexo não foi informado.");
+				//throw new ValidationException("O nome da publicação do arquivo anexo não foi informado.");
 			}
 			
 			publicacao.setPossuiAnexo(false);
@@ -104,19 +98,19 @@ public class ArquivosController extends BeanController {
 		
 		try {
 			
-		publicacaoServiceClient.cadastrarPublicacaoPorUpload(publicacao, arquivo, publicacaoAnexo, arquivoAnexo);
-		publicacaoServiceClient.armazenarArquivo(arquivo);
-		if (!arquivoAnexo.getNome().isEmpty()) {
-			publicacaoServiceClient.armazenarArquivo(arquivoAnexo);
-		}
-		
-		addMessage(FacesMessage.SEVERITY_INFO, "Sucesso", "Diário salvo com sucesso.");
+			publicacaoServiceClient.cadastrarPublicacaoPorUpload(publicacao, arquivo, publicacaoAnexo, arquivoAnexo);
+//			publicacaoServiceClient.armazenarArquivo(arquivo);
+//			if (publicacao.getPossuiAnexo() && !arquivoAnexo.getNome().isEmpty()) {
+//				publicacaoServiceClient.armazenarArquivo(arquivoAnexo);
+//			}
 			
+			addMessage(FacesMessage.SEVERITY_INFO, "Diário salvo com sucesso.", "Diário salvo com sucesso.");
+			limpar();
 		} catch (Exception e) {
-		    throw new Exception(e);
+			registrarMensagem(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		    //throw new Exception(e);
 		}
 			
-		limpar();
 	}
 
 	public void uploadFile(FileUploadEvent event) throws IOException {

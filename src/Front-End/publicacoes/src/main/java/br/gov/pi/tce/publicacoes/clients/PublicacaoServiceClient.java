@@ -20,7 +20,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.validation.ValidationException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -87,15 +86,15 @@ public class PublicacaoServiceClient{
 		
 		for (Publicacao publicacaoElement : publicacoes) {
 	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
-	        	throw new ValidationException("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+	        	throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
 	        }
 	        
 	        if (publicacaoElement.getCodigo().equals(publicacao.getCodigo())) {
-	        	throw new ValidationException("Este código já existe em outra publicacão. Por favor use outro código para esta publicação.");
+	        	throw new Exception("Este código já existe em outra publicacão. Por favor use outro código para esta publicação.");
 	        }
 	        
 	        if (publicacaoElement.getFonte().equals(publicacao.getFonte()) && publicacaoElement.getData().equals(publicacao.getData())) {
-	        	throw new ValidationException("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+	        	throw new Exception("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
 	        }
 	    }
 		
@@ -104,7 +103,9 @@ public class PublicacaoServiceClient{
 		publicacao = cadastrarPublicacao(publicacao, arquivo);
 		publicacaoAnexo.setPublicacao(publicacao);
 		publicacaoAnexo.setSucesso(true);
-		cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
+		if(publicacao.getPossuiAnexo()) {
+			cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
+		}
 	}
 	
 	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo) throws Exception{
