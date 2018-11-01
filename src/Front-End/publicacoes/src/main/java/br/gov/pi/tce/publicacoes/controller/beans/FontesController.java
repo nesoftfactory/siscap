@@ -74,6 +74,7 @@ public class FontesController extends BeanController {
 
 	public void limpar() {
 		fonte = new Fonte();
+		fonte.setAtivo(true);
 	}
 
 	public List<Fonte> getFontes() {

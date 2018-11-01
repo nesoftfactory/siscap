@@ -77,6 +77,7 @@ public class FeriadosController extends BeanController {
 	public void limpar() {
 		feriado = new Feriado();
 		feriado.setFontes(Collections.EMPTY_LIST);
+		feriado.setAtivo(true);
 	}
 
 	public List<Feriado> getFeriados() {

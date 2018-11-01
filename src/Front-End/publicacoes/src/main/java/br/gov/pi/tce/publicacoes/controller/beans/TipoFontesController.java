@@ -46,6 +46,7 @@ public class TipoFontesController extends BeanController {
 	
 	public void limpar() {
 		tipoFonte = new TipoFonte();
+		tipoFonte.setAtivo(true);
 	}
 	
 	
