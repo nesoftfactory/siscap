@@ -76,7 +76,7 @@
                             
                             <p:column headerText="Feriado em todas as fontes? (Sim/Não)" filterBy="#{feriado.todasFontes}" filterMatchMode="equals">
                            		  <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('feriadosTable').filter()" value="">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
@@ -88,7 +88,7 @@
                             
                             <p:column headerText="Feriado em data fixa? (Sim/Não)" filterBy="#{feriado.fixo}" filterMatchMode="equals">
 	                            <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('feriadosTable').filter()" value="">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
@@ -100,7 +100,7 @@
                             
                             <p:column headerText="O Feriado está Ativo? (Sim/Não)" filterBy="#{feriado.ativo}" filterMatchMode="equals">
 	                            <f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('feriadosTable').filter()" value="true">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
