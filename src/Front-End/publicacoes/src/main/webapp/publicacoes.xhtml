@@ -83,7 +83,8 @@
                             </p:column>
                             
                             <p:column headerText="Histórico da publicação">
-                           		  <h:outputText value="Histórico" />
+                           		<h:commandLink value="Histórico" action="#{consultaPublicacaoController.popup}" immediate="true" /> 
+                           		  
                             </p:column>
                             
                             <p:column headerText="Nome Anexo" filterBy="#{publicacao.publicacaoAnexo.nome}" sortBy="#{publicacao.publicacaoAnexo.nome}">

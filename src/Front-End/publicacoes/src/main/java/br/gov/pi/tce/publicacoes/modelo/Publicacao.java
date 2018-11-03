@@ -1,6 +1,7 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -57,8 +58,6 @@ public class Publicacao {
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
 	}
-	
-	
 	
 	public PublicacaoAnexo getPublicacaoAnexo() {
 		return publicacaoAnexo;

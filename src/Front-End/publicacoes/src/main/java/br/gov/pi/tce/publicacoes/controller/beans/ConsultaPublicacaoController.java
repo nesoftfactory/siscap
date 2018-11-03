@@ -1,26 +1,32 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ViewHandler;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
+import br.gov.pi.tce.publicacoes.clients.PublicacaoHistoricoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
+import br.gov.pi.tce.publicacoes.modelo.PublicacaoHistorico;
 
 @Named
 @ViewScoped
@@ -53,8 +59,13 @@ public class ConsultaPublicacaoController extends BeanController {
 	@Inject
 	private ArquivoServiceClient arquivoServiceClient;
 	
+	@Inject
+	private PublicacaoHistoricoServiceClient publicacaoHistoricoServiceClient;
+	
 	private static final String HEADER_CONTENT_DISPOSITION = "Content-disposition";
 	private static final String ATTACHMENT_FILENAME = "attachment; filename=";
+	
+	private List<PublicacaoHistorico> historicoPublicacaoSelecionada;
 
 	
 
@@ -82,6 +93,18 @@ public class ConsultaPublicacaoController extends BeanController {
 	}
 	
 	
+	
+	
+	public List<PublicacaoHistorico> getHistoricoPublicacaoSelecionada() {
+		return historicoPublicacaoSelecionada;
+	}
+
+
+	public void setHistoricoPublicacaoSelecionada(List<PublicacaoHistorico> historicoPublicacaoSelecionada) {
+		this.historicoPublicacaoSelecionada = historicoPublicacaoSelecionada;
+	}
+
+
 	private void iniciaFontes() {
 		try {
 			fontes = fonteServiceClient.consultarTodasFontes();
@@ -234,6 +257,13 @@ public class ConsultaPublicacaoController extends BeanController {
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
+	
+	public void getHistoricoPublicacao(){
+		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+		historicoPublicacaoSelecionada = publicacaoHistoricoServiceClient.consultarPublicacaoHistoricoPeloIdPublicacao(publicacao.getId());
+		LOGGER.error("rerer");
+	}
+	
 	public void downloadArquivoAnexo(){
 		
 		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
@@ -255,6 +285,13 @@ public class ConsultaPublicacaoController extends BeanController {
 		
 	}
 	
- 
-
+	public void popup() throws IOException {
+		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+		historicoPublicacaoSelecionada = publicacaoHistoricoServiceClient.consultarPublicacaoHistoricoPeloIdPublicacao(publicacao.getId());
+		HttpServletResponse res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String uri = req.getRequestURI();
+        res.getWriter().println("<script>window.open('" + "publicacaoHistorico.xhtml" + "','_blank', 'location=yes,height=600,width=800,scrollbars=yes,status=yes'); window.parent.location.href= '"+uri+"';</script>");
+        FacesContext.getCurrentInstance().responseComplete(); 
+	}
 }

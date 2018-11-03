@@ -32,6 +32,7 @@ public class Publicacao extends BaseEntity {
 	private Boolean possuiAnexo;
 	private int quantidadeTentativas;
 	
+	
 	@Transient
 	private PublicacaoAnexo publicacaoAnexo;
 
@@ -44,6 +45,7 @@ public class Publicacao extends BaseEntity {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+	
 	
 	@NotNull
 	@ManyToOne

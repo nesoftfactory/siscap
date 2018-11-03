@@ -37,6 +37,13 @@ public class PublicacaoHistorico  {
 		this.usuarioCriacao= usuarioLogado;
 	}
 
+	
+	public PublicacaoHistorico(String mensagem, boolean sucesso,LocalDateTime dataCriacao, Usuario usuarioCriacao) {
+		this.mensagem = mensagem;
+		this.sucesso = sucesso;
+		this.dataCriacao = dataCriacao;
+		this.usuarioCriacao= usuarioCriacao;
+	}
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -77,7 +84,6 @@ public class PublicacaoHistorico  {
 	}
 
 	@Column(name="data_criacao")
-	@JsonIgnore
 	public LocalDateTime getDataCriacao() {
 		return dataCriacao;
 	}
@@ -88,7 +94,6 @@ public class PublicacaoHistorico  {
 	
 	@OneToOne
 	@JoinColumn( name = "usuario_criacao" )
-	@JsonIgnore
 	public Usuario getUsuarioCriacao() {
 		return usuarioCriacao;
 	}
