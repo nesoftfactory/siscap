@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.gov.pi.tce.siscap.api.service.exception.PublicacaoInexistenteException;
+
 @ControllerAdvice
 public class SiscapExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -73,6 +75,15 @@ public class SiscapExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
+	@ExceptionHandler(PublicacaoInexistenteException.class)
+	public ResponseEntity<Object> handlePublicacaoInexistenteException(PublicacaoInexistenteException ex) {
+		String mensagemUsuario = messageSource.getMessage("publicacao.inexistente", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		
+		return ResponseEntity.badRequest().body(erros);
+	}
+
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
 		
