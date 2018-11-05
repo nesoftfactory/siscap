@@ -11,6 +11,7 @@ public class TipoFonte
     private Usuario usuarioCriacao;
     private Usuario usuarioAtualizacao; 
     
+    
 	public TipoFonte() {
 		super();
 	}

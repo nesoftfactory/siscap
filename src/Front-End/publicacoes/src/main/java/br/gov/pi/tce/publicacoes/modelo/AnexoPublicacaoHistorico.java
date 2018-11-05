@@ -10,6 +10,7 @@ public class AnexoPublicacaoHistorico  {
 	private boolean sucesso;
 	private String dataCriacao;
 	private Usuario usuarioCriacao;
+	private String dataCriacaoString;
 
 	public AnexoPublicacaoHistorico() {
 	}
@@ -87,6 +88,15 @@ public class AnexoPublicacaoHistorico  {
 		return getSucesso() ? "Sim" : "Não";
 	}
 
+	public String getDataCriacaoString() {
+		return dataCriacaoString;
+	}
+
+	public void setDataCriacaoString(String dataCriacaoString) {
+		this.dataCriacaoString = dataCriacaoString;
+	}
+
+	
 
 }
 

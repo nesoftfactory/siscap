@@ -13,6 +13,7 @@ public class PublicacaoAnexo {
 	private String nome;
 	private Long arquivo;
 	private boolean sucesso;
+	
 
 	/**
 	 * 

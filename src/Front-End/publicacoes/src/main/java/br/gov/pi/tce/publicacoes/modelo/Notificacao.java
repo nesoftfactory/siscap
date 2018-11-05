@@ -2,18 +2,13 @@ package br.gov.pi.tce.publicacoes.modelo;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-@Entity
-@Table(name="notificacao")
 public class Notificacao{
 	
 	private Long id;
 	private String tipo;
 	private String texto;
-	private String dataCriacao;
-	private Usuario usuarioCriacao;
+	private String dataCriacaoString;
+	private String usuarioCriacaoString;
 	private List<Usuario> usuarios;
 	private Publicacao publicacao;
 	
@@ -25,12 +20,12 @@ public class Notificacao{
 	
 	
 	
-	public Notificacao(String tipo, String texto, String dataCriacao, Usuario usuarioCriacao) {
+	public Notificacao(String tipo, String texto, String dataCriacaoString, String usuarioCriacaoString) {
 		super();
 		this.tipo = tipo;
 		this.texto = texto;
-		this.dataCriacao = dataCriacao;
-		this.usuarioCriacao = usuarioCriacao;
+		this.dataCriacaoString = dataCriacaoString;
+		this.usuarioCriacaoString = usuarioCriacaoString;
 	}
 	
 	
@@ -62,18 +57,6 @@ public class Notificacao{
 	public void setTexto(String texto) {
 		this.texto = texto;
 	}
-	public String getDataCriacao() {
-		return dataCriacao;
-	}
-	public void setDataCriacao(String dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-	public Usuario getUsuarioCriacao() {
-		return usuarioCriacao;
-	}
-	public void setUsuarioCriacao(Usuario usuarioCriacao) {
-		this.usuarioCriacao = usuarioCriacao;
-	}
 	public Long getId() {
 		return id;
 	}
@@ -86,6 +69,37 @@ public class Notificacao{
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
 	}
+
+
+
+
+	public String getDataCriacaoString() {
+		return dataCriacaoString;
+	}
+
+
+
+
+	public void setDataCriacaoString(String dataCriacaoString) {
+		this.dataCriacaoString = dataCriacaoString;
+	}
+
+
+
+
+	public String getUsuarioCriacaoString() {
+		return usuarioCriacaoString;
+	}
+
+
+
+
+	public void setUsuarioCriacaoString(String usuarioCriacaoString) {
+		this.usuarioCriacaoString = usuarioCriacaoString;
+	}
+
+	
+	
 	
 	
 	

@@ -63,9 +63,8 @@
                                 <h:outputText value="#{publicacao.nome}" />
                             </p:column>
 
-                            <p:column headerText="Data" filterBy="#{publicacao.data}" sortBy="#{publicacao.data}">
-                                <h:outputText value="#{publicacao.data}" >
-                                	<f:convertDateTime pattern="dd/MM/yyyy" />
+                            <p:column headerText="Data" >
+                                <h:outputText value="#{publicacao.dataString}" >
                                 </h:outputText>	
                             </p:column>
                             

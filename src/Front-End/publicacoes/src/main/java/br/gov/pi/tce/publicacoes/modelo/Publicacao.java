@@ -18,12 +18,15 @@ public class Publicacao {
 	private String nome;
 	private Fonte fonte;
 	private String data;
+	private String dataCriacao;
 	private String codigo;
 	private Long arquivo;
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas = 0L;
 	private Boolean possuiNotificacao;
+	private Usuario usuarioCriacao;
+	private String dataString;
 	
 	
 	private PublicacaoAnexo publicacaoAnexo;
@@ -38,7 +41,7 @@ public class Publicacao {
 	
 	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo,
 			Long arquivo, Boolean sucesso, Boolean anexo,
-			Long quantidadeTentativas) {
+			Long quantidadeTentativas, String dataCriacao, Usuario usuarioCriacao) {
 		super();
 		setId(id);
 		setFonte(fonte);
@@ -49,6 +52,8 @@ public class Publicacao {
 		setSucesso(sucesso);
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
+		setDataCriacao(dataCriacao);
+		setUsuarioCriacao(usuarioCriacao);
 	}
 
 	/**
@@ -75,14 +80,7 @@ public class Publicacao {
 		setQuantidadeTentativas(quantidadeTentativas);
 	}
 	
-	public PublicacaoAnexo getPublicacaoAnexo() {
-		return publicacaoAnexo;
-	}
-
-	public void setPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo) {
-		this.publicacaoAnexo = publicacaoAnexo;
-	}
-
+	
 	/**
 	 * @param id
 	 * @param fonte
@@ -95,11 +93,43 @@ public class Publicacao {
 	 * @param quantidadeTentativas
 	 */
 	public Publicacao(Long id, Fonte fonte, String nome, String data,
-			String codigo, Long arquivo, Date dataCriacao, String usuarioCriacao, Date dataAtualizacao,
+			String codigo, Long arquivo, String usuarioCriacao, Date dataAtualizacao,
 			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas) {
 		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas);
 		this.id = id;
 	}
+	
+	
+	
+	
+	public String getDataString() {
+		return dataString;
+	}
+
+
+	public void setDataString(String dataString) {
+		this.dataString = dataString;
+	}
+
+
+	public String getDataCriacao() {
+		return dataCriacao;
+	}
+
+
+	public void setDataCriacao(String dataCriacao) {
+		this.dataCriacao = dataCriacao;
+	}
+
+
+	public PublicacaoAnexo getPublicacaoAnexo() {
+		return publicacaoAnexo;
+	}
+
+	public void setPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo) {
+		this.publicacaoAnexo = publicacaoAnexo;
+	}
+
 
 	/**
 	 * @return the id
@@ -242,6 +272,18 @@ public class Publicacao {
 	public String getTextoSucesso() {
 		return getSucesso() ? "Sim" : "Não";
 	}
+
+
+	public Usuario getUsuarioCriacao() {
+		return usuarioCriacao;
+	}
+
+
+	public void setUsuarioCriacao(Usuario usuarioCriacao) {
+		this.usuarioCriacao = usuarioCriacao;
+	}
+	
+	
 	
 	
 	
