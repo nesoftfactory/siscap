@@ -14,7 +14,7 @@
 			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 	</f:facet>
-	<title>Histórico de Publicações</title>
+	<title>Histórico de Notificações</title>
 	<h:outputScript name="js/nanoscroller.js" library="paradise-layout" />
 	<h:outputScript name="js/layout.js" library="paradise-layout" />
 	<ui:insert name="head" />
@@ -26,26 +26,26 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:dataTable id="publicacoesHistoricoTable" var="historicoPublicacao" value="#{historicoPublicacaoController.historicoPublicacaoSelecionada}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesHistoricoTable"
-                 emptyMessage="Não foi encontrdo histórico da publicação.">
+						<p:dataTable id="notificacoesPublicacoesHistoricoTable" var="notificacao" value="#{notificacaoController.historicoNotificacoesPublicacaoSelecionada}" reflow="true" paginator="true" rows="10" widgetVar="notificacoesPublicacoesHistoricoTable"
+                 emptyMessage="Não foi encontrdo histórico de notificações.">
                             <f:facet name="header">
-                                Histórico de Publicações
+                                Histórico de Notificações
                             </f:facet>
 
-                            <p:column headerText="Mensagem"  >
-                                <h:outputText value="#{historicoPublicacao.mensagem}" />
+                            <p:column headerText="Tipo"  >
+                                <h:outputText value="#{notificacao.tipo}" />
                             </p:column>
                             
-                             <p:column headerText="Sucesso (Sim/Não)"  >
-                                <h:outputText value="#{historicoPublicacao.textoSucesso}" />
+                             <p:column headerText="Mensagem"  >
+                                <h:outputText value="#{notificacao.texto}" />
                             </p:column>
                             
                             <p:column headerText="Data de criação"  >
-                                <h:outputText value="#{historicoPublicacao.dataCriacao}" />
+                                <h:outputText value="#{notificacao.dataCriacao}" />
                             </p:column>
                             
                              <p:column headerText="Usuário"  >
-                                <h:outputText value="#{historicoPublicacao.usuarioCriacao.nome}" />
+                                <h:outputText value="#{notificacao.usuarioCriacao.nome}" />
                             </p:column>
                         </p:dataTable>
                     </div>

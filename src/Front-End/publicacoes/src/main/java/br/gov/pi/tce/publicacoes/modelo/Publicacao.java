@@ -1,7 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
 import java.util.Date;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,6 +23,7 @@ public class Publicacao {
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	private Long quantidadeTentativas = 0L;
+	private Boolean possuiNotificacao;
 	
 	
 	private PublicacaoAnexo publicacaoAnexo;
@@ -33,6 +33,22 @@ public class Publicacao {
 	 */
 	public Publicacao() {
 		super();
+	}
+	
+	
+	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo,
+			Long arquivo, Boolean sucesso, Boolean anexo,
+			Long quantidadeTentativas) {
+		super();
+		setId(id);
+		setFonte(fonte);
+		setNome(nome);
+		setData(data);
+		setCodigo(codigo);
+		setArquivo(arquivo);
+		setSucesso(sucesso);
+		setPossuiAnexo(anexo);
+		setQuantidadeTentativas(quantidadeTentativas);
 	}
 
 	/**
@@ -212,6 +228,16 @@ public class Publicacao {
 	}
 	
 	
+	
+	
+	public Boolean getPossuiNotificacao() {
+		return possuiNotificacao;
+	}
+
+	public void setPossuiNotificacao(Boolean possuiNotificacao) {
+		this.possuiNotificacao = possuiNotificacao;
+	}
+
 	@JsonIgnore
 	public String getTextoSucesso() {
 		return getSucesso() ? "Sim" : "Não";

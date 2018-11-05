@@ -15,10 +15,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.gov.pi.tce.siscap.api.model.Fonte;
+import br.gov.pi.tce.siscap.api.model.Notificacao;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexo;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoRepository;
+import br.gov.pi.tce.siscap.api.repository.filter.NotificacaoFilter;
 import br.gov.pi.tce.siscap.api.repository.filter.PublicacaoFilter;
+import br.gov.pi.tce.siscap.api.repository.notificacao.NotificacaoRepositoryImpl;
 import br.gov.pi.tce.siscap.api.service.exception.FiltroPublicacaoDataInvalidaException;
 
 public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
@@ -28,6 +31,9 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 	
 	@Autowired
 	private PublicacaoAnexoRepository publicacaoAnexoRepository;
+	
+	@Autowired
+	private NotificacaoRepositoryImpl notificacaoRepositoryImpl;
 	
 
 	@Override
@@ -47,6 +53,13 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 			if(publicacao.getPossuiAnexo()) {
 				publicacao.setPublicacaoAnexo(getPublicacaoAnexo(publicacao.getId()));
 			}
+			NotificacaoFilter filter = new NotificacaoFilter();
+			filter.setIdPublicacao(publicacao.getId());
+			List<Notificacao> notificacoes = notificacaoRepositoryImpl.filtrar(filter);
+			if(notificacoes != null && !notificacoes.isEmpty()) {
+				publicacao.setPossuiNotificacao(true);
+			}
+			
 		}
 		return publicacoes;
 	}

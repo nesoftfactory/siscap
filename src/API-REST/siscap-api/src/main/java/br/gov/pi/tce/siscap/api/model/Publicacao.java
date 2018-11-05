@@ -30,6 +30,9 @@ public class Publicacao extends BaseEntity {
 	private Arquivo arquivo;
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
+	
+	@Transient
+	private Boolean possuiNotificacao;
 	private int quantidadeTentativas;
 	
 	
@@ -122,6 +125,17 @@ public class Publicacao extends BaseEntity {
 	public void setPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo) {
 		this.publicacaoAnexo = publicacaoAnexo;
 	}
+
+	@Transient
+	public Boolean getPossuiNotificacao() {
+		return possuiNotificacao;
+	}
+
+	public void setPossuiNotificacao(Boolean possuiNotificacao) {
+		this.possuiNotificacao = possuiNotificacao;
+	}
+	
+	
 	
 	
 

@@ -77,13 +77,19 @@
                            		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
                             </p:column>
                             
+                             <p:column headerText="Notificações">
+                            	  <h:commandLink value="Notificações" onclick="window.open('notificacoesPublicacaoHistorico.xhtml?id='+ '#{publicacao.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" rendered="#{publicacao.possuiNotificacao}"/>
+                            	  <h:outputText value="-" rendered="#{! publicacao.possuiNotificacao}"/>	
+                            </p:column>
+                            
                             <p:column headerText="Arquivo da publicação">
                             	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null}" immediate="true"/>
                            		  <h:commandLink value="Upload" action="#{consultaPublicacaoController.uploadArquivo()}" rendered="#{publicacao.arquivo == null}"/>
                             </p:column>
                             
                             <p:column headerText="Histórico da publicação">
-                           		<h:commandLink value="Histórico" action="#{consultaPublicacaoController.popup}" immediate="true" /> 
+                           		<h:commandLink value="Histórico" onclick="window.open('publicacaoHistorico.xhtml?id='+ '#{publicacao.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" >
+                           		</h:commandLink> 
                            		  
                             </p:column>
                             
@@ -94,12 +100,12 @@
                             <p:column headerText="Arquivo do Anexo">
                            		  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null}" immediate="true"/>
                            		  <h:commandLink value="Upload de Anexo" action="#{consultaPublicacaoController.uploadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo == null}"/>
-                           		  <h:outputText value="Não se aplica" rendered="#{! publicacao.possuiAnexo}"/>
+                           		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>
                             
                             <p:column headerText="Histórico do Anexo">
-                           		  <h:outputText value="Histórico de Anexo" rendered="#{publicacao.possuiAnexo}"/>
-                           		  <h:outputText value="Não se aplica" rendered="#{! publicacao.possuiAnexo}"/>
+                            	  <h:commandLink value="Histórico de Anexo" onclick="window.open('anexoPublicacaoHistorico.xhtml?id='+ '#{publicacao.publicacaoAnexo.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" rendered="#{publicacao.possuiAnexo}" />	
+                           		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>
                         </p:dataTable>
                     </div>

@@ -14,7 +14,7 @@
 			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 	</f:facet>
-	<title>Histórico de Publicações</title>
+	<title>Histórico de Anexos de Publicações</title>
 	<h:outputScript name="js/nanoscroller.js" library="paradise-layout" />
 	<h:outputScript name="js/layout.js" library="paradise-layout" />
 	<ui:insert name="head" />
@@ -26,26 +26,26 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:dataTable id="publicacoesHistoricoTable" var="historicoPublicacao" value="#{historicoPublicacaoController.historicoPublicacaoSelecionada}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesHistoricoTable"
+						<p:dataTable id="anexosPublicacoesHistoricoTable" var="historicoAnexoPublicacao" value="#{historicoAnexoPublicacaoController.historicoAnexoPublicacaoSelecionada}" reflow="true" paginator="true" rows="10" widgetVar="anexosPublicacoesHistoricoTable"
                  emptyMessage="Não foi encontrdo histórico da publicação.">
                             <f:facet name="header">
-                                Histórico de Publicações
+                                Histórico de Anexos de Publicações
                             </f:facet>
 
                             <p:column headerText="Mensagem"  >
-                                <h:outputText value="#{historicoPublicacao.mensagem}" />
+                                <h:outputText value="#{historicoAnexoPublicacao.mensagem}" />
                             </p:column>
                             
                              <p:column headerText="Sucesso (Sim/Não)"  >
-                                <h:outputText value="#{historicoPublicacao.textoSucesso}" />
+                                <h:outputText value="#{historicoAnexoPublicacao.textoSucesso}" />
                             </p:column>
                             
                             <p:column headerText="Data de criação"  >
-                                <h:outputText value="#{historicoPublicacao.dataCriacao}" />
+                                <h:outputText value="#{historicoAnexoPublicacao.dataCriacao}" />
                             </p:column>
                             
                              <p:column headerText="Usuário"  >
-                                <h:outputText value="#{historicoPublicacao.usuarioCriacao.nome}" />
+                                <h:outputText value="#{historicoAnexoPublicacao.usuarioCriacao.nome}" />
                             </p:column>
                         </p:dataTable>
                     </div>

@@ -13,6 +13,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import br.gov.pi.tce.siscap.api.model.enums.NotificacaoTipo;
 
 @Entity
@@ -34,6 +38,8 @@ public class Notificacao extends BaseEntity {
 		this.tipo = tipo;
 	}
 	
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true)
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="id_publicacao")

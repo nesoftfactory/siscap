@@ -14,8 +14,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name="publicacao_historico")
 public class PublicacaoHistorico  {
@@ -101,7 +99,8 @@ public class PublicacaoHistorico  {
 	public void setUsuarioCriacao(Usuario usuarioCriacao) {
 		this.usuarioCriacao = usuarioCriacao;
 	}
-
+	
+	
 	@PrePersist
 	public void prePersist() {
 		final LocalDateTime atual = LocalDateTime.now();

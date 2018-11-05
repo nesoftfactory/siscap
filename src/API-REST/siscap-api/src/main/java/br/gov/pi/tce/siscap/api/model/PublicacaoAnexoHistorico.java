@@ -14,8 +14,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name="publicacao_anexo_historico")
 public class PublicacaoAnexoHistorico  {
@@ -36,6 +34,14 @@ public class PublicacaoAnexoHistorico  {
 		this.sucesso = sucesso;
 		this.usuarioCriacao= usuarioLogado;
 	}
+	
+	public PublicacaoAnexoHistorico(String mensagem, boolean sucesso,LocalDateTime dataCriacao, Usuario usuarioCriacao) {
+		this.mensagem = mensagem;
+		this.sucesso = sucesso;
+		this.dataCriacao = dataCriacao;
+		this.usuarioCriacao= usuarioCriacao;
+	}
+
 
 
 	@Id
@@ -79,8 +85,7 @@ public class PublicacaoAnexoHistorico  {
 	}
 
 	@Column(name="data_criacao")
-	@JsonIgnore
-	public LocalDateTime getDataCriacao() {
+		public LocalDateTime getDataCriacao() {
 		return dataCriacao;
 	}
 	
@@ -90,7 +95,6 @@ public class PublicacaoAnexoHistorico  {
 	
 	@OneToOne
 	@JoinColumn( name = "usuario_criacao" )
-	@JsonIgnore
 	public Usuario getUsuarioCriacao() {
 		return usuarioCriacao;
 	}

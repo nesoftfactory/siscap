@@ -33,7 +33,13 @@ public class NotificacaoRepositoryImpl implements NotificacaoRepositoryQuery {
 		criteriaQuery.where(predicates);
 		
 		TypedQuery<Notificacao> query = manager.createQuery(criteriaQuery);
-		return query.getResultList();
+		
+		List<Notificacao> lista = query.getResultList();
+		for (Notificacao notificacao : lista) {
+			notificacao.setPublicacao(null);
+			notificacao.setUsuarios(null);
+		}
+		return lista;
 	}
 
 	private Predicate[] criarRestriscoes(NotificacaoFilter filter, CriteriaBuilder builder, Root<Notificacao> root) {
