@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.model;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,12 +11,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.gov.pi.tce.siscap.api.model.enums.NotificacaoTipo;
 
@@ -38,8 +36,6 @@ public class Notificacao extends BaseEntity {
 		this.tipo = tipo;
 	}
 	
-	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
-	@JsonIdentityReference(alwaysAsId=true)
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="id_publicacao")
@@ -71,6 +67,26 @@ public class Notificacao extends BaseEntity {
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
 	}
+	
+	
+	@Transient
+	public String getUsuarioCriacaoString() {
+		return getUsuarioCriacao() != null ? getUsuarioCriacao().getNome() : "";
+	}
+	
+	@Transient
+	public String getDataCriacaoString() {
+		if(getDataCriacao() != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	        String dataCriacaoFormatada = getDataCriacao().format(formatter);
+			return dataCriacaoFormatada;
+		}
+		else {
+			return "";
+		}
+		
+	}
+
 
 
 }

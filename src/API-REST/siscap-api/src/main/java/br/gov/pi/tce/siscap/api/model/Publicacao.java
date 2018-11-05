@@ -1,6 +1,7 @@
 package br.gov.pi.tce.siscap.api.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -133,6 +134,19 @@ public class Publicacao extends BaseEntity {
 
 	public void setPossuiNotificacao(Boolean possuiNotificacao) {
 		this.possuiNotificacao = possuiNotificacao;
+	}
+	
+	@Transient
+	public String getDataString() {
+		if(getData() != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	        String dataFormatada = getData().format(formatter);
+			return dataFormatada;
+		}
+		else {
+			return "";
+		}
+		
 	}
 	
 	

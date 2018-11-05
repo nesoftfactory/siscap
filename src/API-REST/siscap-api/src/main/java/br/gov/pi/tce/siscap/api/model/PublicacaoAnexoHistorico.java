@@ -1,6 +1,7 @@
 package br.gov.pi.tce.siscap.api.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -132,6 +134,19 @@ public class PublicacaoAnexoHistorico  {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	
+	@Transient
+	public String getDataCriacaoString() {
+		if(getDataCriacao() != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	        String dataCriacaoFormatada = getDataCriacao().format(formatter);
+			return dataCriacaoFormatada;
+		}
+		else {
+			return "";
+		}
+		
 	}
 
 }
