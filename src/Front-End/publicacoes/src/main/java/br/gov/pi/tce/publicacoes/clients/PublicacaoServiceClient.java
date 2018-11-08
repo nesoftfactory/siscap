@@ -89,10 +89,6 @@ public class PublicacaoServiceClient{
 	        	throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
 	        }
 	        
-	        if (publicacaoElement.getCodigo().equals(publicacao.getCodigo())) {
-	        	throw new Exception("Este código já existe em outra publicacão. Por favor use outro código para esta publicação.");
-	        }
-	        
 	        if (publicacaoElement.getFonte().equals(publicacao.getFonte()) && publicacaoElement.getData().equals(publicacao.getData())) {
 	        	throw new Exception("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
 	        }
@@ -100,21 +96,25 @@ public class PublicacaoServiceClient{
 		
 		publicacao.setSucesso(true);
 		publicacao.setQuantidadeTentativas((long) 1);
-		publicacao = cadastrarPublicacao(publicacao, arquivo);
+		publicacao = cadastrarPublicacao(publicacao, arquivo, true);
 		publicacaoAnexo.setPublicacao(publicacao);
 		publicacaoAnexo.setSucesso(true);
 		if(publicacao.getPossuiAnexo()) {
-			cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
+			cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, true);
 		}
 	}
 	
-	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo) throws Exception{
+	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
-//			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
-			dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			if(isUploadManual) {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			}
+			else {
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
+			}
 		}
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
@@ -135,13 +135,17 @@ public class PublicacaoServiceClient{
 		return response.readEntity(Publicacao.class);
 	}
 	
-	public PublicacaoAnexo cadastrarPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo, Arquivo arquivo) throws Exception{
+	public PublicacaoAnexo cadastrarPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo, Arquivo arquivo, boolean isUploadManual) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
-//			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
-			dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			if(isUploadManual) {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			}
+			else {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			}
 		}
 		
 		dataOutput.addFormData("nome", publicacaoAnexo.getNome(), MediaType.TEXT_PLAIN_TYPE);
@@ -220,13 +224,17 @@ public class PublicacaoServiceClient{
 		return fileInputStream;
 	}
 
-	public Publicacao alterarPublicacao(Publicacao publicacao, Arquivo arquivo) throws Exception{
+	public Publicacao alterarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
 			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
 		} else {
-//			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
-			dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			if(isUploadManual) {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			}
+			else {
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+			}
 		}
 		
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
@@ -300,21 +308,33 @@ public class PublicacaoServiceClient{
 	
 	
 	
-	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim, Boolean sucesso) throws Exception{
+	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim, Boolean sucesso, String data) throws Exception{
 		LocalDate dtInicio = null;
 		LocalDate dtFim = null;
-		if(dataInicio == null || dataFim == null) {
-			throw new Exception("Data Inicio e Data Fim são obrigatórios");
+		LocalDate dt = null;
+		if(data == null) {
+			if(dataInicio == null || dataFim == null) {
+				throw new Exception("Data Inicio e Data Fim são obrigatórios");
+			}
+			try {
+				dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+				dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			}
+			catch (Exception e) {
+				throw new Exception("Data Inválida");
+			}
+		}
+		else {
+			try {
+				dt = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			}
+			catch (Exception e) {
+				throw new Exception("Data Inválida");
+			}
 		}
 		
-		try {
-			dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		}
-		catch (Exception e) {
-			throw new Exception("Data Inválida");
-		}
-		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("fonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso);
+		
+		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("idFonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso).queryParam("data", dt);
 		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
 		trataRetorno(response);
@@ -369,6 +389,42 @@ public class PublicacaoServiceClient{
 	 */
 	public LocalDate asLocalDate(Date date) {
 		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+
+	public void alterarPublicacaoPorUpload(Publicacao publicacaoExistente, Publicacao publicacao, Arquivo arquivo,
+			PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
+		List<Publicacao> publicacoes = consultarTodasPublicacoes();
+		
+		for (Publicacao publicacaoElement : publicacoes) {
+	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
+	        	throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+	        }
+	        
+	        if (publicacaoElement.getFonte().equals(publicacao.getFonte()) && publicacaoElement.getData().equals(publicacao.getData())) {
+	        	throw new Exception("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+	        }
+	    }
+		
+		publicacao.setSucesso(true);
+		publicacao.setQuantidadeTentativas(publicacaoExistente.getQuantidadeTentativas() + 1);
+		
+		publicacaoExistente.setQuantidadeTentativas(publicacaoExistente.getQuantidadeTentativas() + 1);
+		publicacaoExistente.setNome(publicacao.getNome());
+		publicacaoExistente.setFonte(publicacao.getFonte());
+		publicacaoExistente.setData(publicacao.getData());
+		publicacaoExistente.setCodigo(publicacao.getCodigo());
+		publicacaoExistente.setSucesso(publicacao.getSucesso());
+		publicacaoExistente.setPossuiAnexo(publicacao.getPossuiAnexo());
+		
+		publicacaoExistente = alterarPublicacao(publicacaoExistente, arquivo, true);
+		
+		publicacaoAnexo.setPublicacao(publicacao);
+		publicacaoAnexo.setSucesso(true);
+		if(publicacao.getPossuiAnexo()) {
+			publicacaoAnexo.setPublicacao(publicacaoExistente);
+			cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, true);
+		}
+		
 	}
 
 }

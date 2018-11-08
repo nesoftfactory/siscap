@@ -497,10 +497,10 @@ public class PublicacaoController extends BeanController{
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
 		try {
 			if (publicacaoConsultada == null) {
-				publicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao, arquivo);
+				publicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao, arquivo, false);
 				if (publicacaoAnexo != null) {
 					publicacaoAnexo.setPublicacao(publicacao);
-					publicacaoAnexo = publicacaoServiceClient.cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo);
+					publicacaoAnexo = publicacaoServiceClient.cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, false);
 				}
 			} else {
 				if (!publicacaoConsultada.getSucesso()) {
@@ -513,8 +513,7 @@ public class PublicacaoController extends BeanController{
 					publicacaoConsultada.setCodigo(publicacao.getCodigo());
 					publicacaoConsultada.setSucesso(publicacao.getSucesso());
 					publicacaoConsultada.setPossuiAnexo(publicacao.getPossuiAnexo());
-					publicacaoConsultada.setQuantidadeTentativas(publicacao.getQuantidadeTentativas());
-					publicacaoServiceClient.alterarPublicacao(publicacaoConsultada, arquivo);
+					publicacaoServiceClient.alterarPublicacao(publicacaoConsultada, arquivo, false);
 				}
 			}
 		} catch (Exception e) {
@@ -646,15 +645,7 @@ public class PublicacaoController extends BeanController{
 		return listaMesAno;
 	}
 
-	/**
-	 * Converte um Date em LocalDate.
-	 * 
-	 * @param date
-	 * @return
-	 */
-	public LocalDate asLocalDate(Date date) {
-		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
-	}
+	
 
 	/**
 	 *  Converte um LocalDate em Date.

@@ -63,8 +63,9 @@
                                 <h:outputText value="#{publicacao.nome}" />
                             </p:column>
 
-                            <p:column headerText="Data" >
-                                <h:outputText value="#{publicacao.dataString}" >
+                            <p:column headerText="Data" filterBy="#{publicacao.data}" sortBy="#{publicacao.data}">
+                                <h:outputText value="#{publicacao.data}" >
+                                	<f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>	
                             </p:column>
                             
@@ -82,7 +83,7 @@
                             </p:column>
                             
                             <p:column headerText="Arquivo da publicação">
-                            	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null}" immediate="true"/>
+                            	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null and publicacao.sucesso}" immediate="true"/>
                            		  <h:commandLink value="Upload" action="#{consultaPublicacaoController.uploadArquivo()}" rendered="#{publicacao.arquivo == null}"/>
                             </p:column>
                             
@@ -97,7 +98,7 @@
                             </p:column>
                             
                             <p:column headerText="Arquivo do Anexo">
-                           		  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null}" immediate="true"/>
+                           		  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null and publicacao.publicacaoAnexo.sucesso}" immediate="true"/>
                            		  <h:commandLink value="Upload de Anexo" action="#{consultaPublicacaoController.uploadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo == null}"/>
                            		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>

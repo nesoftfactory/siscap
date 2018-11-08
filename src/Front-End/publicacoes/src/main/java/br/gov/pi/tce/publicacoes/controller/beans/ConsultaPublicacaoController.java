@@ -72,7 +72,7 @@ public class ConsultaPublicacaoController extends BeanController {
 				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "");
 			}
 			else {
-				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso);
+				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso, null);
 			}
 		}
 		catch (Exception e) {

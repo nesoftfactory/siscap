@@ -2,9 +2,13 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -116,6 +120,17 @@ public class BeanController implements Serializable {
 		}
 
 		return selectItems;
+	}
+	
+	
+	/**
+	 * Converte um Date em LocalDate.
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public LocalDate asLocalDate(Date date) {
+		return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
 
