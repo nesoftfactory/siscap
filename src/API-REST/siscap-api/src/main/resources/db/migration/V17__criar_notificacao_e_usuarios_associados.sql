@@ -65,17 +65,3 @@ GO
 ALTER TABLE [dbo].[notificacao_usuarios] CHECK CONSTRAINT [FK_notificacao_usuarios_usuario]
 GO
 
--- Povoar tabela
-
-set language brazilian	
-DECLARE @id_notificacao int, @id_usuario int, @id_publicacao int
-SELECT TOP 1 @id_usuario = id FROM usuario
-SELECT TOP 1 @id_publicacao = id FROM publicacao
-
-INSERT INTO notificacao (id_publicacao, tipo, texto, data_criacao, usuario_criacao, data_atualizacao, usuario_atualizacao) 
-	VALUES(@id_publicacao, 'CAPTURA', 'Teste criado no ato da criação', getdate(), @id_usuario, getdate(), @id_usuario)
-SELECT @id_notificacao = @@IDENTITY
-
-INSERT INTO notificacao_usuarios (id_notificacao, id_usuario) VALUES(@id_notificacao, @id_usuario)
-GO
-COMMIT
