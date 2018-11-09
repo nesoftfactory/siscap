@@ -291,8 +291,10 @@ public class PublicacaoController extends BeanController{
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Erro: HTML da página não foi encontrado.");
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return listHtmls;
@@ -519,6 +521,7 @@ public class PublicacaoController extends BeanController{
 		} catch (Exception e) {
 			LOGGER.error("Erro ao Criar/Atualizar Publicacao.");
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

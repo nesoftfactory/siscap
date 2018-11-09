@@ -8,6 +8,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
+
 import br.gov.pi.tce.publicacoes.clients.UsuarioServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
@@ -23,10 +25,18 @@ public class UsuariosController extends BeanController {
 	private Usuario usuario;
 	private List<Usuario> usuarios;
 	
+	private static final Logger LOGGER = Logger.getLogger(UsuariosController.class);
+	
 	@PostConstruct
 	public void init() {
 		limpar();
-		iniciaUsuarios();
+		try {
+			iniciaUsuarios();
+		} catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar usuários.", e.getMessage());
+			LOGGER.error("Erro ao iniciar usuários.:" + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	public void limpar() {
@@ -41,36 +51,41 @@ public class UsuariosController extends BeanController {
 	public void excluir(Usuario usuarioExcluir) {
 		try {
 			if(usuarioExcluir == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if(usuarioExcluir.getId() > 0) {
 					usuarioServiceClient.excluirUsuarioPorCodigo(usuarioExcluir.getId());
 				}	
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 				iniciaUsuarios();
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir usuário.", "");
+			LOGGER.error("Erro ao excluir usuário.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
      
     
-	private void iniciaUsuarios() {
+	private void iniciaUsuarios() throws Exception{
 		try {
 			usuarios = usuarioServiceClient.consultarTodos();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar usuários.", e.getMessage());
+			LOGGER.error("Erro ao iniciar usuários.:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
 		}
 	}
 	
 	public void salvar() {
 		try {
 			if(usuario == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if(usuario.getId() == null || usuario.getId() == 0) {
@@ -79,14 +94,16 @@ public class UsuariosController extends BeanController {
 				else {
 					usuarioServiceClient.alterarUsuario(usuario);
 				}
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 				iniciaUsuarios();
 			}
 			limpar();
 			
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar usuário.", e.getMessage());
+			LOGGER.error("Erro ao salvar usuário:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

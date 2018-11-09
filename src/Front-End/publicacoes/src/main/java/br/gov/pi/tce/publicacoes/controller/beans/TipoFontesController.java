@@ -8,6 +8,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
+
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
@@ -20,6 +22,8 @@ public class TipoFontesController extends BeanController {
 
 	private TipoFonte tipoFonte;
 	private List<TipoFonte> tipoFontes;
+	
+	private static final Logger LOGGER = Logger.getLogger(TipoFontesController.class);
 	
 	@Inject
 	private FonteServiceClient fonteServiceClient;
@@ -40,7 +44,9 @@ public class TipoFontesController extends BeanController {
 			tipoFontes = fonteServiceClient.consultarTodasTipoFontes();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar tipos de fontes.", e.getMessage());
+			LOGGER.error("Erro ao consultar tipos de fontes:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -77,14 +83,16 @@ public class TipoFontesController extends BeanController {
 	public TipoFonte getTipoFonte(Long id) {
 		try {
 			if (id == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			
 			tipoFonte = fonteServiceClient.consultarTipoFontePorCodigo(id);
 			
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao buscar tipo de fonte específica.", "");
+			LOGGER.error("Erro ao buscar tipo de fonte específica.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return tipoFonte;
@@ -93,7 +101,7 @@ public class TipoFontesController extends BeanController {
 	public void salvar() {
 		try {
 			if (tipoFonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if (tipoFonte.getId() == null) {
@@ -103,35 +111,39 @@ public class TipoFontesController extends BeanController {
 					fonteServiceClient.alterarTipoFonte(tipoFonte);
 				}
 				iniciaTipoFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar tipo de fonte.", e.getMessage());
+			LOGGER.error("Erro ao salvar tipo de fonte.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
 	public void excluir(TipoFonte tipoFonte) {
 		try {
 			if (tipoFonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				fonteServiceClient.excluirTipoFontePorCodigo(tipoFonte.getId());
 				iniciaTipoFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir tipo de fonte", "");
+			LOGGER.error("Erro ao excluir tipo de fonte.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
 	public void inativar(TipoFonte tipoFonte) {
 		try {
 			if (tipoFonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				//fonteServiceClient.inativarTipoFonte(tipoFonte);
@@ -139,11 +151,13 @@ public class TipoFontesController extends BeanController {
 				tipoFonte.setAtivo(false);
 				fonteServiceClient.alterarTipoFonte(tipoFonte);
 				iniciaTipoFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao inativar tipo de fonte.", "");
+			LOGGER.error("Erro ao inativar tipo de fonte.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

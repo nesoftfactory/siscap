@@ -11,6 +11,8 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
+
 import br.gov.pi.tce.publicacoes.clients.FeriadoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
@@ -35,6 +37,8 @@ public class FeriadosController extends BeanController {
 	
 	private List<Fonte> fontes = Collections.EMPTY_LIST;
 	
+	private static final Logger LOGGER = Logger.getLogger(FeriadosController.class);
+	
 	@PostConstruct
 	public void init() {
 		limpar();
@@ -51,7 +55,9 @@ public class FeriadosController extends BeanController {
 			fontes = fonteServiceClient.consultarTodasFontes();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}
@@ -65,7 +71,9 @@ public class FeriadosController extends BeanController {
 			feriados = feriadoServiceClient.consultarTodosFeriados();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar feriados.", e.getMessage());
+			LOGGER.error("Erro ao iniciar feriados.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -87,14 +95,16 @@ public class FeriadosController extends BeanController {
 	public Feriado getFeriado(Long id) {
 		try {
 			if (id == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			
 			feriado = feriadoServiceClient.consultarFeriadoPorCodigo(id);
 			
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao recuperar feriado.", "");
+			LOGGER.error("Erro ao recuperar feriado.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return feriado;
@@ -103,7 +113,7 @@ public class FeriadosController extends BeanController {
 	public void salvar() {
 		try {
 			if (feriado == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if ((feriado.getTodasFontes()) && (feriado.getFontes().size() > 0)) {
@@ -122,29 +132,33 @@ public class FeriadosController extends BeanController {
 				}
 				iniciaFeriados();
 				iniciaFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar feriado.", e.getMessage());
+			LOGGER.error("Erro ao salvar feriado.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
 	public void excluir(Feriado feriado) {
 		try {
 			if (feriado == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				feriadoServiceClient.excluirFeriadoPorCodigo(feriado.getId());
 				iniciaFeriados();
 				iniciaFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir feriado.", "");
+			LOGGER.error("Erro ao excluir feriado.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

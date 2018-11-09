@@ -34,7 +34,7 @@ public class BeanController implements Serializable {
     }
 	
 	
-	public void registrarMensagem(Severity severidade, String chave, Object... parametros) {
+	public void addMessage(Severity severidade, String chave, Object... parametros) {
 		FacesMessage mensagem = getFacesMessage(severidade, chave, parametros);
 		FacesContext.getCurrentInstance().addMessage(null, mensagem);	
 	}

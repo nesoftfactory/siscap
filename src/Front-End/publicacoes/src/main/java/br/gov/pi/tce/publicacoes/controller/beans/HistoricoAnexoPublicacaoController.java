@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -35,7 +36,9 @@ public class HistoricoAnexoPublicacaoController extends BeanController {
 		try {
 			popupHistorico();
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar histórico de anexo de publicação.", e.getMessage());
+			LOGGER.error("Erro ao iniciar histórico de anexo de publicação.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

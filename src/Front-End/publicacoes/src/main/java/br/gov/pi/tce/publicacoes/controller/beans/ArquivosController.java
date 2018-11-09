@@ -72,7 +72,9 @@ public class ArquivosController extends BeanController {
 			fontes = fonteServiceClient.consultarTodasFontes();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}
@@ -84,14 +86,14 @@ public class ArquivosController extends BeanController {
 	public void salvar() throws Exception {
 		
 		if (arquivo.getNome().isEmpty()) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "Arquivo de diário não informado.");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Arquivo de diário não informado.");
 			//throw new ValidationException("Arquivo de diário não informado.");
 		}
 		
 		if (publicacaoAnexo.getNome().isEmpty()) {
 			
 			if (!arquivoAnexo.getNome().isEmpty()) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "O nome da publicação do arquivo anexo não foi informado.");
+				addMessage(FacesMessage.SEVERITY_ERROR, "O nome da publicação do arquivo anexo não foi informado.");
 				//throw new ValidationException("O nome da publicação do arquivo anexo não foi informado.");
 			}
 			
@@ -110,14 +112,14 @@ public class ArquivosController extends BeanController {
 			Date data = formato.parse(publicacao.getData());
 			Boolean isFeriado = isFeriado(data, publicacao.getFonte().getId());
 			if(isFeriado){
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "Não pode ser cadastrada uma publicação para esta fonte na data solicitada pois está configurada no sistema como feriado.");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Não pode ser cadastrada uma publicação para esta fonte na data solicitada pois está configurada no sistema como feriado.");
 			}
 			
 			if(publicacoes != null && !publicacoes.isEmpty()) {
 				Publicacao publicacaoExistente = publicacoes.get(0);
 				if(publicacaoExistente != null) {
 					if(publicacaoExistente.getSucesso()) {
-						registrarMensagem(FacesMessage.SEVERITY_ERROR, "Já foi feito anteriormente um upload de arquivo para a publicação solicitada.");
+						addMessage(FacesMessage.SEVERITY_ERROR, "Já foi feito anteriormente um upload de arquivo para a publicação solicitada.");
 					}
 					else {
 						publicacaoServiceClient.alterarPublicacaoPorUpload(publicacaoExistente, publicacao, arquivo, publicacaoAnexo, arquivoAnexo);
@@ -140,7 +142,7 @@ public class ArquivosController extends BeanController {
 			LOGGER.error("Erro realizar o upload da publicação.");
 			LOGGER.error(e.getMessage());
 			
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload da publicação.");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload da publicação.");
 		    //throw new Exception(e);
 		}
 			

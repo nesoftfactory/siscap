@@ -3,6 +3,7 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -32,7 +33,9 @@ public class NotificacaoController extends BeanController {
 		try {
 			popupNotificacoes();
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao consultar notificações.", e.getMessage());
+			LOGGER.error("Erro ao consultar notificações.:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

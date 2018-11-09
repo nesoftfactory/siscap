@@ -69,14 +69,16 @@ public class ConsultaPublicacaoController extends BeanController {
 	public void consultar() {
 		try {
 			if(dataInicio == null || dataFim == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "");
 			}
 			else {
 				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso, null);
 			}
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao consultar publicações", e.getMessage());
+			LOGGER.error("Erro ao consultar publicações:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -86,7 +88,9 @@ public class ConsultaPublicacaoController extends BeanController {
 			fontes = fonteServiceClient.consultarTodasFontes();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -190,14 +194,16 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 	private void iniciaPublicacoes() {
 		try {
-			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
-			registrarMensagem(FacesMessage.SEVERITY_INFO, "label.download.sucesso");
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
+			addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+			addMessage(FacesMessage.SEVERITY_INFO, "label.download.sucesso");
+			addMessage(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
 			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes();
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
+			addMessage(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());
+			LOGGER.error("Erro ao iniciar publicações:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -229,6 +235,7 @@ public class ConsultaPublicacaoController extends BeanController {
 		} catch (Exception e) {
 			LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 		}
 		FacesContext.getCurrentInstance().responseComplete();
 	}
@@ -254,6 +261,7 @@ public class ConsultaPublicacaoController extends BeanController {
 			} catch (Exception e) {
 				LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
 				LOGGER.error(e.getMessage());
+				e.printStackTrace();
 			}
 			FacesContext.getCurrentInstance().responseComplete();
 		}

@@ -50,7 +50,9 @@ public class FontesController extends BeanController {
 			tiposFontes = fonteServiceClient.consultarTodasTipoFontes();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao consultar tipos de fontes", e.getMessage());
+			LOGGER.error("Erro ao consultar tipos de fontes:" + e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}
@@ -64,7 +66,9 @@ public class FontesController extends BeanController {
 			fontes = fonteServiceClient.consultarTodasFontes();
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao consultar fontes", e.getMessage());
+			LOGGER.error("Erro ao consultar fontes:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -84,14 +88,16 @@ public class FontesController extends BeanController {
 	public Fonte getFonte(Long id) {
 		try {
 			if (id == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			
 			fonte = fonteServiceClient.consultarFontePorCodigo(id);
 			
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao recuperar fonte", "");
+			LOGGER.error("Erro ao recuperar fonte:" + e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return fonte;
@@ -100,7 +106,7 @@ public class FontesController extends BeanController {
 	public void salvar() {
 		try {
 			if (fonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				if (fonte.getId() == null) {
@@ -111,36 +117,41 @@ public class FontesController extends BeanController {
 				}
 				iniciaFontes();
 				iniciaTiposFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  e.getMessage(), e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar fonte.", "label.erro");
+			LOGGER.error("Erro ao salvar fonte:" + e.getMessage());
+			e.printStackTrace();
+			
 		}
 	}
 	
 	public void excluir(Fonte fonte) {
 		try {
 			if (fonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				fonteServiceClient.excluirFontePorCodigo(fonte.getId());
 				iniciaFontes();
 				iniciaTiposFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir fonte.", "");
+			LOGGER.error("Erro ao excluir fonte:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
 	public void inativar(Fonte fonte) {
 		try {
 			if (fonte == null) {
-				registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
 			}
 			else {
 				//fonteServiceClient.inativarFonte(fonte);
@@ -148,11 +159,13 @@ public class FontesController extends BeanController {
 				fonte.setAtivo(false);
 				fonteServiceClient.alterarFonte(fonte);
 				iniciaFontes();
-				registrarMensagem(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
 		catch (Exception e) {
-			registrarMensagem(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao inativar fonte.", "");
+			LOGGER.error("Erro ao inativar fonte:" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
