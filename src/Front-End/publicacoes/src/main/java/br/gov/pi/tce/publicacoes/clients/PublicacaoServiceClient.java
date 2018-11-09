@@ -113,7 +113,7 @@ public class PublicacaoServiceClient{
 				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 			}
 			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "teste.pdf");
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 			}
 		}
 		
@@ -144,7 +144,7 @@ public class PublicacaoServiceClient{
 				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 			}
 			else {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
 			}
 		}
 		
@@ -212,10 +212,10 @@ public class PublicacaoServiceClient{
 		FileInputStream fileInputStream = null;
 		try {
 			url = new URL(encodeString(linkArquivo));
-			File file = new File(linkArquivo);
+			File file = new File("/temp/temp.pdf");
 			FileUtils.copyURLToFile(url, file);
 			fileInputStream = new FileInputStream(file);
-			fileInputStream.close();
+			
 		} catch (MalformedURLException e) {
 			LOGGER.error(e.getMessage());
 		} catch (IOException e) {

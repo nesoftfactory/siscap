@@ -192,7 +192,7 @@ public class PublicacaoController extends BeanController{
 				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 				LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
 				Propriedades propriedades = Propriedades.getInstance();
-				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
+				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "Indisponível");
 				//notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 			}
 		}

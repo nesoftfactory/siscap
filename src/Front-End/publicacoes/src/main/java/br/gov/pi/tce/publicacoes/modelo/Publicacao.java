@@ -101,7 +101,6 @@ public class Publicacao {
 	
 	
 	
-	
 	public String getDataString() {
 		return dataString;
 	}

@@ -58,7 +58,7 @@
                             
                             <p:column headerText="Administrador? (Sim/Não)" filterBy="#{usuario.admin}" filterMatchMode="equals">
                             		<f:facet name="filter">
-							    	<p:selectOneButton onchange="PF('usuariosTable').filter()" value="">
+							    	<p:selectOneButton onchange="PF('usuariosTable').filter()" value="true">
 							        	<f:converter converterId="javax.faces.Boolean" />
 							            <f:selectItem itemLabel="Todos" itemValue="" />
 							            <f:selectItem itemLabel="Sim" itemValue="true" />
