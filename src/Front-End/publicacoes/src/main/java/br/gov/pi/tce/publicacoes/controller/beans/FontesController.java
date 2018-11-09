@@ -88,7 +88,7 @@ public class FontesController extends BeanController {
 	public Fonte getFonte(Long id) {
 		try {
 			if (id == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Fonte não selecionada.", "");
 			}
 			
 			fonte = fonteServiceClient.consultarFontePorCodigo(id);
@@ -106,7 +106,7 @@ public class FontesController extends BeanController {
 	public void salvar() {
 		try {
 			if (fonte == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Fonte não selecionada", "");
 			}
 			else {
 				if (fonte.getId() == null) {
@@ -117,7 +117,7 @@ public class FontesController extends BeanController {
 				}
 				iniciaFontes();
 				iniciaTiposFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Fontes cadastradas com sucesso.", "");
 			}
 			limpar();
 		}
@@ -132,13 +132,13 @@ public class FontesController extends BeanController {
 	public void excluir(Fonte fonte) {
 		try {
 			if (fonte == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir fonte.", "");
 			}
 			else {
 				fonteServiceClient.excluirFontePorCodigo(fonte.getId());
 				iniciaFontes();
 				iniciaTiposFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Fonte excluída com sucesso", "");
 			}
 		}
 		catch (Exception e) {
@@ -151,7 +151,7 @@ public class FontesController extends BeanController {
 	public void inativar(Fonte fonte) {
 		try {
 			if (fonte == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Fonte não selecionada", "");
 			}
 			else {
 				//fonteServiceClient.inativarFonte(fonte);
@@ -159,7 +159,7 @@ public class FontesController extends BeanController {
 				fonte.setAtivo(false);
 				fonteServiceClient.alterarFonte(fonte);
 				iniciaFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Erro ao inativar fonte.", "");
 			}
 		}
 		catch (Exception e) {

@@ -69,7 +69,7 @@ public class ConsultaPublicacaoController extends BeanController {
 	public void consultar() {
 		try {
 			if(dataInicio == null || dataFim == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e fim são obrigatórias.", "");
 			}
 			else {
 				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso, null);
@@ -194,11 +194,7 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 	private void iniciaPublicacoes() {
 		try {
-			addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
-			addMessage(FacesMessage.SEVERITY_INFO, "label.download.sucesso");
-			addMessage(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
 			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes();
-			addMessage(FacesMessage.SEVERITY_ERROR, "label.datas.obrigatorias", "label.datas.obrigatorias");
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());

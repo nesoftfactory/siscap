@@ -95,7 +95,7 @@ public class FeriadosController extends BeanController {
 	public Feriado getFeriado(Long id) {
 		try {
 			if (id == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Feriado não selecionado.", "");
 			}
 			
 			feriado = feriadoServiceClient.consultarFeriadoPorCodigo(id);
@@ -113,7 +113,7 @@ public class FeriadosController extends BeanController {
 	public void salvar() {
 		try {
 			if (feriado == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Feriado não selecionado.", "");
 			}
 			else {
 				if ((feriado.getTodasFontes()) && (feriado.getFontes().size() > 0)) {
@@ -132,7 +132,7 @@ public class FeriadosController extends BeanController {
 				}
 				iniciaFeriados();
 				iniciaFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Feriado salvo com sucesso.", "");
 			}
 			limpar();
 		}
@@ -146,13 +146,13 @@ public class FeriadosController extends BeanController {
 	public void excluir(Feriado feriado) {
 		try {
 			if (feriado == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Feriado não selecionado", "");
 			}
 			else {
 				feriadoServiceClient.excluirFeriadoPorCodigo(feriado.getId());
 				iniciaFeriados();
 				iniciaFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Feriado excluído com sucesso.", "");
 			}
 		}
 		catch (Exception e) {

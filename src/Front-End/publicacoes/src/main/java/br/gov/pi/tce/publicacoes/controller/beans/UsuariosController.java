@@ -51,13 +51,13 @@ public class UsuariosController extends BeanController {
 	public void excluir(Usuario usuarioExcluir) {
 		try {
 			if(usuarioExcluir == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Erro excluir usuário.", "");
 			}
 			else {
 				if(usuarioExcluir.getId() > 0) {
 					usuarioServiceClient.excluirUsuarioPorCodigo(usuarioExcluir.getId());
 				}	
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Erro excluir usuário.", "");
 				iniciaUsuarios();
 			}
 			limpar();
@@ -94,7 +94,7 @@ public class UsuariosController extends BeanController {
 				else {
 					usuarioServiceClient.alterarUsuario(usuario);
 				}
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Erro excluir usuário.", "");
 				iniciaUsuarios();
 			}
 			limpar();

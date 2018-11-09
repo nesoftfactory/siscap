@@ -20,7 +20,8 @@ import br.gov.pi.tce.publicacoes.modelo.Usuario;
 public class UsuarioServiceClient{
 	
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-	private String URI = "http://localhost:7788/usuarios/";
+	//private String URI = "http://localhost:7788/usuarios/";
+	private String URI = "http://ne-software.tce.pi.gov.br:7788/usuarios/";
 
 	
 	private Client client;

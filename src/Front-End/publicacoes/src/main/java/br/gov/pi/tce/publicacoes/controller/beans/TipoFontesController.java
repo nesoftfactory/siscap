@@ -83,7 +83,7 @@ public class TipoFontesController extends BeanController {
 	public TipoFonte getTipoFonte(Long id) {
 		try {
 			if (id == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Tipo de Fonte não selcionada", "");
 			}
 			
 			tipoFonte = fonteServiceClient.consultarTipoFontePorCodigo(id);
@@ -101,7 +101,7 @@ public class TipoFontesController extends BeanController {
 	public void salvar() {
 		try {
 			if (tipoFonte == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Tipo de fonte não selecionada.", "");
 			}
 			else {
 				if (tipoFonte.getId() == null) {
@@ -111,7 +111,7 @@ public class TipoFontesController extends BeanController {
 					fonteServiceClient.alterarTipoFonte(tipoFonte);
 				}
 				iniciaTipoFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Erro ao salvar tipo de fonte", "");
 			}
 			limpar();
 		}
@@ -125,12 +125,12 @@ public class TipoFontesController extends BeanController {
 	public void excluir(TipoFonte tipoFonte) {
 		try {
 			if (tipoFonte == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir tipo de fonte", "");
 			}
 			else {
 				fonteServiceClient.excluirTipoFontePorCodigo(tipoFonte.getId());
 				iniciaTipoFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Tipo de fonte excluída com sucesso", "");
 			}
 		}
 		catch (Exception e) {
@@ -143,7 +143,7 @@ public class TipoFontesController extends BeanController {
 	public void inativar(TipoFonte tipoFonte) {
 		try {
 			if (tipoFonte == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Tipo de fonte não selecionada", "");
 			}
 			else {
 				//fonteServiceClient.inativarTipoFonte(tipoFonte);
