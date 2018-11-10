@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -71,8 +72,13 @@ public class ArquivosController extends BeanController {
 		try {
 			fontes = fonteServiceClient.consultarTodasFontes();
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes." + e.getMessage(), e.getMessage());
 			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
 			e.printStackTrace();
 		}
@@ -137,11 +143,17 @@ public class ArquivosController extends BeanController {
 				addMessage(FacesMessage.SEVERITY_INFO, "Diário salvo com sucesso.", "Diário salvo com sucesso.");
 				limpar();
 			}
+			
 				
-		} catch (Exception e) {
+		} 
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
+			LOGGER.error("Erro realizar o upload da publicação.:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
 			LOGGER.error("Erro realizar o upload da publicação.");
 			LOGGER.error(e.getMessage());
-			
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload da publicação.");
 		    //throw new Exception(e);
 		}

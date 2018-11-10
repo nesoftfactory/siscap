@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -54,6 +54,11 @@ public class FeriadosController extends BeanController {
 		try {
 			fontes = fonteServiceClient.consultarTodasFontes();
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Fontes", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
 			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
@@ -69,6 +74,11 @@ public class FeriadosController extends BeanController {
 	private void iniciaFeriados() {
 		try {
 			feriados = feriadoServiceClient.consultarTodosFeriados();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Feriados.", e.getMessage());
+			LOGGER.error("Erro ao iniciar feriados.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar feriados.", e.getMessage());
@@ -100,6 +110,11 @@ public class FeriadosController extends BeanController {
 			
 			feriado = feriadoServiceClient.consultarFeriadoPorCodigo(id);
 			
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Feriados.", e.getMessage());
+			LOGGER.error("Erro ao recuperar feriado.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao recuperar feriado.", "");
@@ -136,6 +151,11 @@ public class FeriadosController extends BeanController {
 			}
 			limpar();
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível.", e.getMessage());
+			LOGGER.error("Erro ao salvar feriado.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar feriado.", e.getMessage());
 			LOGGER.error("Erro ao salvar feriado.:" + e.getMessage());
@@ -154,6 +174,11 @@ public class FeriadosController extends BeanController {
 				iniciaFontes();
 				addMessage(FacesMessage.SEVERITY_INFO, "Feriado excluído com sucesso.", "");
 			}
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível.", e.getMessage());
+			LOGGER.error("Erro ao excluir feriado.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir feriado.", "");

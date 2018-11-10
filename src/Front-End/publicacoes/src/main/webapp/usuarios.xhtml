@@ -6,10 +6,12 @@
 	template="/WEB-INF/paradise/template.xhtml">
 
 	<ui:define name="title">Usuários</ui:define>
+	<ui:define name="msgPostConstruct">
+			    <h:inputHidden value="#{usuariosController.msgPostConstruct}"></h:inputHidden>
+		    </ui:define>
 
 	<ui:define name="content">
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="false" sticky="true" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
@@ -81,20 +83,14 @@
                             </p:column>
                             
                             <p:column headerText="Ações">
-								<p:commandButton icon="fa fa-edit" title="editar" process="usuariosTable"
+								<p:commandButton icon="fa fa-edit" title="editar" process="@this"
 									action="#{usuariosController.editar(usuario)}" update="@form"/>
-								<p:commandButton icon="fa fa-trash" title="excluir" update="usuariosTable" process="usuariosTable"
+								<p:commandButton icon="fa fa-trash" title="excluir" update="usuariosTable" process="@this"
 									actionListener="#{usuariosController.excluir(usuario)}" >                						
 							        <p:confirm header="Confirmação" message="Confirma exclusão desse usuário?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>
-                        
-                   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-					    </p:confirmDialog>
-                        
                     </div>
 				</div>
 			</div>

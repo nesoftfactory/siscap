@@ -6,10 +6,12 @@
 	template="/WEB-INF/paradise/template.xhtml">
 
 	<ui:define name="title">Tipo de Fontes</ui:define>
+	<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{tipoFontesController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
 
 	<ui:define name="content">
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="false" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
@@ -58,17 +60,17 @@
                             </p:column>
                             
                             <p:column headerText="Ações">
-								<p:commandButton icon="fa fa-edit" title="editar" process="tipoFontesTable"
+								<p:commandButton icon="fa fa-edit" title="editar" process="@this"
 									action="#{tipoFontesController.editar(tipoFonte)}" update="@form"/>
 									
-								<p:commandButton icon="fa fa-trash" title="inativar" update="@form" process="tipoFontesTable"
-									actionListener="#{tipoFontesController.inativar(tipoFonte)}" >                						
-							        <p:confirm header="Confirmação" message="Confirma a inativação desse tipo de fonte?" icon="ui-icon-alert" />
+								<p:commandButton icon="fa fa-trash" title="Excluir" update="@form" process="@this"
+									actionListener="#{tipoFontesController.excluir(tipoFonte)}" >                						
+							        <p:confirm header="Confirmação" message="Confirma a exclusão desse tipo de fonte?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>
                         
-                   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                   		<p:confirmDialog global="true" >
 					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					    </p:confirmDialog>

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -17,7 +18,6 @@ import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
-import br.gov.pi.tce.publicacoes.clients.PublicacaoHistoricoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
@@ -75,6 +75,11 @@ public class ConsultaPublicacaoController extends BeanController {
 				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso, null);
 			}
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
+			LOGGER.error("Erro ao consultar publicações.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao consultar publicações", e.getMessage());
 			LOGGER.error("Erro ao consultar publicações:" + e.getMessage());
@@ -86,6 +91,11 @@ public class ConsultaPublicacaoController extends BeanController {
 	private void iniciaFontes() {
 		try {
 			fontes = fonteServiceClient.consultarTodasFontes();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
@@ -195,6 +205,11 @@ public class ConsultaPublicacaoController extends BeanController {
 	private void iniciaPublicacoes() {
 		try {
 			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
+			LOGGER.error("Erro ao iniciar publicações.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());

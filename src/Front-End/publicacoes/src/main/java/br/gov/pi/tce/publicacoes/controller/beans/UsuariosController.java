@@ -3,6 +3,7 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -30,13 +31,8 @@ public class UsuariosController extends BeanController {
 	@PostConstruct
 	public void init() {
 		limpar();
-		try {
-			iniciaUsuarios();
-		} catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar usuários.", e.getMessage());
-			LOGGER.error("Erro ao iniciar usuários.:" + e.getMessage());
-			e.printStackTrace();
-		}
+		iniciaUsuarios();
+		
 	}
 	
 	public void limpar() {
@@ -63,45 +59,56 @@ public class UsuariosController extends BeanController {
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir usuário.", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Usuário excluído com sucesso.", "");
 			LOGGER.error("Erro ao excluir usuário.:" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
      
     
-	private void iniciaUsuarios() throws Exception{
+	private void iniciaUsuarios() {
 		try {
 			usuarios = usuarioServiceClient.consultarTodos();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Usuários.", e.getMessage());
+			LOGGER.error("Erro ao iniciar usuários.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar usuários.", e.getMessage());
 			LOGGER.error("Erro ao iniciar usuários.:" + e.getMessage());
 			e.printStackTrace();
-			throw e;
 		}
+		
 	}
 	
 	public void salvar() {
 		try {
 			if(usuario == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "label.erro", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Usuário não preenchido.", "");
 			}
 			else {
 				if(usuario.getId() == null || usuario.getId() == 0) {
 					usuarioServiceClient.cadastrarUsuario(usuario);
+					addMessage(FacesMessage.SEVERITY_INFO, "Usuário criado com sucesso.", "");
 				}	
 				else {
 					usuarioServiceClient.alterarUsuario(usuario);
+					addMessage(FacesMessage.SEVERITY_INFO, "Usuário atualizado com sucesso.", "");
 				}
-				addMessage(FacesMessage.SEVERITY_INFO, "Erro excluir usuário.", "");
 				iniciaUsuarios();
 			}
 			limpar();
 			
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Usuários.", e.getMessage());
+			LOGGER.error("Erro ao salvar usuário.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar usuário.", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar usuário." + e.getMessage(), e.getMessage());
 			LOGGER.error("Erro ao salvar usuário:" + e.getMessage());
 			e.printStackTrace();
 		}

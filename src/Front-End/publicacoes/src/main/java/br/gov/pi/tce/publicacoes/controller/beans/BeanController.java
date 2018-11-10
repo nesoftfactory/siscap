@@ -26,8 +26,21 @@ public class BeanController implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	public static final String BUNDLE_PADRAO = "Mensagens";
+	private boolean msgPostConstruct = true;
 	
 	
+	
+	
+	public boolean isMsgPostConstruct() {
+		return msgPostConstruct;
+	}
+
+
+	public void setMsgPostConstruct(boolean msgPostConstruct) {
+		this.msgPostConstruct = msgPostConstruct;
+	}
+
+
 	public void addMessage(Severity severityInfo, String summary, String detail) {
         FacesMessage message = new FacesMessage(severityInfo, summary, detail);
         FacesContext.getCurrentInstance().addMessage(null, message);

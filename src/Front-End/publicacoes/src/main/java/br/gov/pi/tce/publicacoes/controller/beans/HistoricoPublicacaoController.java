@@ -2,9 +2,9 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -40,6 +40,17 @@ public class HistoricoPublicacaoController extends BeanController {
 			LOGGER.error("Erro ao iniciar histórico de publicação.:" + e.getMessage());
 			e.printStackTrace();
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Histórico de Publicação.", e.getMessage());
+			LOGGER.error("Erro ao iniciar histórico de publicação.:" + e.getMessage());
+			e.printStackTrace();
+		}
+		 catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar histórico de publicação.", e.getMessage());
+			LOGGER.error("Erro ao iniciar histórico de publicação.:" + e.getMessage());
+			e.printStackTrace();
+		 }	
+		
 	}
 	
 	

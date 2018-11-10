@@ -7,10 +7,12 @@
 	template="/WEB-INF/paradise/template.xhtml">
 
 	<ui:define name="title">Feriados</ui:define>
+	<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{feriadosController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
 
 	<ui:define name="content">
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="false" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
@@ -111,10 +113,10 @@
                             </p:column>
                             
                             <p:column headerText="Ações">
-								<p:commandButton icon="fa fa-edit" title="editar" process="feriadosTable"
+								<p:commandButton icon="fa fa-edit" title="editar" process="@this"
 									action="#{feriadosController.editar(feriado)}" update="@form"/>
 									
-								<p:commandButton icon="fa fa-trash" title="excluir" update="feriadosTable" process="feriadosTable"
+								<p:commandButton icon="fa fa-trash" title="excluir" update="feriadosTable" process="@this"
 									actionListener="#{feriadosController.excluir(feriado)}" >                						
 							        <p:confirm header="Confirmação" message="Confirma exclusão desse feriado?" icon="ui-icon-alert" />
 								</p:commandButton>

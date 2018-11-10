@@ -21,8 +21,10 @@
 </h:head>	
 
 <h:body>	
+<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{historicoPublicacaoController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="false" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">

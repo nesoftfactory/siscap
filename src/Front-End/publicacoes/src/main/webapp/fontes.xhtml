@@ -6,10 +6,12 @@
 	template="/WEB-INF/paradise/template.xhtml">
 
 	<ui:define name="title">Fontes</ui:define>
+    <ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{fontesController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
 
 	<ui:define name="content">
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="false" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
@@ -73,12 +75,12 @@
                             </p:column>
                             
                             <p:column headerText="Ações">
-								<p:commandButton icon="fa fa-edit" title="editar" process="fontesTable"
+								<p:commandButton icon="fa fa-edit" title="editar" process="@this"
 									action="#{fontesController.editar(fonte)}" update="@form"/>
 									
-								<p:commandButton icon="fa fa-trash" title="inativar" update="@form" process="fontesTable"
-									actionListener="#{fontesController.inativar(fonte)}" >                						
-							        <p:confirm header="Confirmação" message="Confirma a inativação dessa fonte?" icon="ui-icon-alert" />
+								<p:commandButton icon="fa fa-trash" title="Excluir" update="@form" process="@this"
+									actionListener="#{fontesController.excluir(fonte)}" >                						
+							        <p:confirm header="Confirmação" message="Confirma a exlusão dessa fonte?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>

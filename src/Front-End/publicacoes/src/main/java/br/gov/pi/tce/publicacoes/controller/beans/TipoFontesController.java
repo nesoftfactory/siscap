@@ -3,6 +3,7 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -12,7 +13,6 @@ import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
-import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Named
 @ViewScoped
@@ -42,6 +42,11 @@ public class TipoFontesController extends BeanController {
 	private void iniciaTipoFontes() {
 		try {
 			tipoFontes = fonteServiceClient.consultarTodasTipoFontes();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Tipos de fontes.", e.getMessage());
+			LOGGER.error("Erro ao consultar tipos de fontes.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar tipos de fontes.", e.getMessage());
@@ -89,6 +94,11 @@ public class TipoFontesController extends BeanController {
 			tipoFonte = fonteServiceClient.consultarTipoFontePorCodigo(id);
 			
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Tipo de fonte", e.getMessage());
+			LOGGER.error("Erro ao buscar tipo de fonte específica.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao buscar tipo de fonte específica.", "");
 			LOGGER.error("Erro ao buscar tipo de fonte específica.:" + e.getMessage());
@@ -106,17 +116,23 @@ public class TipoFontesController extends BeanController {
 			else {
 				if (tipoFonte.getId() == null) {
 					fonteServiceClient.cadastrarTipoFonte(tipoFonte);
+					addMessage(FacesMessage.SEVERITY_INFO, "Tipo de fonte cadastrada com sucesso", "");
 				}	
 				else {
 					fonteServiceClient.alterarTipoFonte(tipoFonte);
+					addMessage(FacesMessage.SEVERITY_INFO, "Tipo de fonte atualizada com sucesso", "");
 				}
 				iniciaTipoFontes();
-				addMessage(FacesMessage.SEVERITY_INFO, "Erro ao salvar tipo de fonte", "");
 			}
 			limpar();
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Tipo de fonte.", e.getMessage());
+			LOGGER.error("Erro ao salvar tipo de fonte.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar tipo de fonte.", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar tipo de fonte." + e.getMessage(), e.getMessage());
 			LOGGER.error("Erro ao salvar tipo de fonte.:" + e.getMessage());
 			e.printStackTrace();
 		}
@@ -132,6 +148,11 @@ public class TipoFontesController extends BeanController {
 				iniciaTipoFontes();
 				addMessage(FacesMessage.SEVERITY_INFO, "Tipo de fonte excluída com sucesso", "");
 			}
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Tipo de fonte.", e.getMessage());
+			LOGGER.error("Erro ao excluir tipo de fonte.:" + e.getMessage());
+			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir tipo de fonte", "");
@@ -154,8 +175,13 @@ public class TipoFontesController extends BeanController {
 				addMessage(FacesMessage.SEVERITY_INFO, "label.sucesso", "");
 			}
 		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Tipo de fonte.", e.getMessage());
+			LOGGER.error("Erro ao inativar tipo de fonte.:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao inativar tipo de fonte.", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao inativar tipo de fonte." + e.getMessage(), "");
 			LOGGER.error("Erro ao inativar tipo de fonte.:" + e.getMessage());
 			e.printStackTrace();
 		}
