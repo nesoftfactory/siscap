@@ -85,12 +85,16 @@
                             <p:column headerText="Ações">
 								<p:commandButton icon="fa fa-edit" title="editar" process="@this"
 									action="#{usuariosController.editar(usuario)}" update="@form"/>
-								<p:commandButton icon="fa fa-trash" title="excluir" update="usuariosTable" process="@this"
+								<p:commandButton icon="fa fa-trash" title="excluir" update="@form" process="@this"
 									actionListener="#{usuariosController.excluir(usuario)}" >                						
 							        <p:confirm header="Confirmação" message="Confirma exclusão desse usuário?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>
+                        <p:confirmDialog global="true" >
+					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					    </p:confirmDialog>
                     </div>
 				</div>
 			</div>
