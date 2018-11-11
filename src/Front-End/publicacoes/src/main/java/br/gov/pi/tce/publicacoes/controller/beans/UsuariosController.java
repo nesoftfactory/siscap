@@ -47,19 +47,19 @@ public class UsuariosController extends BeanController {
 	public void excluir(Usuario usuarioExcluir) {
 		try {
 			if(usuarioExcluir == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "Erro excluir usuário.", "");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Usuário não selecionado.", "");
 			}
 			else {
 				if(usuarioExcluir.getId() > 0) {
 					usuarioServiceClient.excluirUsuarioPorCodigo(usuarioExcluir.getId());
 				}	
-				addMessage(FacesMessage.SEVERITY_INFO, "Erro excluir usuário.", "");
+				addMessage(FacesMessage.SEVERITY_INFO, "Usuário excluído com sucesso.", "");
 				iniciaUsuarios();
 			}
 			limpar();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Usuário excluído com sucesso.", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir usuário.", "");
 			LOGGER.error("Erro ao excluir usuário.:" + e.getMessage());
 			e.printStackTrace();
 		}
