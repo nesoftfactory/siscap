@@ -1,6 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.json.bind.annotation.JsonbTransient;
 
 public class Fonte {
 	
@@ -90,7 +90,7 @@ public class Fonte {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
 	
-	@JsonIgnore
+	@JsonbTransient
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}

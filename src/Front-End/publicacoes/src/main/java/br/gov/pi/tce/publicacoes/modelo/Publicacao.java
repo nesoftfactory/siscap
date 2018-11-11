@@ -2,7 +2,7 @@ package br.gov.pi.tce.publicacoes.modelo;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.json.bind.annotation.JsonbTransient;
 
 /**
  * 
@@ -267,7 +267,7 @@ public class Publicacao {
 		this.possuiNotificacao = possuiNotificacao;
 	}
 
-	@JsonIgnore
+	@JsonbTransient
 	public String getTextoSucesso() {
 		return getSucesso() ? "Sim" : "Não";
 	}

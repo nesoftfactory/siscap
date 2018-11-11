@@ -1,7 +1,8 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.json.bind.annotation.JsonbTransient;
 
 public class Usuario implements Serializable
 {
@@ -67,12 +68,12 @@ public class Usuario implements Serializable
 		this.login = login;
 	}
 	
-	@JsonIgnore
+	@JsonbTransient
 	public String getTextoAdmin() {
 		return getAdmin() ? "Sim" : "Não";
 	}
 	
-	@JsonIgnore
+	@JsonbTransient
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}
