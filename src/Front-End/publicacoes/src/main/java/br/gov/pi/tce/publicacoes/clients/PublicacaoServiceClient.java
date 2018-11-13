@@ -39,6 +39,7 @@ import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
+import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
  * 
@@ -49,11 +50,11 @@ import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 @Stateless(name="PublicacaoServiceClient")
 public class PublicacaoServiceClient{
 	
-	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-	private String URI_PUBLICACOES = "http://localhost:7788/publicacoes/";
-	private String URI_PUBLICACOES_ANEXOS = "http://localhost:7788/publicacoes_anexos/";
-	private String URI_FONTES = "http://localhost:7788/fontes/";
-	private String URI_FERIADOS = "http://localhost:7788/feriados/";
+//	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
+//	private String URI_PUBLICACOES = "http://localhost:7788/publicacoes/";
+//	private String URI_PUBLICACOES_ANEXOS = "http://localhost:7788/publicacoes_anexos/";
+//	private String URI_FONTES = "http://localhost:7788/fontes/";
+//	private String URI_FERIADOS = "http://localhost:7788/feriados/";
 	private static final int BUFFER_SIZE = 6124;
 	
 	private static final Logger LOGGER = Logger.getLogger(PublicacaoServiceClient.class);
@@ -67,8 +68,9 @@ public class PublicacaoServiceClient{
 	
 	public List<Publicacao> consultarTodasPublicacoes(){
 		try {
-			this.webTarget = this.client.target(URI_PUBLICACOES);
-			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+			Propriedades propriedades = Propriedades.getInstance();
+			this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
+			Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 			Response response = invocationBuilder.get();
 			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {});
 			return list;
@@ -106,14 +108,15 @@ public class PublicacaoServiceClient{
 	
 	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
+		Propriedades propriedades = Propriedades.getInstance();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
-			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
+			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
 		} else {
 			if(isUploadManual) {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
 			}
 			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
 			}
 		}
 		
@@ -128,7 +131,7 @@ public class PublicacaoServiceClient{
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
-		this.webTarget = this.client.target(URI_PUBLICACOES);
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
@@ -137,14 +140,15 @@ public class PublicacaoServiceClient{
 	
 	public PublicacaoAnexo cadastrarPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo, Arquivo arquivo, boolean isUploadManual) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
+		Propriedades propriedades = Propriedades.getInstance();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
-			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
+			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
 		} else {
 			if(isUploadManual) {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
 			}
 			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
 			}
 		}
 		
@@ -155,7 +159,7 @@ public class PublicacaoServiceClient{
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
-		this.webTarget = this.client.target(URI_PUBLICACOES_ANEXOS);
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES_ANEXOS"));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
@@ -212,7 +216,8 @@ public class PublicacaoServiceClient{
 		FileInputStream fileInputStream = null;
 		try {
 			url = new URL(encodeString(linkArquivo));
-			File file = new File("/temp/temp.pdf");
+			Propriedades propriedades = Propriedades.getInstance();
+			File file = new File(propriedades.getValorString("DOWNLOAD_TEMPORARIO"));
 			FileUtils.copyURLToFile(url, file);
 			fileInputStream = new FileInputStream(file);
 			
@@ -226,14 +231,15 @@ public class PublicacaoServiceClient{
 
 	public Publicacao alterarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual) throws Exception{
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
+		Propriedades propriedades = Propriedades.getInstance();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
-			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), "");
+			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
 		} else {
 			if(isUploadManual) {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
 			}
 			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8"), arquivo.getNome());
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
 			}
 		}
 		
@@ -248,7 +254,7 @@ public class PublicacaoServiceClient{
 		
 		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
 		
-		this.webTarget = this.client.target(URI_PUBLICACOES).path(String.valueOf(publicacao.getId()));
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).path(String.valueOf(publicacao.getId()));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.put(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
@@ -256,8 +262,9 @@ public class PublicacaoServiceClient{
 	}
 
 	public Publicacao consultarPublicacaoPorCodigo(Long id){
-		this.webTarget = this.client.target(URI_PUBLICACOES).path(String.valueOf(id));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).path(String.valueOf(id));
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
@@ -268,8 +275,9 @@ public class PublicacaoServiceClient{
 	}
 	
 	public Fonte consultarFontePorCodigo(Long id){
-		this.webTarget = this.client.target(URI_FONTES).path(String.valueOf(id));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FONTES")).path(String.valueOf(id));
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
@@ -281,8 +289,9 @@ public class PublicacaoServiceClient{
 	}
 	
 	public List<Feriado> consultarFeriadoPorFontePeriodo(Long idFonte, LocalDate periodoDe, LocalDate periodoAte){
-		this.webTarget = this.client.target(URI_FERIADOS).queryParam("idFonte", idFonte).queryParam("periodoDe", periodoDe).queryParam("periodoAte", periodoAte);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FERIADOS")).queryParam("idFonte", idFonte).queryParam("periodoDe", periodoDe).queryParam("periodoAte", periodoAte);
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
@@ -294,8 +303,9 @@ public class PublicacaoServiceClient{
 	}
 	
 	public List<Publicacao> consultarPublicacaoPorFonteDataNome(Long idFonte, LocalDate data, String nome){
-		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("idFonte", idFonte).queryParam("data", data).queryParam("nome", nome);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).queryParam("idFonte", idFonte).queryParam("data", data).queryParam("nome", nome);
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
@@ -333,9 +343,9 @@ public class PublicacaoServiceClient{
 			}
 		}
 		
-		
-		this.webTarget = this.client.target(URI_PUBLICACOES).queryParam("idFonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso).queryParam("data", dt);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).queryParam("idFonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso).queryParam("data", dt);
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
 		trataRetorno(response);
 		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {

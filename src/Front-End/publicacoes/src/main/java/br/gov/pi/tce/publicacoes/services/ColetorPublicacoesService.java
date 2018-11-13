@@ -27,7 +27,7 @@ public class ColetorPublicacoesService {
 	
 	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-	@Schedule(hour="23", minute = "20")
+	@Schedule(hour="22", minute = "52")
 	public void coletarDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
 		Propriedades propriedades = Propriedades.getInstance();
@@ -38,7 +38,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="20", minute = "26")
+	@Schedule(hour="01", minute = "10")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
 		Propriedades propriedades = Propriedades.getInstance();
@@ -49,18 +49,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	//@Schedule(hour="11", minute = "16")
-	public void coletarDiarioOficialMunicipios() {
-		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
-		Propriedades propriedades = Propriedades.getInstance();
-		Date data = new Date();
-		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
-		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), dataInicial, dataFinal);
-		LOGGER.info("Finalizando a Coleta do Diario Oficial dos Municipios");
-	}
-	
-	@Schedule(hour="23", minute = "30")
+	@Schedule(hour="22", minute = "56")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
 		Propriedades propriedades = Propriedades.getInstance();
@@ -69,6 +58,17 @@ public class ColetorPublicacoesService {
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
 		publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");
+	}
+	
+	@Schedule(hour="22", minute = "58")
+	public void coletarDiarioOficialMunicipios() {
+		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
+		Propriedades propriedades = Propriedades.getInstance();
+		Date data = new Date();
+		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
+		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), dataInicial, dataFinal);
+		LOGGER.info("Finalizando a Coleta do Diario Oficial dos Municipios");
 	}
 	
 	private Date getData00Horas00Minutos00SeguntosMenosQuatidadeDias(Date data, int quatidadeDias){

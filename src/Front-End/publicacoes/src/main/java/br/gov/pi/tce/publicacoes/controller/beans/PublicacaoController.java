@@ -12,7 +12,6 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -25,14 +24,10 @@ import java.util.regex.Pattern;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
@@ -57,30 +52,27 @@ public class PublicacaoController extends BeanController{
 	private static final Logger LOGGER = Logger.getLogger(PublicacaoController.class);
 	
 	// URL das fontes dos diários oficiais
-	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);
-	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3);
-	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4);
-	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5);
+//	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);
+//	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3);
+//	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4);
+//	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5);
 
 	// URL das fontes utiliziadas na coleta dos diários oficiais
-	public final static String URL_COLETA_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br/home?d=";
-	public final static String URL_COLETA_DIARIO_OFICIAL_TERESINA = "http://www.dom.teresina.pi.gov.br/lista_diario.php?pagina=";
-	public final static String URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org/";
-	public final static String URL_COLETA_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br/diario.php?dia=";
+//	public final static String URL_COLETA_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br/home?d=";
+//	public final static String URL_COLETA_DIARIO_OFICIAL_TERESINA = "http://www.dom.teresina.pi.gov.br/lista_diario.php?pagina=";
+//	public final static String URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org/";
+//	public final static String URL_COLETA_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br/diario.php?dia=";
 
 	// URL Específica para realizar downloads dos diarios oficiais
-	public final static String URL_DOWNLOAD_DOM_PARNAIBA = "http://dom.parnaiba.pi.gov.br/assets/diarios/";
-	public final static String URL_DOWNLOAD_DOM_TERESINA = "http://www.dom.teresina.pi.gov.br/admin/upload/";
-	public final static String URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org/PDF/";
-	public final static String URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br/diario/";
+//	public final static String URL_DOWNLOAD_DOM_PARNAIBA = "http://dom.parnaiba.pi.gov.br/assets/diarios/";
+//	public final static String URL_DOWNLOAD_DOM_TERESINA = "http://www.dom.teresina.pi.gov.br/admin/upload/";
+//	public final static String URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org/PDF/";
+//	public final static String URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br/diario/";
 
-	public final static String PALAVRA_FINAL_DO_ARQUIVO_DOM_PARNAIBA = "assets/diarios/";
+//	public final static String PALAVRA_FINAL_DO_ARQUIVO_DOM_PARNAIBA = "assets/diarios/";
 	
 	@Inject
 	private PublicacaoServiceClient publicacaoServiceClient;
-	
-	
-	
 	
 	@EJB
 	private NotificacaoService notificacao;
@@ -141,7 +133,7 @@ public class PublicacaoController extends BeanController{
 
 		Fonte fonte = consultarFontePorIdFonte(idFonte);
 
-		if (URL_FONTE_DIARIO_OFICIAL_TERESINA.equals(idFonte)) {
+		if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA").equals(idFonte)) {
 			for (pageDomTeresina = 1; isFinalPaginacao.equals(Boolean.FALSE); pageDomTeresina++) {
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomTeresina), arquivoList,
 						dataInicial, dataFinal, diasUteisList);
@@ -151,7 +143,7 @@ public class PublicacaoController extends BeanController{
 				}
 			}
 			salvarPublicacaoInexistente(diasUteisList, fonte);
-		} else if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(idFonte)) {
+		} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(idFonte)) {
 			for (pageDomParnaiba = 1; isFinalPaginacao.equals(Boolean.FALSE); pageDomParnaiba++) {
 				isFinalPaginacao = getPaginasDiariosDOM(fonte, String.valueOf(pageDomParnaiba), arquivoList,
 						dataInicial, dataFinal, diasUteisList);
@@ -161,11 +153,11 @@ public class PublicacaoController extends BeanController{
 				}
 			}
 			salvarPublicacaoInexistente(diasUteisList, fonte);
-		} else if (URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS.equals(idFonte)) {
+		} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS").equals(idFonte)) {
 			List<String> listaMesAnoHtml = getListaMesAnoHtml(dataInicial, dataFinal);
 			for (String mesAnoHtml : listaMesAnoHtml) {
 				List<String> listHtmls = getPaginasAnoMesDiarioOficialMunicipios(
-						URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS + mesAnoHtml);
+						propriedades.getValorString("URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS") + mesAnoHtml);
 				for (String html : listHtmls) {
 					isFinalPaginacao = getPaginasDiariosDOM(fonte, html, arquivoList, dataInicial, dataFinal,
 							diasUteisList);
@@ -227,20 +219,21 @@ public class PublicacaoController extends BeanController{
 		String htmlCompleto = "";
 		Boolean isFinalPaginacao = null;
 		Boolean erroUrlFonte = Boolean.TRUE;
+		Propriedades propriedades = Propriedades.getInstance();
 
 		try {
 			String regexForDate = null, regexForPDF = null;
 
 			// A expressão regular das datas e PDFs estão diferentes para cada Fonte.
-			if (URL_FONTE_DIARIO_OFICIAL_TERESINA.equals(fonte.getId())) {
+			if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA").equals(fonte.getId())) {
 				regexForDate = "\\d{2}/\\d{2}/\\d{4}";
 				regexForPDF = "[0-9A-Za-z|\\s|-]+.(pdf)";
 				erroUrlFonte = Boolean.FALSE;
-			} else if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(fonte.getId())) {
+			} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(fonte.getId())) {
 				regexForDate = "\\d{2}[\\.\\-]{1,2}\\d{2}-\\d{4}";
 				regexForPDF = "[0-9A-Za-z]+.(pdf)";
 				erroUrlFonte = Boolean.FALSE;
-			} else if (URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS.equals(fonte.getId())) {
+			} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS").equals(fonte.getId())) {
 				regexForDate = "\\d{2}\\s+((Janeiro)|(Fevereiro)|(Março)|(Abril)|(Maio)|(Junho)|(Julho)|(Agosto)|(Setembro)|(Outubro)|(Novembro)|(Dezembro))\\s+[d][e]\\s+\\d{4}";
 				regexForPDF = "[D][M]\\s+[0-9A-Za-z]+.(pdf)";
 				erroUrlFonte = Boolean.FALSE;
@@ -322,14 +315,15 @@ public class PublicacaoController extends BeanController{
 		String linhaHTML;
 		Date date = null;
 		String urlFonte = fonte.getUrl();
+		Propriedades propriedades = Propriedades.getInstance();
 
 		URL url = new URL(fonte.getUrl());
-		if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(fonte.getId())) {
-			urlFonte = URL_COLETA_DIARIO_OFICIAL_PARNAIBA + pageDom;
-		}else if (URL_FONTE_DIARIO_OFICIAL_TERESINA.equals(fonte.getId())) {
-			urlFonte = URL_COLETA_DIARIO_OFICIAL_TERESINA + pageDom;
-		}else if (URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS.equals(fonte.getId())) {
-			urlFonte = URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS + pageDom;
+		if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(fonte.getId())) {
+			urlFonte = propriedades.getValorString("URL_COLETA_DIARIO_OFICIAL_PARNAIBA") + pageDom;
+		}else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA").equals(fonte.getId())) {
+			urlFonte = propriedades.getValorString("URL_COLETA_DIARIO_OFICIAL_TERESINA") + pageDom;
+		}else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS").equals(fonte.getId())) {
+			urlFonte = propriedades.getValorString("URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS") + pageDom;
 		}
 		url = new URL(urlFonte);
 		BufferedReader fonteHTML = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -352,11 +346,11 @@ public class PublicacaoController extends BeanController{
 					if (!isNull(date)) {
 						
 						String arquivoStr = matcher.group();
-						if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(fonte.getId())
-								|| URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS.equals(fonte.getId())) {
+						if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(fonte.getId())
+								|| propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS").equals(fonte.getId())) {
 
 							if (dataInicial.compareTo(date) <= 0 && dataFinal.compareTo(date) >= 0) {
-								if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(fonte.getId())) {
+								if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(fonte.getId())) {
 									
 									String codigo = "";
 									Matcher matcherDOM = Pattern.compile("DOM_+[\\d]+").matcher(linhaHTML);
@@ -374,14 +368,14 @@ public class PublicacaoController extends BeanController{
 										publicacaoName = matcherTitleTag.group().replace("title=", "").replace("\"", "").replace("Ãš", "U").replace("EDIÃ‡ÃƒO", "EDIÇÃO").replace("_PESQUISÃVEL", "_PESQUISÁVEL");
 									}
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_PARNAIBA + arquivoStr, convertDateToString(date),
+									salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DOM_PARNAIBA") + arquivoStr, convertDateToString(date),
 											arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, codigo, publicacaoName);
 								} else {
 									Calendar c = Calendar.getInstance();
 									c.setTime(date);
 									String mes = String.format("%02d", c.get(Calendar.MONTH) + 1);
 									String ano = String.valueOf(c.get(Calendar.YEAR));
-									salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS + ano + mes + "/" + arquivoStr,
+									salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS") + ano + mes + "/" + arquivoStr,
 											convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", arquivoStr);
 								}
 								LocalDate localDate = asLocalDate(date);
@@ -395,7 +389,7 @@ public class PublicacaoController extends BeanController{
 							// Necessário nullar o date para evitar trazer PDFs que não contenham na
 							// lista, e estes estão sem data.
 							date = null;
-						} else if (URL_FONTE_DIARIO_OFICIAL_TERESINA.equals(fonte.getId())) {
+						} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA").equals(fonte.getId())) {
 							
 							if (!arquivoList.contains(arquivoStr)) {
 								arquivoList.add(arquivoStr);
@@ -435,14 +429,14 @@ public class PublicacaoController extends BeanController{
 										if (matcherPositive.find()) {
 											String arquivoAnexoStr = matcherPositive.group();
 											arquivoAnexo = new Arquivo(arquivoAnexoStr, Long.valueOf(10), "tipo",
-													URL_DOWNLOAD_DOM_TERESINA + arquivoAnexoStr, "conteudo".getBytes());
+													propriedades.getValorString("URL_DOWNLOAD_DOM_TERESINA") + arquivoAnexoStr, "conteudo".getBytes());
 											publicacaoAnexo = new PublicacaoAnexo(null, arquivoAnexoStr,
 													arquivoAnexo.getId(), true);
 											break;
 										}
 									} while (true);
 									
-									salvarPublicacao(fonte, URL_DOWNLOAD_DOM_TERESINA + arquivoStr, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.valueOf(publicacaoAnexo!=null), "Sucesso", publicacaoAnexo, arquivoAnexo, codigo, publicacaoName);
+									salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DOM_TERESINA") + arquivoStr, convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.valueOf(publicacaoAnexo!=null), "Sucesso", publicacaoAnexo, arquivoAnexo, codigo, publicacaoName);
 									LocalDate localDate = asLocalDate(date);
 									if (diasUteisList.contains(localDate)) {
 										diasUteisList.remove(localDate);
@@ -466,8 +460,8 @@ public class PublicacaoController extends BeanController{
 			}
 		}
 		fonteHTML.close();
-		if (URL_FONTE_DIARIO_OFICIAL_PARNAIBA.equals(fonte.getId())) {
-			if (htmlCompleto.contains(PALAVRA_FINAL_DO_ARQUIVO_DOM_PARNAIBA)) {
+		if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(fonte.getId())) {
+			if (htmlCompleto.contains(propriedades.getValorString("PALAVRA_FINAL_DO_ARQUIVO_DOM_PARNAIBA"))) {
 				isFinalPaginacao = Boolean.FALSE;
 			} else {
 				isFinalPaginacao = Boolean.TRUE;
@@ -475,7 +469,6 @@ public class PublicacaoController extends BeanController{
 		}
 		return isFinalPaginacao;
 	}
-
 
 	/**
 	 * Método resposável por chamar a API para incluir ou alterar publicação.
@@ -549,6 +542,7 @@ public class PublicacaoController extends BeanController{
 	 */
 	public void getDiariosEmDiarioOficialPI(Date dataInicial, Date dataFinal) {
 
+		Propriedades propriedades = Propriedades.getInstance();
 		List<LocalDate> localDateList = getDiasUteis(dataInicial, dataFinal);
 		for (LocalDate localDate : localDateList) {
 
@@ -564,10 +558,10 @@ public class PublicacaoController extends BeanController{
 				Matcher matcher = null;
 
 				// Constrói nova url para coletar o PDF e Busca em nova fonte
-				URL url = new URL(URL_COLETA_DIARIO_OFICIAL_PIAUI + ano + mes + dia);
+				URL url = new URL(propriedades.getValorString("URL_COLETA_DIARIO_OFICIAL_PIAUI") + ano + mes + dia);
 				BufferedReader fonteHTML = new BufferedReader(new InputStreamReader(url.openStream()));
 
-				Fonte fonte = consultarFontePorIdFonte(URL_FONTE_DIARIO_OFICIAL_PIAUI);
+				Fonte fonte = consultarFontePorIdFonte(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PIAUI"));
 				
 				buscaPDF: while ((linhaHTML = fonteHTML.readLine()) != null) {
 					regexForPDF = "DIARIO+[0-9]+[_]+[0-9A-Za-z]+[.][Pp][Dd][Ff]";
@@ -576,7 +570,7 @@ public class PublicacaoController extends BeanController{
 					matcher = pdfPattern.matcher(linhaHTML);
 					while (matcher.find()) {
 						if (!isNull(date)) {
-							salvarPublicacao(fonte, URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", matcher.group());
+							salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI")  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", matcher.group());
 							diarioEncontrado = Boolean.TRUE;
 							// Ao encontrar o pdf sai do loop mais externo
 							break buscaPDF;
@@ -587,7 +581,6 @@ public class PublicacaoController extends BeanController{
 					if (!isFeriado(date, fonte.getId())) {
 						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
 						LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
-						Propriedades propriedades = Propriedades.getInstance();
 						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 						//notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 					}
@@ -647,9 +640,7 @@ public class PublicacaoController extends BeanController{
 		}
 		return listaMesAno;
 	}
-
 	
-
 	/**
 	 *  Converte um LocalDate em Date.
 	 * 
@@ -703,67 +694,5 @@ public class PublicacaoController extends BeanController{
 		}
 		return data;
 	}
-	
-
-//	public void upload() {
-//		Part arquivo = null;
-//		String token = tokenManager.getToken();
-//		if (token == null) {
-//			return;
-//		}
-
-//		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
-//		try {
-//			dataOutput.addFormData("uploadedFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset("utf-8")
-//					, arquivo.getSubmittedFileName());
-//		} catch (IOException e) {
-//			FacesContext.getCurrentInstance().addMessage(null, 
-//					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao recuperar o conteúdo do arquivo", 
-//							"Erro ao recuperar o conteúdo do arquivo"));
-//		}
-//		
-//		dataOutput.addFormData("login", this.getLogin(), MediaType.TEXT_PLAIN_TYPE);
-//		dataOutput.addFormData("protocolo", this.getProtocolo(), MediaType.TEXT_PLAIN_TYPE);
-//		dataOutput.addFormData("tipo", this.getTipoAto(), MediaType.TEXT_PLAIN_TYPE);
-//
-//		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) {
-//		};
-//		
-//		Client client = ClientBuilder.newClient();
-//
-////		String urlApp = "http://jabbah:8081/protocolows/";
-//		String urlApp = "http://localhost:8080/ProtocoloWS/";
-//		Response response = client.target(urlApp + "upload/ato")
-//				.request(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + tokenManager.getToken())
-//				.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
-//
-//		if (response.getStatus() == Status.OK.getStatusCode()) {
-//			FacesContext.getCurrentInstance().addMessage(null, 
-//					new FacesMessage(FacesMessage.SEVERITY_INFO, response.getStatusInfo().toString(), 
-//							response.getStatusInfo().toString()));
-//		} else {
-//			FacesContext.getCurrentInstance().addMessage(null, 
-//					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Não foi possível incluir o ato: " + response.getStatusInfo().toString(), 
-//							response.getStatusInfo().toString()));
-//		}
-//	}
-	
-//	public void realizarDownload() {
-//		URL url;
-//		try {
-//			url = new URL("http://dom.parnaiba.pi.gov.br/assets/diarios/858e1f1d6fceedca3fd70610b4eb1097.pdf");
-//			File file = new File("C:\\Temp\\arquivo-baixado.pdf");
-//			FileUtils.copyURLToFile(url, file);
-//			FileInputStream fileInputStream = new FileInputStream(file);
-//			//fileInputStream.close();.asopdskjdvsok;vsdovf
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//	}
 
 }
