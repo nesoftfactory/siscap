@@ -51,26 +51,6 @@ public class PublicacaoController extends BeanController{
 	
 	private static final Logger LOGGER = Logger.getLogger(PublicacaoController.class);
 	
-	// URL das fontes dos diários oficiais
-//	public final static Long URL_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS = Long.valueOf(2);
-//	public final static Long URL_FONTE_DIARIO_OFICIAL_PIAUI = Long.valueOf(3);
-//	public final static Long URL_FONTE_DIARIO_OFICIAL_TERESINA = Long.valueOf(4);
-//	public final static Long URL_FONTE_DIARIO_OFICIAL_PARNAIBA = Long.valueOf(5);
-
-	// URL das fontes utiliziadas na coleta dos diários oficiais
-//	public final static String URL_COLETA_DIARIO_OFICIAL_PARNAIBA = "http://dom.parnaiba.pi.gov.br/home?d=";
-//	public final static String URL_COLETA_DIARIO_OFICIAL_TERESINA = "http://www.dom.teresina.pi.gov.br/lista_diario.php?pagina=";
-//	public final static String URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org/";
-//	public final static String URL_COLETA_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br/diario.php?dia=";
-
-	// URL Específica para realizar downloads dos diarios oficiais
-//	public final static String URL_DOWNLOAD_DOM_PARNAIBA = "http://dom.parnaiba.pi.gov.br/assets/diarios/";
-//	public final static String URL_DOWNLOAD_DOM_TERESINA = "http://www.dom.teresina.pi.gov.br/admin/upload/";
-//	public final static String URL_DOWNLOAD_DIARIO_OFICIAL_DOS_MUNICIPIOS = "http://www.diarioficialdosmunicipios.org/PDF/";
-//	public final static String URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI = "http://www.diariooficial.pi.gov.br/diario/";
-
-//	public final static String PALAVRA_FINAL_DO_ARQUIVO_DOM_PARNAIBA = "assets/diarios/";
-	
 	@Inject
 	private PublicacaoServiceClient publicacaoServiceClient;
 	

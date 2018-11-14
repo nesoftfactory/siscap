@@ -27,7 +27,7 @@ public class ColetorPublicacoesService {
 	
 	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-	@Schedule(hour="22", minute = "52")
+	@Schedule(hour="21", minute = "48")
 	public void coletarDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
 		Propriedades propriedades = Propriedades.getInstance();
@@ -38,7 +38,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="01", minute = "10")
+	@Schedule(hour="21", minute = "50")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
 		Propriedades propriedades = Propriedades.getInstance();
@@ -49,7 +49,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	@Schedule(hour="22", minute = "56")
+	@Schedule(hour="21", minute = "52")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
 		Propriedades propriedades = Propriedades.getInstance();
@@ -60,7 +60,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");
 	}
 	
-	@Schedule(hour="22", minute = "58")
+	@Schedule(hour="21", minute = "54")
 	public void coletarDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
 		Propriedades propriedades = Propriedades.getInstance();

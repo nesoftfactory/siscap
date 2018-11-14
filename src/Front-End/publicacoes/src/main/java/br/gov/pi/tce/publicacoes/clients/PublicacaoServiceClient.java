@@ -50,11 +50,6 @@ import br.gov.pi.tce.publicacoes.util.Propriedades;
 @Stateless(name="PublicacaoServiceClient")
 public class PublicacaoServiceClient{
 	
-//	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
-//	private String URI_PUBLICACOES = "http://localhost:7788/publicacoes/";
-//	private String URI_PUBLICACOES_ANEXOS = "http://localhost:7788/publicacoes_anexos/";
-//	private String URI_FONTES = "http://localhost:7788/fontes/";
-//	private String URI_FERIADOS = "http://localhost:7788/feriados/";
 	private static final int BUFFER_SIZE = 6124;
 	
 	private static final Logger LOGGER = Logger.getLogger(PublicacaoServiceClient.class);
@@ -217,7 +212,7 @@ public class PublicacaoServiceClient{
 		try {
 			url = new URL(encodeString(linkArquivo));
 			Propriedades propriedades = Propriedades.getInstance();
-			File file = new File(propriedades.getValorString("DOWNLOAD_TEMPORARIO"));
+			File file = new File(System.getProperty("java.io.tmpdir")+File.separator+propriedades.getValorString("DOWNLOAD_TEMPORARIO"));
 			FileUtils.copyURLToFile(url, file);
 			fileInputStream = new FileInputStream(file);
 			
