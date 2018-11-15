@@ -22,15 +22,6 @@
  
     <build>
         <finalName>${project.artifactId}</finalName>
-        <resources>
-			<resource>
-				<directory>src/main/webapp/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-		</resources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
