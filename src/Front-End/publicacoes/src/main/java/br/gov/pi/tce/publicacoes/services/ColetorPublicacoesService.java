@@ -38,7 +38,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="21", minute = "50")
+	@Schedule(hour="11", minute = "01")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
 		Propriedades propriedades = Propriedades.getInstance();

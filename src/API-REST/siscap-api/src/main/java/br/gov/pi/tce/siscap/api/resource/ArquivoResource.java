@@ -26,4 +26,5 @@ public class ArquivoResource {
 		return arquivoOptional.isPresent() ? 
 				ResponseEntity.ok(arquivoOptional.get()) : ResponseEntity.notFound().build();
 	}
+	
 }

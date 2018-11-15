@@ -23,6 +23,16 @@ public class Arquivo extends BaseEntity {
 	public Arquivo() {
 	}
 	
+	
+	public Arquivo(Long id, String nome,  Long tamanho, String tipo, String link, byte[] conteudo) throws IOException {
+		this.setId(id);
+		this.setNome(nome);
+		this.setTamanho(tamanho);
+		this.setConteudo(conteudo);
+		this.setTipo(tipo);
+		this.setLink(link);
+	}
+	
 	public Arquivo(MultipartFile partFile, String link, Usuario usuario) throws IOException {
 		this.setNome(partFile.getOriginalFilename());
 		this.setTamanho(partFile.getSize());

@@ -6,5 +6,4 @@ import br.gov.pi.tce.siscap.api.model.Arquivo;
 
 public interface ArquivoRepository extends JpaRepository<Arquivo, Long> {
 	
-
 }

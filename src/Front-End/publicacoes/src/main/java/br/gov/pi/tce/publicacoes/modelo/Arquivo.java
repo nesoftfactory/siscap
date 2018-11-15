@@ -25,7 +25,7 @@ public class Arquivo {
 	public Arquivo() {
 		super();
 	}
-
+	
 	/**
 	 * @param nome
 	 * @param tamanho
@@ -41,7 +41,7 @@ public class Arquivo {
 		setLink(link);
 		setConteudo(conteudo);
 	}
-
+	
 	/**
 	 * @param id
 	 * @param nome
@@ -55,6 +55,7 @@ public class Arquivo {
 		this.id = id;
 	}
 
+	
 	/**
 	 * @return the id
 	 */

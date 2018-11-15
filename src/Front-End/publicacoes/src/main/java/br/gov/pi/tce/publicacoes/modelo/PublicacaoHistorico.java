@@ -1,6 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import javax.json.bind.annotation.JsonbTransient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PublicacaoHistorico  {
 	
@@ -81,7 +81,7 @@ public class PublicacaoHistorico  {
 		this.usuarioCriacao = usuarioCriacao;
 	}
 	
-	@JsonbTransient
+	@JsonIgnore
 	public String getTextoSucesso() {
 		return getSucesso() ? "Sim" : "Não";
 	}

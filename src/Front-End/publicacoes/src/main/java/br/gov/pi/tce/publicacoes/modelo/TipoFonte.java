@@ -1,6 +1,6 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import javax.json.bind.annotation.JsonbTransient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class TipoFonte 
 {
@@ -61,7 +61,7 @@ public class TipoFonte
 		this.ativo = ativo;
 	}
 
-	@JsonbTransient
+	@JsonIgnore
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}

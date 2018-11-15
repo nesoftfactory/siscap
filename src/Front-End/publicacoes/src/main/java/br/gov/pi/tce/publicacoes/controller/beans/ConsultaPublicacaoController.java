@@ -231,39 +231,14 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 	public void downloadArquivo(){
 		
-		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-		Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getArquivo());
-		
-		
-		ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
-		HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
-		
-		response.reset();
-		response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
 		try {
-			response.getOutputStream().write(arquivo.getConteudo());
-			response.flushBuffer();
-		} catch (Exception e) {
-			LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
-			LOGGER.error(e.getMessage());
-			e.printStackTrace();
-		}
-		FacesContext.getCurrentInstance().responseComplete();
-	}
-	
-	
-	public void getHistoricoPublicacao(){
-		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("publicacaoSelecionada", publicacao);
-	}
-	
-	public void downloadArquivoAnexo(){
-		
-		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-		if(publicacao != null && publicacao.getPossuiAnexo()) {
-			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getPublicacaoAnexo().getArquivo());
+			Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getArquivo());
+			
+			
 			ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
 			HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
+			
 			response.reset();
 			response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
 			try {
@@ -276,6 +251,46 @@ public class ConsultaPublicacaoController extends BeanController {
 			}
 			FacesContext.getCurrentInstance().responseComplete();
 		}
+		catch(Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
+			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void getHistoricoPublicacao(){
+		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("publicacaoSelecionada", publicacao);
+	}
+	
+	public void downloadArquivoAnexo(){
+		try {
+			Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+			if(publicacao != null && publicacao.getPossuiAnexo()) {
+				Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getPublicacaoAnexo().getArquivo());
+				ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
+				HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
+				response.reset();
+				response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
+				try {
+					response.getOutputStream().write(arquivo.getConteudo());
+					response.flushBuffer();
+				} catch (Exception e) {
+					LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
+					LOGGER.error(e.getMessage());
+					e.printStackTrace();
+				}
+				FacesContext.getCurrentInstance().responseComplete();
+			}
+		}
+		catch(Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de anexo de publicações.", e.getMessage());
+			LOGGER.error("Erro realizar download de anexo de publicações:" + e.getMessage());
+			e.printStackTrace();
+		}
+		
 	}
 	
 	

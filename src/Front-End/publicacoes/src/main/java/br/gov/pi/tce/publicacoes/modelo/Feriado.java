@@ -1,8 +1,9 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.json.bind.annotation.JsonbTransient;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Classe responsável por representar a entidade Feriado.
@@ -138,17 +139,17 @@ public class Feriado {
 		this.fixo = fixo;
 	}
 
-	@JsonbTransient
+	@JsonIgnore
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}
 	
-	@JsonbTransient
+	@JsonIgnore
 	public String getTextoTodasFontes() {
 		return getTodasFontes() ? "Sim" : "Não";
 	}
 	
-	@JsonbTransient
+	@JsonIgnore
 	public String getTextoFixo() {
 		return getFixo() ? "Sim" : "Não";
 	}
