@@ -28,7 +28,22 @@ public class BeanController implements Serializable {
 	public static final String BUNDLE_PADRAO = "Mensagens";
 	private boolean msgPostConstruct = true;
 	
-	
+	public String validaData(String data) {
+		// Tratamento para data
+		String[] dataSplit = data.split("/");
+		String dt = "";
+		if(dataSplit == null || dataSplit.length < 3) {
+			return null;
+		}
+		else {
+			dt = dataSplit[0]+"/"+dataSplit[1]+"/"+dataSplit[2];
+			if(dt.length() != 10) {
+				return null;
+			}
+		}
+		return dt;
+	}
+
 	
 	
 	public boolean isMsgPostConstruct() {

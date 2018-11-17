@@ -134,7 +134,7 @@ public class FontesController extends BeanController {
 			e.printStackTrace();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar fonte.", "label.erro");
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar fonte: " + e.getMessage());
 			LOGGER.error("Erro ao salvar fonte:" + e.getMessage());
 			e.printStackTrace();
 			

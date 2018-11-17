@@ -153,5 +153,13 @@ public class Feriado {
 	public String getTextoFixo() {
 		return getFixo() ? "Sim" : "Não";
 	}
+	
+	@JsonIgnore
+	public void ajustaFormatoDataParaAPI() {
+		if(data != null && data.length() == 10) {
+			String[] dataSplit = data.split("/");
+			setData((dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]));
+		}
+	}
 
 }

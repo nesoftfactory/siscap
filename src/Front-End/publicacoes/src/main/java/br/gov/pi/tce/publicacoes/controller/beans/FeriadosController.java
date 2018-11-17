@@ -127,6 +127,13 @@ public class FeriadosController extends BeanController {
 	
 	public void salvar() {
 		try {
+			
+			String dt = validaData(feriado.getData());
+			if(dt == null) {
+				addMessage(FacesMessage.SEVERITY_ERROR, "Data inválida.");
+				return;
+			}
+			feriado.setData(dt);
 			if (feriado == null) {
 				addMessage(FacesMessage.SEVERITY_ERROR, "Feriado não selecionado.", "");
 			}
@@ -140,9 +147,11 @@ public class FeriadosController extends BeanController {
 				}
 				
 				if (feriado.getId() == null) {
+					feriado.ajustaFormatoDataParaAPI();
 					feriadoServiceClient.cadastrarFeriado(feriado);
 				}	
 				else {
+					feriado.ajustaFormatoDataParaAPI();
 					feriadoServiceClient.alterarFeriado(feriado);
 				}
 				iniciaFeriados();
@@ -162,6 +171,7 @@ public class FeriadosController extends BeanController {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public void excluir(Feriado feriado) {
 		try {

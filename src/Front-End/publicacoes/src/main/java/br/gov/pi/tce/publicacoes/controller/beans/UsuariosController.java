@@ -37,7 +37,6 @@ public class UsuariosController extends BeanController {
 	
 	public void limpar() {
 		usuario = new Usuario();
-		usuario.setAtivo(true);
 	}
 
 	public void editar(Usuario usuarioEditar) {

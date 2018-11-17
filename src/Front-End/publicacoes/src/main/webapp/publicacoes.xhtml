@@ -20,10 +20,10 @@
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								
 								 <p:outputLabel value="Data Inicio" for="dataInicio" />
-							 	 <p:inputMask id="dataInicio"  value="#{consultaPublicacaoController.dataInicio}"  mask="99/99/9999" required="true"/>
+								 <p:calendar id="dataInicio" value="#{consultaPublicacaoController.dataInicio}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
 							 	
 							 	<p:outputLabel value="Data Fim" for="dataFim"/>
-							 	<p:inputMask id="dataFim"  value="#{consultaPublicacaoController.dataFim}"  mask="99/99/9999" required="true"/>
+							 	<p:calendar id="dataFim" value="#{consultaPublicacaoController.dataFim}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter"/>
 								
 								
 								<p:outputLabel value="Nome" for="nome"/>
@@ -71,7 +71,7 @@
                                 </h:outputText>	
                             </p:column>
                             
-                            <p:column headerText="Sucesso (Sim/Não)" >
+                            <p:column headerText="Sucesso (Sim/Não)" filterBy="#{publicacao.textoSucesso}">
                            		  <h:outputText value="#{publicacao.textoSucesso}" />
                             </p:column>
                             

@@ -20,13 +20,13 @@
 						<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-12 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome" for="nome"/>
-								<p:inputText id="nome" value="#{arquivosController.publicacao.nome}" required="true" style="width:300px;" />
+								<p:inputText id="nome" value="#{arquivosController.publicacao.nome}" required="true" style="width:300px;" maxlength="50"/>
 						</p:panelGrid>
 						
 						<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-12 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Código" for="codigo"/>
-								<p:inputText id="codigo" value="#{arquivosController.publicacao.codigo}" style="width:300px;" />
+								<p:inputText id="codigo" value="#{arquivosController.publicacao.codigo}" style="width:300px;" maxlength="20"/>
 						</p:panelGrid>
 						
 						<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-12 ui-lg-4" layout="grid" 
@@ -42,17 +42,17 @@
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 
 								<p:outputLabel value="Data de Publicação" for="data"/>
-								<p:calendar id="data" value="#{arquivosController.publicacao.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" maxdate="#{arquivosController.today}" converter="dataConverter"/>
+								<p:calendar id="data" value="#{arquivosController.publicacao.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" maxdate="#{arquivosController.today}" converter="dataConverter" />
 								
 							</p:panelGrid>
 							
 							<p:fileUpload fileUploadListener="#{arquivosController.uploadFile}" mode="advanced" 
-								label="Selecione o arquivo PDF" auto="true" required="true"
+								label="Selecione o arquivo PDF" auto="true" required="true" 
 								 update="arquivo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." 
 								 allowTypes="/(\.|\/)(pdf)$/" invalidFileMessage="São permitidas somente arquivos em PDF" 
-								 sizeLimit="3145728" invalidSizeMessage="O tamanho máximo permitido é de 300MB.">				
+								 sizeLimit="3145728" invalidSizeMessage="O tamanho máximo permitido é de 300MB." >				
 							</p:fileUpload>
-							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+							<p:panelGrid columns="1" columnClasses="ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">			
 							<h:outputText id="arquivo" value="#{arquivosController.arquivo.nome}"/> 
 							</p:panelGrid>
@@ -60,7 +60,7 @@
 							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-12 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								<p:outputLabel value="Nome do Anexo" for="nomeAnexo"/>
-								<p:inputText id="nomeAnexo" value="#{arquivosController.publicacaoAnexo.nome}" style="width:300px;"/>
+								<p:inputText id="nomeAnexo" value="#{arquivosController.publicacaoAnexo.nome}" style="width:300px;" maxlength="50"/>
 							</p:panelGrid>
 							
 							<p:fileUpload fileUploadListener="#{arquivosController.uploadFileAnexo}" mode="advanced" 

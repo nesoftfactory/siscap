@@ -13,6 +13,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Feriado extends BaseEntity {
 	
 	private String nome;
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	private LocalDate data;
 	private List<Fonte> fontes;
 	private Boolean ativo;

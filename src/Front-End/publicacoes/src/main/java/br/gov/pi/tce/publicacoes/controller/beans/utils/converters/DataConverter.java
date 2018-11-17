@@ -25,7 +25,8 @@ public class DataConverter implements Converter {
 			if (dataSplit[2].length() == 2) {
 				return ("20"+dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]);
 			} else {
-				return (dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]);
+				//return (dataSplit[2]+"-"+dataSplit[1]+"-"+dataSplit[0]);
+				return (dataSplit[0]+"/"+dataSplit[1]+"/"+dataSplit[2]);
 			}
 		} catch (Exception e) {
 			throw new ConverterException(e);

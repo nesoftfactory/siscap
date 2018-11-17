@@ -94,23 +94,35 @@ public class ArquivosController extends BeanController {
 		if (arquivo.getNome().isEmpty()) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Arquivo de diário não informado.");
 			//throw new ValidationException("Arquivo de diário não informado.");
+			return;
 		}
 		
-		if (publicacaoAnexo.getNome().isEmpty()) {
-			
-			if (!arquivoAnexo.getNome().isEmpty()) {
+		publicacao.setPossuiAnexo(false);
+		if (publicacaoAnexo.getNome().isEmpty() && !arquivoAnexo.getNome().isEmpty()) {
 				addMessage(FacesMessage.SEVERITY_ERROR, "O nome da publicação do arquivo anexo não foi informado.");
-				//throw new ValidationException("O nome da publicação do arquivo anexo não foi informado.");
-			}
-			
-			publicacao.setPossuiAnexo(false);
-		} else {
+				return;
+		}else if (arquivoAnexo.getNome().isEmpty() && !publicacaoAnexo.getNome().isEmpty())	{
+				addMessage(FacesMessage.SEVERITY_ERROR, "O arquivo do anexo não foi informado.");
+				return;
+		} else if(!publicacaoAnexo.getNome().isEmpty() && !arquivoAnexo.getNome().isEmpty()){
 			publicacao.setPossuiAnexo(true);
 		}
 		
-		// Tratamento para data
-		String[] dataSplit = publicacao.getData().split("-");
-		publicacao.setData(dataSplit[2]+"/"+dataSplit[1]+"/"+dataSplit[0]);
+		
+
+		String dt = validaData(publicacao.getData());
+		if(dt == null) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Data inválida.");
+			return;
+		}
+		LocalDate today = LocalDate.now();
+		DateTimeFormatter calendarPattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate dataPub = LocalDate.parse(dt, calendarPattern);
+		if(dataPub.isAfter(today)) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Data inválida. A maior data permitida é:" + getToday());
+			return;
+		}
+		publicacao.setData(dt);
 		
 		try {
 			publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(publicacao.getFonte().getId(), null, null, null,null, publicacao.getData());
@@ -154,7 +166,7 @@ public class ArquivosController extends BeanController {
 		catch (Exception e) {
 			LOGGER.error("Erro realizar o upload da publicação.");
 			LOGGER.error(e.getMessage());
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload da publicação.");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload da publicação: " + e.getMessage());
 		    //throw new Exception(e);
 		}
 			
@@ -214,7 +226,7 @@ public class ArquivosController extends BeanController {
 
 	public String getToday() {
 		LocalDate today = LocalDate.now();
-		DateTimeFormatter calendarPattern = DateTimeFormatter.ofPattern("dd/MM/yy");
+		DateTimeFormatter calendarPattern = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		return today.format(calendarPattern);
 	}
 	
