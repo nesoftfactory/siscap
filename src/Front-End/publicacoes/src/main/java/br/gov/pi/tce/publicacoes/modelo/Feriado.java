@@ -1,6 +1,5 @@
 package br.gov.pi.tce.publicacoes.modelo;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 public class Feriado {
-	
+
 	private Long id;
 	private String nome;
 	private String data;
@@ -24,7 +23,7 @@ public class Feriado {
 	public Feriado() {
 		super();
 	}
-	
+
 	public Feriado(String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean todasFontes, Boolean fixo) {
 		super();
 		setNome(nome);
@@ -35,8 +34,9 @@ public class Feriado {
 		setTodasFontes(todasFontes);
 		setFixo(fixo);
 	}
-	
-	public Feriado(Long id, String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean todasFontes, Boolean fixo) {
+
+	public Feriado(Long id, String nome, String data, List<Fonte> fontes, Boolean ativo, Boolean todasFontes,
+			Boolean fixo) {
 		this(nome, data, fontes, ativo, todasFontes, fixo);
 		this.id = id;
 	}
@@ -110,7 +110,7 @@ public class Feriado {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
 	/**
 	 * @return todasFontes
 	 */
@@ -143,15 +143,15 @@ public class Feriado {
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
 	}
-	
+
 	@JsonIgnore
 	public String getTextoTodasFontes() {
 		return getTodasFontes() ? "Sim" : "Não";
 	}
-	
+
 	@JsonIgnore
 	public String getTextoFixo() {
 		return getFixo() ? "Sim" : "Não";
 	}
-		
+
 }

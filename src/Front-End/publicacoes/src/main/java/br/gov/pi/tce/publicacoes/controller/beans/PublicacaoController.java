@@ -32,8 +32,13 @@ import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
+import br.gov.pi.tce.publicacoes.modelo.Notificacao;
+import br.gov.pi.tce.publicacoes.modelo.NotificacaoConfig;
+import br.gov.pi.tce.publicacoes.modelo.NotificacaoN;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
+import br.gov.pi.tce.publicacoes.modelo.PublicacaoN;
+import br.gov.pi.tce.publicacoes.modelo.enums.NotificacaoTipo;
 import br.gov.pi.tce.publicacoes.services.NotificacaoService;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
 
@@ -161,11 +166,9 @@ public class PublicacaoController extends BeanController{
 			Date date = asDate(localDate);
 			Boolean isFeriado = isFeriado(date, fonte.getId());
 			if (!isFeriado) {
-				SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
-				LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
 				Propriedades propriedades = Propriedades.getInstance();
+				LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + convertDateToString(date) + ".");
 				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "Indisponível");
-				//notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 			}
 		}
 	}
@@ -207,7 +210,7 @@ public class PublicacaoController extends BeanController{
 			// A expressão regular das datas e PDFs estão diferentes para cada Fonte.
 			if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA").equals(fonte.getId())) {
 				regexForDate = "\\d{2}/\\d{2}/\\d{4}";
-				regexForPDF = "[0-9A-Za-z|\\s|-]+.(pdf)";
+				regexForPDF = "[0-9A-Za-z|\\s|-]+[\\(\\d\\)]*+.(pdf)";
 				erroUrlFonte = Boolean.FALSE;
 			} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA").equals(fonte.getId())) {
 				regexForDate = "\\d{2}[\\.\\-]{1,2}\\d{2}-\\d{4}";
@@ -467,12 +470,15 @@ public class PublicacaoController extends BeanController{
 	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, String dataPublicacao,
 			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo, String codigo, String publicacaoName) {
 
+		Propriedades propriedades = Propriedades.getInstance();
 		Arquivo arquivo = new Arquivo(nomeArquivoPublicacao, Long.valueOf(10),"tipo", linkArquivoPublicacao, "conteudo".getBytes());
 		Publicacao publicacao = new Publicacao(fonte, publicacaoName, dataPublicacao, codigo, arquivo.getId(), isSucesso, isAnexo,Long.valueOf(1));
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
+		Publicacao publicacaoRetorno = publicacao;
 		try {
 			if (publicacaoConsultada == null) {
-				publicacao = publicacaoServiceClient.cadastrarPublicacao(publicacao, arquivo, false);
+				publicacaoRetorno = publicacaoServiceClient.cadastrarPublicacao(publicacao, arquivo, false);
+				//publicacaoRetorno = publicacao;
 				if (publicacaoAnexo != null) {
 					publicacaoAnexo.setPublicacao(publicacao);
 					publicacaoAnexo = publicacaoServiceClient.cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, false);
@@ -488,13 +494,23 @@ public class PublicacaoController extends BeanController{
 					publicacaoConsultada.setCodigo(publicacao.getCodigo());
 					publicacaoConsultada.setSucesso(publicacao.getSucesso());
 					publicacaoConsultada.setPossuiAnexo(publicacao.getPossuiAnexo());
-					publicacaoServiceClient.alterarPublicacao(publicacaoConsultada, arquivo, false);
+					publicacaoRetorno = publicacaoServiceClient.alterarPublicacao(publicacaoConsultada, arquivo, false);
+					//publicacaoRetorno = publicacaoConsultada;
 				}
 			}
 		} catch (Exception e) {
 			LOGGER.error("Erro ao Criar/Atualizar Publicacao.");
 			LOGGER.error(e.getMessage());
 			e.printStackTrace();
+		}
+		if (!isSucesso) {
+			List<NotificacaoConfig> notificacaoConfigList = consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo.CAPTURA, Boolean.TRUE);
+			PublicacaoN publicacaoNotif = new PublicacaoN(publicacaoRetorno.getId());
+			String tituloNotificacao = propriedades.getValorString("EMAIL_SUBJECT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_SUBJECT_2") + publicacaoRetorno.getData();
+			String conteudoNotificacao = propriedades.getValorString("EMAIL_CONTENT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + publicacaoRetorno.getData();
+			NotificacaoN notificacao = new NotificacaoN(NotificacaoTipo.CAPTURA, notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
+			cadastrarNotificacao(notificacao);
+//			notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
 		}
 	}
 	
@@ -512,6 +528,35 @@ public class PublicacaoController extends BeanController{
 			publicacaoConsultada = publicacaolist.get(0);
 		}
 		return publicacaoConsultada;
+	}
+	
+	/**
+	 * Método resposável por chamar a API para consultar Notificação Config por Tipo, e Ativo.
+	 * 
+	 * @param tipo
+	 * @param ativo
+	 * @return notificacaoConfigList
+	 */
+	private List<NotificacaoConfig> consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo tipo, Boolean ativo) {
+		List<NotificacaoConfig> notificacaoConfigList = publicacaoServiceClient.consultarNotificacaoConfigPorTipoAtivo(tipo, ativo);
+		return notificacaoConfigList;
+	}
+	
+	/**
+	 * Método resposável por chamar a API para Cadastrar uma Notificação.
+	 * 
+	 * @param notif
+	 * @return notificacao
+	 */
+	private Notificacao cadastrarNotificacao(NotificacaoN notif) {
+		Notificacao notificacao = null;
+		try {
+			notificacao = publicacaoServiceClient.cadastrarNotificacao(notif);
+		} catch (Exception e) {
+			LOGGER.error("Erro na criação da notificacao");
+			LOGGER.error(e.getMessage());
+		}
+		return notificacao;
 	}
 
 	/**
@@ -559,10 +604,8 @@ public class PublicacaoController extends BeanController{
 				}
 				if (!diarioEncontrado) {
 					if (!isFeriado(date, fonte.getId())) {
-						SimpleDateFormat formatoDeData = new SimpleDateFormat("dd/MM/yyyy");
-						LOGGER.info("Nao foi encontrado Diario Oficial da Fonte " + fonte.getId() + " para a data " + formatoDeData.format(date) + " .");
+						LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + " para a data " + convertDateToString(date) + ".");
 						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
-						//notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), propriedades.getValorString("EMAIL_SUBJECT"), propriedades.getValorString("EMAIL_CONTENT"));
 					}
 				}
 				fonteHTML.close();

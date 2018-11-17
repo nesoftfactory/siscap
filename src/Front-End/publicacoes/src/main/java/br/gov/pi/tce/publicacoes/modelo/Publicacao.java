@@ -27,8 +27,7 @@ public class Publicacao {
 	private Boolean possuiNotificacao;
 	private Usuario usuarioCriacao;
 	private String dataString;
-	
-	
+
 	private PublicacaoAnexo publicacaoAnexo;
 
 	/**
@@ -37,11 +36,22 @@ public class Publicacao {
 	public Publicacao() {
 		super();
 	}
-	
-	
-	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo,
-			Long arquivo, Boolean sucesso, Boolean anexo,
-			Long quantidadeTentativas, String dataCriacao, Usuario usuarioCriacao) {
+
+	/**
+	 * @param id
+	 * @param fonte
+	 * @param nome
+	 * @param data
+	 * @param codigo
+	 * @param arquivo
+	 * @param sucesso
+	 * @param anexo
+	 * @param quantidadeTentativas
+	 * @param dataCriacao
+	 * @param usuarioCriacao
+	 */
+	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo, Long arquivo, Boolean sucesso,
+			Boolean anexo, Long quantidadeTentativas, String dataCriacao, Usuario usuarioCriacao) {
 		super();
 		setId(id);
 		setFonte(fonte);
@@ -61,14 +71,13 @@ public class Publicacao {
 	 * @param nome
 	 * @param data
 	 * @param codigo
-	 * @param idArquivo
+	 * @param arquivo
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Fonte fonte, String nome, String data, String codigo,
-			Long arquivo, Boolean sucesso, Boolean anexo,
-			Long quantidadeTentativas) {
+	public Publicacao(Fonte fonte, String nome, String data, String codigo, Long arquivo, Boolean sucesso,
+			Boolean anexo, Long quantidadeTentativas) {
 		super();
 		setFonte(fonte);
 		setNome(nome);
@@ -79,8 +88,7 @@ public class Publicacao {
 		setPossuiAnexo(anexo);
 		setQuantidadeTentativas(quantidadeTentativas);
 	}
-	
-	
+
 	/**
 	 * @param id
 	 * @param fonte
@@ -88,38 +96,43 @@ public class Publicacao {
 	 * @param data
 	 * @param codigo
 	 * @param arquivo
+	 * @param usuarioCriacao
+	 * @param dataAtualizacao
+	 * @param usuarioAtualizacao
 	 * @param sucesso
 	 * @param anexo
 	 * @param quantidadeTentativas
 	 */
-	public Publicacao(Long id, Fonte fonte, String nome, String data,
-			String codigo, Long arquivo, String usuarioCriacao, Date dataAtualizacao,
-			String usuarioAtualizacao, Boolean sucesso, Boolean anexo, Long quantidadeTentativas) {
+	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo, Long arquivo,
+			String usuarioCriacao, Date dataAtualizacao, String usuarioAtualizacao, Boolean sucesso, Boolean anexo,
+			Long quantidadeTentativas) {
 		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas);
 		this.id = id;
 	}
-	
-	
-	
+
+	/**
+	 * @param id
+	 */
+	public Publicacao(Long id) {
+		super();
+		setId(id);
+	}
+
 	public String getDataString() {
 		return dataString;
 	}
-
 
 	public void setDataString(String dataString) {
 		this.dataString = dataString;
 	}
 
-
 	public String getDataCriacao() {
 		return dataCriacao;
 	}
 
-
 	public void setDataCriacao(String dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
-
 
 	public PublicacaoAnexo getPublicacaoAnexo() {
 		return publicacaoAnexo;
@@ -128,7 +141,6 @@ public class Publicacao {
 	public void setPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo) {
 		this.publicacaoAnexo = publicacaoAnexo;
 	}
-
 
 	/**
 	 * @return the id
@@ -255,10 +267,7 @@ public class Publicacao {
 	public void setArquivo(Long arquivo) {
 		this.arquivo = arquivo;
 	}
-	
-	
-	
-	
+
 	public Boolean getPossuiNotificacao() {
 		return possuiNotificacao;
 	}
@@ -272,18 +281,12 @@ public class Publicacao {
 		return getSucesso() ? "Sim" : "Não";
 	}
 
-
 	public Usuario getUsuarioCriacao() {
 		return usuarioCriacao;
 	}
 
-
 	public void setUsuarioCriacao(Usuario usuarioCriacao) {
 		this.usuarioCriacao = usuarioCriacao;
 	}
-	
-	
-	
-	
-	
+
 }

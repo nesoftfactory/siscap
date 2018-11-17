@@ -37,8 +37,12 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
+import br.gov.pi.tce.publicacoes.modelo.Notificacao;
+import br.gov.pi.tce.publicacoes.modelo.NotificacaoConfig;
+import br.gov.pi.tce.publicacoes.modelo.NotificacaoN;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
+import br.gov.pi.tce.publicacoes.modelo.enums.NotificacaoTipo;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
@@ -311,7 +315,28 @@ public class PublicacaoServiceClient{
 		}
 	}
 	
+	public List<NotificacaoConfig> consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo tipo, Boolean ativo){
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES_CONFIG")).queryParam("ativo", ativo).queryParam("tipo", tipo.toString());
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		Response response = invocationBuilder.get();
+		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+			return null;
+		}	
+		else {
+			List<NotificacaoConfig> tf = response.readEntity(new GenericType<List<NotificacaoConfig>>() {});
+			return  tf;
+		}
+	}
 	
+	public Notificacao cadastrarNotificacao(NotificacaoN notificacao) throws Exception{
+		Propriedades propriedades = Propriedades.getInstance();
+		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES"));
+		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		Response response = invocationBuilder.post(Entity.entity(notificacao, propriedades.getValorString("RESPONSE_TYPE")));
+		trataRetorno(response);
+		return response.readEntity(Notificacao.class);
+	}
 	
 	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim, Boolean sucesso, String data) throws Exception{
 		LocalDate dtInicio = null;
