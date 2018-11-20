@@ -604,7 +604,7 @@ public class PublicacaoController extends BeanController{
 				}
 				if (!diarioEncontrado) {
 					if (!isFeriado(date, fonte.getId())) {
-						LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + " para a data " + convertDateToString(date) + ".");
+						LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + convertDateToString(date) + ".");
 						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
 					}
 				}
