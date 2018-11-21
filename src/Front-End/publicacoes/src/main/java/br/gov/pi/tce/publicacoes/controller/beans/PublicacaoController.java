@@ -504,13 +504,17 @@ public class PublicacaoController extends BeanController{
 			e.printStackTrace();
 		}
 		if (!isSucesso) {
-			List<NotificacaoConfig> notificacaoConfigList = consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo.CAPTURA, Boolean.TRUE);
-			PublicacaoN publicacaoNotif = new PublicacaoN(publicacaoRetorno.getId());
-			String tituloNotificacao = propriedades.getValorString("EMAIL_SUBJECT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_SUBJECT_2") + publicacaoRetorno.getData();
-			String conteudoNotificacao = propriedades.getValorString("EMAIL_CONTENT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + publicacaoRetorno.getData();
-			NotificacaoN notificacao = new NotificacaoN(NotificacaoTipo.CAPTURA, notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
-			cadastrarNotificacao(notificacao);
-//			notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
+			if (publicacaoRetorno.getQuantidadeTentativas() > 0
+					&& (propriedades.getValorInt("QUANTIDADE_VEZES_NOTIFICAR") == 0
+					|| (publicacaoRetorno.getQuantidadeTentativas() % propriedades.getValorLong("QUANTIDADE_VEZES_NOTIFICAR")) == 0)) {
+				List<NotificacaoConfig> notificacaoConfigList = consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo.CAPTURA, Boolean.TRUE);
+				PublicacaoN publicacaoNotif = new PublicacaoN(publicacaoRetorno.getId());
+				String tituloNotificacao = propriedades.getValorString("EMAIL_SUBJECT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_SUBJECT_2") + publicacaoRetorno.getData();
+				String conteudoNotificacao = propriedades.getValorString("EMAIL_CONTENT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + publicacaoRetorno.getData();
+				NotificacaoN notificacao = new NotificacaoN(NotificacaoTipo.CAPTURA, notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
+				cadastrarNotificacao(notificacao);
+//				notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
+			}
 		}
 	}
 	
@@ -605,7 +609,7 @@ public class PublicacaoController extends BeanController{
 				if (!diarioEncontrado) {
 					if (!isFeriado(date, fonte.getId())) {
 						LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + convertDateToString(date) + ".");
-						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "inexistente");
+						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "Indisponível");
 					}
 				}
 				fonteHTML.close();
