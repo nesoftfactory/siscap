@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Publicações</ui:define>
+	<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{consultaPublicacaoController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Consulta de Publicações" style="margin-bottom:20px">
+							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								
+								 <p:outputLabel value="Data Inicio" for="dataInicio" />
+								 <p:calendar id="dataInicio" value="#{consultaPublicacaoController.dataInicio}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
+							 	
+							 	<p:outputLabel value="Data Fim" for="dataFim"/>
+							 	<p:calendar id="dataFim" value="#{consultaPublicacaoController.dataFim}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter"/>
+								
+								
+								<p:outputLabel value="Nome" for="nome"/>
+							 	<p:inputText id="nome" value="#{consultaPublicacaoController.nome}"  /> 
+
+								<p:outputLabel value="Fonte" for="fonte"/>
+								<p:selectOneMenu id="fonte" value="#{consultaPublicacaoController.fonte}" converter="fonteConverter">
+						            <f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{consultaPublicacaoController.fontesParaSelectItems}" />
+						        </p:selectOneMenu>
+							 	
+							 	<p:outputLabel value="Sucesso (Sim/Não)" for="sucesso"/>
+								<p:selectBooleanCheckbox id="sucesso" value="#{consultaPublicacaoController.sucesso}"  />
+								
+							</p:panelGrid>
+							<p:toolbar>
+								<p:toolbarGroup>
+ 									<p:commandButton value="Limpar" action="#{consultaPublicacaoController.limpar()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										
+									<p:commandButton id="btn_add" value="Consultar" icon="fa fa-search White" iconPos="right" update="@form"
+										action="#{consultaPublicacaoController.consultar()}" >
+            						</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>	
+						</p:panel>
+						
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesTable"
+                 emptyMessage="Não foram encontradas publicações com estas informações de busca.">
+                            <f:facet name="header">
+                                Lista de Publicações
+                            </f:facet>
+
+                            <p:column headerText="Fonte" filterBy="#{publicacao.fonte.nome}" sortBy="#{publicacao.fonte.nome}">
+                                <h:outputText value="#{publicacao.fonte.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Nome" filterBy="#{publicacao.nome}" sortBy="#{publicacao.nome}">
+                                <h:outputText value="#{publicacao.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Data" filterBy="#{publicacao.data}" sortBy="#{publicacao.data}">
+                                <h:outputText value="#{publicacao.data}" >
+                                	<f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>	
+                            </p:column>
+                            
+                            <p:column headerText="Sucesso (Sim/Não)" filterBy="#{publicacao.textoSucesso}">
+                           		  <h:outputText value="#{publicacao.textoSucesso}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tentativas" filterBy="#{publicacao.quantidadeTentativas}">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                             <p:column headerText="Notificações">
+                            	  <h:commandLink value="Notificações" onclick="window.open('notificacoesPublicacaoHistorico.xhtml?id='+ '#{publicacao.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" rendered="#{publicacao.possuiNotificacao}"/>
+                            	  <h:outputText value="-" rendered="#{! publicacao.possuiNotificacao}"/>	
+                            </p:column>
+                            
+                            <p:column headerText="Arquivo da publicação">
+                            	  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivo()}" rendered="#{publicacao.arquivo != null and publicacao.sucesso}" immediate="true"/>
+                           		  <h:commandLink value="Upload" action="#{consultaPublicacaoController.uploadArquivo()}" rendered="#{publicacao.arquivo == null}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Histórico da publicação">
+                           		<h:commandLink value="Histórico" onclick="window.open('publicacaoHistorico.xhtml?id='+ '#{publicacao.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" >
+                           		</h:commandLink> 
+                           		  
+                            </p:column>
+                            
+                            <p:column headerText="Nome Anexo" filterBy="#{publicacao.publicacaoAnexo.nome}" sortBy="#{publicacao.publicacaoAnexo.nome}">
+                           		  <h:outputText value="#{publicacao.publicacaoAnexo.nome}" rendered="#{publicacao.possuiAnexo}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Arquivo do Anexo">
+                           		  <h:commandLink value="Download" action="#{consultaPublicacaoController.downloadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo != null and publicacao.publicacaoAnexo.sucesso}" immediate="true"/>
+                           		  <h:commandLink value="Upload de Anexo" action="#{consultaPublicacaoController.uploadArquivoAnexo()}" rendered="#{publicacao.possuiAnexo and publicacao.publicacaoAnexo.arquivo == null}"/>
+                           		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
+                            </p:column>
+                            
+                            <p:column headerText="Histórico do Anexo">
+                            	  <h:commandLink value="Histórico de Anexo" onclick="window.open('anexoPublicacaoHistorico.xhtml?id='+ '#{publicacao.publicacaoAnexo.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" rendered="#{publicacao.possuiAnexo}" />	
+                           		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Feriados</ui:define>
+	<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{feriadosController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Cadastro de Feriados" style="margin-bottom:20px">
+							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								<p:outputLabel value="Nome" for="nome"/>
+								<p:inputText id="nome" value="#{feriadosController.feriado.nome}" required="true" style="width:300px;" maxlength="50"/>
+								
+								<p:outputLabel value="Feriado para todas as fontes? (Sim/Não)" for="todasFontes"/>
+									<p:selectBooleanCheckbox id="todasFontes" value="#{feriadosController.feriado.todasFontes}">
+										<p:ajax listener="#{feriadosController.desabilitarFontes}" update="fontes" />
+									</p:selectBooleanCheckbox>	
+		
+								<p:outputLabel value="Data" for="data"/>
+									<p:calendar id="data" value="#{feriadosController.feriado.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
+							
+						        <p:outputLabel value="Fontes" for="fontes" />
+        						<p:selectManyCheckbox id="fontes" value="#{feriadosController.feriado.fontes}" layout="grid" columns="1" converter="fonteConverter">
+        							<f:selectItems value="#{feriadosController.fontesParaSelectItems}" var="fontes" itemLabel="#{fonte.nome}" itemValue="#{fonte}" />
+        							<p:ajax listener="#{feriadosController.habilitaTodasFontes}" update="fontes todasFontes" />
+    							</p:selectManyCheckbox>
+    
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
+									<p:selectBooleanCheckbox id="ativo" value="#{feriadosController.feriado.ativo}"  />
+	
+								<p:outputLabel value="Feriado em data fixa? (Sim/Não)" for="fixo"/>
+									<p:selectBooleanCheckbox id="fixo" value="#{feriadosController.feriado.fixo}"  />
+									
+								</p:panelGrid>
+							
+								<p:toolbar>
+									<p:toolbarGroup>
+ 										<p:commandButton value="Limpar" action="#{feriadosController.limpar()}" process="@this" update="@form"
+											icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" update="@form"
+											action="#{feriadosController.salvar()}" >
+            							</p:commandButton>
+									</p:toolbarGroup>
+								</p:toolbar>	
+						     					
+						</p:panel>
+
+						<p:dataTable id="feriadosTable" var="feriado" value="#{feriadosController.feriados}" reflow="true" paginator="true" rows="10" widgetVar="feriadosTable"
+                 emptyMessage="Não foram encontrados feriados com estas informações de busca.">
+                            <f:facet name="header">
+                                Lista de Feriados
+                            </f:facet>
+                            <p:column headerText="Nome" filterBy="#{feriado.nome}" sortBy="#{feriado.nome}" >
+                                <h:outputText value="#{feriado.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Fontes">
+                   				<h:outputText value="#{feriadosController.getTodasAsFontes(feriado)}" />
+                   				<ui:repeat var="fonte" value="#{feriado.fontes}">
+            						<h:outputText value="#{fonte.nome} &lt;br /&gt;" escape="false" />
+        						</ui:repeat>
+                            </p:column>
+
+                            <p:column headerText="Data" filterBy="#{feriado.data}" sortBy="#{feriado.data}">
+                                <h:outputText value="#{feriado.data}" />
+                            </p:column>
+                            
+                            <p:column headerText="Feriado em todas as fontes? (Sim/Não)" filterBy="#{feriado.todasFontes}" filterMatchMode="equals">
+                           		  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>
+                           		  <h:outputText value="#{feriado.textoTodasFontes}" />
+                            </p:column>
+                            
+                            <p:column headerText="Feriado em data fixa? (Sim/Não)" filterBy="#{feriado.fixo}" filterMatchMode="equals">
+	                            <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							    </f:facet>
+	                            <h:outputText value="#{feriado.textoFixo}" />
+                            </p:column>
+                            
+                            <p:column headerText="O Feriado está Ativo? (Sim/Não)" filterBy="#{feriado.ativo}" filterMatchMode="equals">
+	                            <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('feriadosTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							    </f:facet>
+	                           	<h:outputText value="#{feriado.textoAtivo}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ações">
+								<p:commandButton id="bt1" icon="fa fa-edit" title="editar" process="@this" onclick="parent.scrollTo(0,0);"
+									action="#{feriadosController.editar(feriado)}" update="@form" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"/>
+									
+								<p:commandButton id="bt2" icon="fa fa-trash" title="excluir" update="feriadosTable" process="@this"
+									action="#{feriadosController.excluir(feriado)}" onclick="parent.scrollTo(0,0);">                						
+							        <p:confirm id="idConfirm" header="Confirmação" message="Confirma exclusão desse feriado?" icon="ui-icon-alert" />
+								</p:commandButton>
+						    </p:column>
+                        </p:dataTable>
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

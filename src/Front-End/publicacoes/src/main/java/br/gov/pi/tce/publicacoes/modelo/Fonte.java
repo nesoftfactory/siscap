@@ -66,8 +66,6 @@ public class Fonte {
 		this.tipoFonte = tipoFonte;
 	}
 
-	
-
 	public Boolean getAtivo() {
 		return ativo;
 	}
@@ -95,6 +93,10 @@ public class Fonte {
 	@JsonIgnore
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
+	}
+	
+	public String toString() {
+		return nome;
 	}
 	
 	@Override

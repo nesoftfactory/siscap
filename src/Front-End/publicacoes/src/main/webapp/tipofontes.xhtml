@@ -1,0 +1,78 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Tipo de Fontes</ui:define>
+	<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{tipoFontesController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Cadastro de tipos de fontes" style="margin-bottom:20px">
+							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								<p:outputLabel value="Nome" for="nome"/>
+								<p:inputText id="nome" value="#{tipoFontesController.tipoFonte.nome}" required="true" style="width:300px;"/>
+								
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{tipoFontesController.tipoFonte.ativo}" />
+																				
+							</p:panelGrid>
+							<p:toolbar>
+								<p:toolbarGroup>
+ 									<p:commandButton value="Limpar" action="#{tipoFontesController.limpar()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										
+										
+									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" 
+										update="@form" action="#{tipoFontesController.salvar()}" >
+            						</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>					     					
+						</p:panel>
+
+						<p:dataTable id="tipoFontesTable" var="tipoFonte" value="#{tipoFontesController.tipoFontes}" reflow="true" paginator="true" rows="10" widgetVar="tipoFontesTable"
+                 emptyMessage="Não foram encontrados tipo fontes com estas informações de busca.">
+                            <f:facet name="header">
+                                Lista de Tipos de Fontes
+                            </f:facet>
+                            <p:column headerText="Nome" filterBy="#{tipoFonte.nome}" sortBy="#{tipoFonte.nome}">
+                                <h:outputText value="#{tipoFonte.nome}" />
+                            </p:column>
+                            
+                             <p:column headerText="O Tipo Fonte está Ativo? (Sim/Não)" filterBy="#{tipoFonte.ativo}" filterMatchMode="equals">
+                             	  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('tipoFontesTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>	
+                           		  <h:outputText value="#{tipoFonte.textoAtivo}" />
+                            </p:column>
+                            
+                            <p:column headerText="Ações">
+								<p:commandButton id="bt1" icon="fa fa-edit" title="editar" process="@this" onclick="parent.scrollTo(0,0);"
+									action="#{tipoFontesController.editar(tipoFonte)}" update="@form" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"/>
+									
+								<p:commandButton id="bt2" icon="fa fa-trash" title="Excluir" update="tipoFontesTable" process="@this"
+									action="#{tipoFontesController.excluir(tipoFonte)}" onclick="parent.scrollTo(0,0);">                						
+							        <p:confirm id="idConfirm" header="Confirmação" message="Confirma a exclusão desse tipo de fonte?" icon="ui-icon-alert" />
+								</p:commandButton>
+						    </p:column>
+                        </p:dataTable>
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

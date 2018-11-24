@@ -6,78 +6,84 @@
 	template="/WEB-INF/paradise/template.xhtml">
 
 	<ui:define name="title">Fontes</ui:define>
+    <ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{fontesController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
 
 	<ui:define name="content">
 		<h:form id="form">
-			<p:growl id="msgs" showDetail="true" />
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:panel header="Cadastro de fontes" style="margin-bottom:20px">
+						<p:panel header="Cadastro de Fontes" style="margin-bottom:20px">
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
-								<p:outputLabel value="Descrição" for="descricao"/>
-								<p:inputText id="descricao" value="#{prototipoFontesController.fonte.descricao}" required="true" />
+								<p:outputLabel value="Nome" for="nome"/>
+								<p:inputText id="nome" value="#{fontesController.fonte.nome}" required="true" style="width:300px;" maxlength="50"/>
 
-								<p:outputLabel value="Esfera" for="esfera"/>
-								<p:selectOneMenu id="esfera" value="#{prototipoFontesController.fonte.esfera}" required="true">
+								<p:outputLabel value="Tipo de Fonte" for="tipoFonte"/>
+								<p:selectOneMenu id="tipoFonte" value="#{fontesController.fonte.tipoFonte}" required="true" converter="tipoFonteConverter">
 						            <f:selectItem itemLabel="Selecione" itemValue="" />
-						            <f:selectItem itemLabel="Estadual" itemValue="Estadual" />
-						            <f:selectItem itemLabel="Municipal" itemValue="Municipal" />
+									<f:selectItems value="#{fontesController.tiposFontesParaSelectItems}" />
 						        </p:selectOneMenu>
+						        
+						        <p:outputLabel value="URL" for="url"/>
+								<p:inputText id="url" value="#{fontesController.fonte.url}" required="true" style="width:300px;" maxlength="50"/>
+								
+								<p:outputLabel value="Ativo (Sim/Não)" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{fontesController.fonte.ativo}"  />
 							</p:panelGrid>
-							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-10" layout="grid" 
-                                styleClass="ui-panelgrid-blank form-group form-elements">
-								<p:outputLabel value="URL" for="url"/>
-								<p:inputText id="url" value="#{prototipoFontesController.fonte.url}" required="true" />
-							</p:panelGrid>
-														
 							<p:toolbar>
 								<p:toolbarGroup>
- 									<p:commandButton value="Limpar" action="#{prototipoFontesController.limpar()}" process="@this" update="@form"
+ 									<p:commandButton value="Limpar" action="#{fontesController.limpar()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
-									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" 
-										update="@form" action="#{prototipoFontesController.limpar()}" >
-                						<p:collector value="#{prototipoFontesController.fonte}" addTo="#{prototipoFontesController.fontes}" unique="true"/>
+										
+									<p:commandButton id="btn_add" value="Salvar" icon="fa fa-save White" iconPos="right" update="@form"
+										action="#{fontesController.salvar()}" >
             						</p:commandButton>
 								</p:toolbarGroup>
-							</p:toolbar>	
-							
-
-						     					
+							</p:toolbar>				
 						</p:panel>
 
-						<p:dataTable id="fontesTable" var="fonte" value="#{prototipoFontesController.fontes}" reflow="true" paginator="true" rows="10">
+						<p:dataTable id="fontesTable" var="fonte" value="#{fontesController.fontes}" reflow="true" paginator="true" rows="10"  widgetVar="fontesTable"
+                 emptyMessage="Não foram encontradas fontes com estas informações de busca.">
                             <f:facet name="header">
                                 Lista de Fontes
                             </f:facet>
-                            <p:column headerText="Descrição">
-                                <h:outputText value="#{fonte.descricao}" />
+                            <p:column headerText="Nome" filterBy="#{fonte.nome}" sortBy="#{fonte.nome}">
+                                <h:outputText value="#{fonte.nome}" />
                             </p:column>
 
-                            <p:column headerText="Esfera">
-                                <h:outputText value="#{fonte.esfera}" />
+                            <p:column headerText="Tipo" filterBy="#{fonte.tipoFonte.nome}" sortBy="#{fonte.tipoFonte.nome}">
+                                <h:outputText value="#{fonte.tipoFonte.nome}" />
                             </p:column>
 
-                            <p:column headerText="URL">
+                            <p:column headerText="URL" filterBy="#{fonte.url}" sortBy="#{fonte.url}">
                                 <h:outputText value="#{fonte.url}" />
                             </p:column>
                             
+                            <p:column headerText="A fonte está Ativa? (Sim/Não)" filterBy="#{fonte.ativo}" filterMatchMode="equals">
+                            	  <f:facet name="filter">
+							    	<p:selectOneButton onchange="PF('fontesTable').filter()">
+							        	<f:converter converterId="javax.faces.Boolean" />
+							            <f:selectItem itemLabel="Todos" itemValue="" />
+							            <f:selectItem itemLabel="Sim" itemValue="true" />
+							            <f:selectItem itemLabel="Não" itemValue="false" />
+							        </p:selectOneButton>
+							      </f:facet>	
+                           		  <h:outputText value="#{fonte.textoAtivo}" />
+                            </p:column>
+                            
                             <p:column headerText="Ações">
-								<p:commandButton icon="fa fa-edit" title="editar" process="fontesTable"
-									action="#{prototipoFontesController.editar(fonte)}" update="@form"/>
-								<p:commandButton icon="fa fa-trash" title="excluir" update="fontesTable" process="fontesTable"
-									actionListener="#{prototipoFontesController.excluir(fonte)}" >                						
-							        <p:confirm header="Confirmação" message="Confirma exclusão dessa fonte?" icon="ui-icon-alert" />
+								<p:commandButton id="bt1" icon="fa fa-edit" title="editar" process="@this" onclick="parent.scrollTo(0,0);"
+									action="#{fontesController.editar(fonte)}" update="@form" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"/>
+									
+								<p:commandButton id="bt2" icon="fa fa-trash" title="Excluir" update="fontesTable" process="@this"
+									action="#{fontesController.excluir(fonte)}" onclick="parent.scrollTo(0,0);">                						
+							        <p:confirm id="idConfirm" header="Confirmação" message="Confirma a exlusão dessa fonte?" icon="ui-icon-alert" />
 								</p:commandButton>
 						    </p:column>
                         </p:dataTable>
-                        
-                   		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-					        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-					        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-					    </p:confirmDialog>
-                        
                     </div>
 				</div>
 			</div>
