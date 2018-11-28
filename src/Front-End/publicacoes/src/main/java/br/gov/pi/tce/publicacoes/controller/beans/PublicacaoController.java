@@ -168,7 +168,7 @@ public class PublicacaoController extends BeanController{
 			if (!isFeriado) {
 				Propriedades propriedades = Propriedades.getInstance();
 				LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + convertDateToString(date) + ".");
-				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "Indisponível");
+				salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, propriedades.getValorString("MENSAGEM_ERRO_DIARIO_NAO_ENCONTRADO"), null, null, "", propriedades.getValorString("MENSAGEM_DIARIO_INDISPONIVEL"));
 			}
 		}
 	}
@@ -511,9 +511,9 @@ public class PublicacaoController extends BeanController{
 				PublicacaoN publicacaoNotif = new PublicacaoN(publicacaoRetorno.getId());
 				String tituloNotificacao = propriedades.getValorString("EMAIL_SUBJECT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_SUBJECT_2") + publicacaoRetorno.getData();
 				String conteudoNotificacao = propriedades.getValorString("EMAIL_CONTENT") + publicacaoRetorno.getFonte().getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + publicacaoRetorno.getData();
-				NotificacaoN notificacao = new NotificacaoN(NotificacaoTipo.CAPTURA, notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
-				cadastrarNotificacao(notificacao);
-//				notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
+				NotificacaoN notificacaoN = new NotificacaoN(NotificacaoTipo.CAPTURA, notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
+				cadastrarNotificacao(notificacaoN);
+				notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"), propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
 			}
 		}
 	}
@@ -609,7 +609,7 @@ public class PublicacaoController extends BeanController{
 				if (!diarioEncontrado) {
 					if (!isFeriado(date, fonte.getId())) {
 						LOGGER.info(propriedades.getValorString("EMAIL_CONTENT") + fonte.getNome() + propriedades.getValorString("EMAIL_CONTENT_2") + convertDateToString(date) + ".");
-						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, "Erro: Diario Não Encontrado", null, null, "", "Indisponível");
+						salvarPublicacao(fonte, "", convertDateToString(date), "", Boolean.FALSE, Boolean.FALSE, propriedades.getValorString("MENSAGEM_ERRO_DIARIO_NAO_ENCONTRADO"), null, null, "", propriedades.getValorString("MENSAGEM_DIARIO_INDISPONIVEL"));
 					}
 				}
 				fonteHTML.close();

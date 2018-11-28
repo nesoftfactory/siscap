@@ -26,7 +26,7 @@ public class NotificacaoService {
 	
 	private static final Logger LOGGER = Logger.getLogger(NotificacaoService.class);
 
-	//@Resource(lookup = "java:jboss/mail/publicacoes") // Nome do Recurso que criamos no Wildfly
+	@Resource(lookup = "java:jboss/mail/publicacoes") // Nome do Recurso que criamos no Wildfly
 	private Session mailSession; // Objeto que vai reprensentar uma sessão de email
 
 	@Asynchronous // Metodo Assíncrono para que a aplicação continue normalmente sem ficar
