@@ -480,7 +480,7 @@ public class PublicacaoController extends BeanController{
 				publicacaoRetorno = publicacaoServiceClient.cadastrarPublicacao(publicacao, arquivo, false);
 				//publicacaoRetorno = publicacao;
 				if (publicacaoAnexo != null) {
-					publicacaoAnexo.setPublicacao(publicacao);
+					publicacaoAnexo.setPublicacao(publicacaoRetorno);
 					publicacaoAnexo = publicacaoServiceClient.cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, false);
 				}
 			} else {
