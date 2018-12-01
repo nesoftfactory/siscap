@@ -53,6 +53,7 @@ public class Usuario extends BaseEntity {
 	}
 
 	@Email
+	@NotNull
 	public String getEmail() {
 		return email;
 	}
