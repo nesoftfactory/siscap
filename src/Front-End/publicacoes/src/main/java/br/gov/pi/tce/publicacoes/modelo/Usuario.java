@@ -3,10 +3,10 @@ package br.gov.pi.tce.publicacoes.modelo;
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class Usuario implements Serializable
-{
-	private static final long serialVersionUID = 1L;
+public class Usuario implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private Long id;
 	private String nome;
 	private String login;
@@ -14,12 +14,13 @@ public class Usuario implements Serializable
 	private Boolean ativo = false;
 	private Usuario usuarioCriacao;
 	private Usuario usuarioAtualizacao;
+	private String email;
 
 	public Usuario() {
 		super();
 	}
 
-	public Usuario(String nome, String login,  boolean ativo, boolean admin ) {
+	public Usuario(String nome, String login, boolean ativo, boolean admin, String email) {
 		super();
 		this.nome = nome;
 		this.login = login;
@@ -27,8 +28,8 @@ public class Usuario implements Serializable
 		this.admin = admin;
 	}
 
-	public Usuario(Long id, String nome, String login,  boolean ativo, boolean admin) {
-		this(nome,login,ativo,admin);
+	public Usuario(Long id, String nome, String login, boolean ativo, boolean admin, String email) {
+		this(nome, login, ativo, admin, email);
 		this.id = id;
 	}
 
@@ -51,27 +52,32 @@ public class Usuario implements Serializable
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public String getLogin() {
 		return login;
 	}
+
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
+
 	@JsonIgnore
 	public String getTextoAdmin() {
 		return getAdmin() ? "Sim" : "Não";
 	}
-	
+
 	@JsonIgnore
 	public String getTextoAtivo() {
 		return getAtivo() ? "Sim" : "Não";
@@ -92,7 +98,13 @@ public class Usuario implements Serializable
 	public void setUsuarioAtualizacao(Usuario usuarioAtualizacao) {
 		this.usuarioAtualizacao = usuarioAtualizacao;
 	}
-	
-	
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 }

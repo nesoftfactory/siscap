@@ -12,6 +12,7 @@ import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
@@ -62,17 +63,27 @@ public class ConsultaPublicacaoController extends BeanController {
 	public void init() {
 		limpar();
 		iniciaFontes();
-		iniciaPublicacoes();
+		if(!((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI().contains("publicacoesUsuario")) {
+			iniciaPublicacoes();
+		}
 	}
 	
 	
 	public void consultar() {
+		consultarPorFiltroSucesso(null);
+	}
+
+	public void consultarSomenteComSucesso() {
+		consultarPorFiltroSucesso(Boolean.TRUE);
+	}
+
+	private void consultarPorFiltroSucesso(Boolean filtroSucesso) {
 		try {
 			if(dataInicio == null || dataFim == null) {
 				addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e fim são obrigatórias.", "");
 			}
 			else {
-				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,sucesso, null);
+				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,filtroSucesso, null);
 			}
 		}
 		catch (EJBException e) {

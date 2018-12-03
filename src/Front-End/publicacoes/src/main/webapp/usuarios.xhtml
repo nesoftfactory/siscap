@@ -24,6 +24,9 @@
 								<p:outputLabel value="Login" for="login"/>
 								<p:inputText id="login" value="#{usuariosController.usuario.login}" required="true" maxlength="20" style="width:300px;"/>
 								
+								<p:outputLabel value="E-mail" for="email"/>
+								<p:inputText id="email" value="#{usuariosController.usuario.email}" required="true" maxlength="20" style="width:300px;"/>
+								
 							 	<p:outputLabel value="Administrador (Sim/Não)" for="admin"/>
 								<p:selectBooleanCheckbox id="admin" value="#{usuariosController.usuario.admin}"  />
 								
@@ -56,6 +59,10 @@
 
                             <p:column headerText="Login" filterBy="#{usuario.login}" sortBy="#{usuario.login}">
                                 <h:outputText value="#{usuario.login}" />
+                            </p:column>
+                            
+                            <p:column headerText="E-mail" filterBy="#{usuario.email}" sortBy="#{usuario.email}">
+                                <h:outputText value="#{usuario.email}" />
                             </p:column>
                             
                             <p:column headerText="Administrador? (Sim/Não)" filterBy="#{usuario.admin}" filterMatchMode="equals">

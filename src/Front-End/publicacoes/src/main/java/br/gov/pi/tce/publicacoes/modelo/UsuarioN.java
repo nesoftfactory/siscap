@@ -15,6 +15,7 @@ public class UsuarioN {
 	private String login;
 	private Boolean admin = false;
 	private Boolean ativo = false;
+	private String email;
 
 	/**
 	 * 
@@ -23,20 +24,22 @@ public class UsuarioN {
 		super();
 	}
 
-	public UsuarioN(String nome, String login, Boolean admin, Boolean ativo) {
+	public UsuarioN(String nome, String login, Boolean admin, Boolean ativo, String email) {
 		super();
 		setNome(nome);
 		setLogin(login);
 		setAdmin(admin);
 		setAtivo(ativo);
+		setEmail(email);
 	}
 
-	public UsuarioN(Long id, String nome, String login, Boolean admin, Boolean ativo) {
+	public UsuarioN(Long id, String nome, String login, Boolean admin, Boolean ativo, String email) {
 		this.id = id;
 		setNome(nome);
 		setLogin(login);
 		setAdmin(admin);
 		setAtivo(ativo);
+		setEmail(email);
 	}
 
 	/**
@@ -107,5 +110,19 @@ public class UsuarioN {
 	 */
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }
