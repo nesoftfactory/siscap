@@ -33,9 +33,9 @@ public class UsuarioRepositoryTest {
 	
 	@Before
 	public void setUp() {
-		this.usuario = criaUsuario("teste1", "usuario teste", usuarioAutomatico);
+		this.usuario = criaUsuario("teste1", "usuario teste", usuarioAutomatico, "teste1@teste.com");
 		usuarioRepository.save(this.usuario);
-		this.usuario2 = criaUsuario("teste2", "usuario teste", usuarioAutomatico);
+		this.usuario2 = criaUsuario("teste2", "usuario teste", usuarioAutomatico, "teste2@teste.com");
 		usuarioRepository.save(this.usuario2);
 	}
 
@@ -66,7 +66,7 @@ public class UsuarioRepositoryTest {
 		assertTrue(usuarioBanco.isPresent());
 	}
 
-	private Usuario criaUsuario(String login, String nome, Usuario usuarioSitema) {
+	private Usuario criaUsuario(String login, String nome, Usuario usuarioSitema, String email) {
 		Usuario usuario = new Usuario();		
 		usuario.setAdmin(true);
 		usuario.setAtivo(true);
@@ -76,6 +76,7 @@ public class UsuarioRepositoryTest {
 		usuario.setNome(nome);
 		usuario.setUsuarioAtualizacao(usuarioSitema);
 		usuario.setUsuarioCriacao(usuarioSitema);
+		usuario.setEmail(email);
 		
 		return usuario;
 	}
