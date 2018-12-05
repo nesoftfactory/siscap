@@ -474,6 +474,13 @@ public class PublicacaoController extends BeanController{
 		Arquivo arquivo = new Arquivo(nomeArquivoPublicacao, Long.valueOf(10),"tipo", linkArquivoPublicacao, "conteudo".getBytes());
 		Publicacao publicacao = new Publicacao(fonte, publicacaoName, dataPublicacao, codigo, arquivo.getId(), isSucesso, isAnexo,Long.valueOf(1));
 		Publicacao publicacaoConsultada = consultarPublicacaoPorFonteDataNomeArquivo(publicacao);
+		if (publicacaoConsultada == null) {
+			Publicacao publicacaoIndisponivel = new Publicacao(fonte, propriedades.getValorString("MENSAGEM_DIARIO_INDISPONIVEL"), dataPublicacao, codigo, arquivo.getId(), isSucesso, isAnexo,Long.valueOf(1));
+			Publicacao publicacaoConsultadaIndisponivel = consultarPublicacaoPorFonteDataNomeArquivo(publicacaoIndisponivel);
+			if (publicacaoConsultadaIndisponivel != null) {
+				publicacaoConsultada = publicacaoConsultadaIndisponivel;
+			}
+		}
 		Publicacao publicacaoRetorno = publicacao;
 		try {
 			if (publicacaoConsultada == null) {
@@ -593,13 +600,15 @@ public class PublicacaoController extends BeanController{
 				Fonte fonte = consultarFontePorIdFonte(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PIAUI"));
 				
 				buscaPDF: while ((linhaHTML = fonteHTML.readLine()) != null) {
-					regexForPDF = "DIARIO+[0-9]+[_]+[0-9A-Za-z]+[.][Pp][Dd][Ff]";
+					regexForPDF = "[0-9]+[/]+DIARIO+[0-9]+[_]+[0-9A-Za-z]+[.][Pp][Dd][Ff]";
 					Pattern pdfPattern = Pattern.compile(regexForPDF);
 
 					matcher = pdfPattern.matcher(linhaHTML);
 					while (matcher.find()) {
 						if (!isNull(date)) {
-							salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI")  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", matcher.group());
+							String localPublicacao[] = matcher.group().split("/");
+							//salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI")  + ano + mes + "/"+ matcher.group(), convertDateToString(date), matcher.group(), Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", matcher.group());
+							salvarPublicacao(fonte, propriedades.getValorString("URL_DOWNLOAD_DIARIO_OFICIAL_PIAUI") + matcher.group(), convertDateToString(date), localPublicacao[1], Boolean.TRUE, Boolean.FALSE, "Sucesso", null, null, "", localPublicacao[1]);
 							diarioEncontrado = Boolean.TRUE;
 							// Ao encontrar o pdf sai do loop mais externo
 							break buscaPDF;

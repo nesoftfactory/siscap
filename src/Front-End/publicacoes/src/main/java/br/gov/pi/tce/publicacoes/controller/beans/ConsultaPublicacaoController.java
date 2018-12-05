@@ -64,7 +64,9 @@ public class ConsultaPublicacaoController extends BeanController {
 		limpar();
 		iniciaFontes();
 		if(!((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI().contains("publicacoesUsuario")) {
-			iniciaPublicacoes();
+			iniciaPublicacoes(null);
+		}else {
+			iniciaPublicacoes(Boolean.TRUE);
 		}
 	}
 	
@@ -213,9 +215,9 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 
 	
-	private void iniciaPublicacoes() {
+	private void iniciaPublicacoes(Boolean sucesso) {
 		try {
-			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes();
+			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes(sucesso);
 		}
 		catch (EJBException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());

@@ -65,10 +65,14 @@ public class PublicacaoServiceClient{
 		this.client = ClientBuilder.newClient();  
 	}
 	
-	public List<Publicacao> consultarTodasPublicacoes(){
+	public List<Publicacao> consultarTodasPublicacoes(Boolean sucesso){
 		try {
 			Propriedades propriedades = Propriedades.getInstance();
-			this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
+			if (sucesso == null) {
+				this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
+			} else {
+				this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).queryParam("sucesso", sucesso);
+			}
 			Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 			Response response = invocationBuilder.get();
 			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {});
@@ -80,10 +84,9 @@ public class PublicacaoServiceClient{
 		}
 	}
 	
-	
 	public void cadastrarPublicacaoPorUpload (Publicacao publicacao, Arquivo arquivo, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
 		
-		List<Publicacao> publicacoes = consultarTodasPublicacoes();
+		List<Publicacao> publicacoes = consultarTodasPublicacoes(null);
 		
 		for (Publicacao publicacaoElement : publicacoes) {
 	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
@@ -423,7 +426,7 @@ public class PublicacaoServiceClient{
 
 	public void alterarPublicacaoPorUpload(Publicacao publicacaoExistente, Publicacao publicacao, Arquivo arquivo,
 			PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
-		List<Publicacao> publicacoes = consultarTodasPublicacoes();
+		List<Publicacao> publicacoes = consultarTodasPublicacoes(null);
 		
 		for (Publicacao publicacaoElement : publicacoes) {
 	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
