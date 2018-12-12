@@ -58,6 +58,11 @@
                             <p:column headerText="Nome" sortBy="#{publicacao.nome}">
                                 <h:outputText value="#{publicacao.nome}" />
                             </p:column>
+                            
+                             <p:column headerText="Situação" filterBy="#{publicacao.situacao}" sortBy="#{publicacao.situacao}">
+                                <h:outputText value="#{publicacao.situacao}" rendered="#{publicacao.situacao != null}"/>
+                                <h:outputText value="Não Coletado" rendered="#{publicacao.situacao == null}"/>
+                            </p:column>
 
                             <p:column headerText="Data" sortBy="#{publicacao.dataString}" style="width:70px;">
                                 <h:outputText value="#{publicacao.dataString}" >

@@ -29,6 +29,9 @@ public class Publicacao {
 	private String dataString;
 
 	private PublicacaoAnexo publicacaoAnexo;
+	private Long quantidadeTentativasOCR = 0L;
+	private Long quantidadeTentativasIndexacao = 0L;
+	private String situacao;
 
 	/**
 	 * 
@@ -36,6 +39,15 @@ public class Publicacao {
 	public Publicacao() {
 		super();
 	}
+
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
+	}
+
 
 	/**
 	 * @param id
@@ -65,6 +77,14 @@ public class Publicacao {
 		setDataCriacao(dataCriacao);
 		setUsuarioCriacao(usuarioCriacao);
 	}
+	
+	
+//	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo, Long arquivo, Boolean sucesso,
+//			Boolean anexo, Long quantidadeTentativas, String dataCriacao, Usuario usuarioCriacao, String situacao) {
+//		this(id,fonte,nome,data,codigo,arquivo,sucesso,anexo,quantidadeTentativas,dataCriacao,usuarioCriacao);
+//		this.situacao = situacao;
+//	}
+	
 
 	/**
 	 * @param fonte
@@ -109,7 +129,7 @@ public class Publicacao {
 		this(fonte, nome, data, codigo, arquivo, sucesso, anexo, quantidadeTentativas);
 		this.id = id;
 	}
-
+	
 	/**
 	 * @param id
 	 */
@@ -117,6 +137,8 @@ public class Publicacao {
 		super();
 		setId(id);
 	}
+	
+	
 
 	public String getDataString() {
 		return dataString;
@@ -288,5 +310,32 @@ public class Publicacao {
 	public void setUsuarioCriacao(Usuario usuarioCriacao) {
 		this.usuarioCriacao = usuarioCriacao;
 	}
+
+	public Long getQuantidadeTentativasOCR() {
+		return quantidadeTentativasOCR;
+	}
+
+	public void setQuantidadeTentativasOCR(Long quantidadeTentativasOCR) {
+		this.quantidadeTentativasOCR = quantidadeTentativasOCR;
+	}
+
+	public Long getQuantidadeTentativasIndexacao() {
+		return quantidadeTentativasIndexacao;
+	}
+
+	public void setQuantidadeTentativasIndexacao(Long quantidadeTentativasIndexacao) {
+		this.quantidadeTentativasIndexacao = quantidadeTentativasIndexacao;
+	}
+
+
+
+
+
+	
+
+
+
+
+	
 
 }

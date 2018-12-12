@@ -13,6 +13,7 @@ import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Fonte;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoHistorico;
+import br.gov.pi.tce.siscap.api.model.enums.SituacaoPublicacao;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
@@ -39,7 +40,6 @@ public class PublicacaoService {
 	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
 		atualizaDadosAdicao(publicacao);
 		Publicacao publicacaoSalva = salvar(publicacao, partFile, link);
-
 		return publicacaoSalva;
 	}
 
@@ -48,7 +48,6 @@ public class PublicacaoService {
 		BeanUtils.copyProperties(publicacao, publicacaoSalva, "id", "arquivo", "dataCriacao", "usuarioCriacao");
 
 		publicacaoSalva = salvar(publicacaoSalva, partFile, link);
-		
 		return publicacaoSalva;
 	}
 
@@ -62,6 +61,9 @@ public class PublicacaoService {
 			PUBLICACAO_MENSAGEM_INCLUSAO);
 		
 		publicacaoSalva = publicacaoRepository.save(publicacaoSalva);
+		if(publicacaoSalva != null && publicacaoSalva.getSucesso()) {
+			publicacaoSalva.setSituacao(SituacaoPublicacao.COLETA_REALIZADA.getDescricao());
+		}
 		atualizarHistorico(publicacaoSalva, mensagemLog);
 		
 		return publicacaoSalva;

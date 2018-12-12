@@ -13,6 +13,7 @@ public class PublicacaoAnexo {
 	private String nome;
 	private Long arquivo;
 	private boolean sucesso;
+	private String situacao;
 	
 
 	/**
@@ -117,4 +118,13 @@ public class PublicacaoAnexo {
 	public void setSucesso(boolean sucesso) {
 		this.sucesso = sucesso;
 	}
+
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
+	}
+
 }

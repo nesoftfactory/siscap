@@ -3,6 +3,7 @@ package br.gov.pi.tce.siscap.api.model;
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -22,7 +24,7 @@ public class PublicacaoAnexo extends BaseEntity {
 	private String nome;
 	private Arquivo arquivo;
 	private boolean sucesso;
-	
+	private String situacao;
 	
 	public PublicacaoAnexo() {
 		super();
@@ -114,6 +116,15 @@ public class PublicacaoAnexo extends BaseEntity {
 		} else if (!getId().equals(other.getId()))
 			return false;
 		return true;
+	}
+	
+	@Column(name="situacao")
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
 	}
 	
 }

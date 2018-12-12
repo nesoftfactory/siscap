@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -32,6 +33,20 @@ public class Publicacao extends BaseEntity {
 	private Boolean sucesso;
 	private Boolean possuiAnexo;
 	
+	private Long quantidadeTentativasOCR;
+	private Long quantidadeTentativasIndexacao;
+	private String situacao;
+	
+	
+	@Column(name="situacao")
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
+	}
+
 	@Transient
 	private Boolean possuiNotificacao;
 	private int quantidadeTentativas;
@@ -39,7 +54,9 @@ public class Publicacao extends BaseEntity {
 	
 	@Transient
 	private PublicacaoAnexo publicacaoAnexo;
-
+	
+	
+	
 	@NotNull
 	@Size(min=3, max=50)
 	public String getNome() {
@@ -148,6 +165,27 @@ public class Publicacao extends BaseEntity {
 		}
 		
 	}
+	
+	
+	@Column(name="quantidade_tentativas_ocr")	
+	public Long getQuantidadeTentativasOCR() {
+		return quantidadeTentativasOCR;
+	}
+
+	public void setQuantidadeTentativasOCR(Long quantidadeTentativasOCR) {
+		this.quantidadeTentativasOCR = quantidadeTentativasOCR;
+	}
+
+	@Column(name="quantidade_tentativas_indexacao")
+	public Long getQuantidadeTentativasIndexacao() {
+		return quantidadeTentativasIndexacao;
+	}
+
+	public void setQuantidadeTentativasIndexacao(Long quantidadeTentativasIndexacao) {
+		this.quantidadeTentativasIndexacao = quantidadeTentativasIndexacao;
+	}
+	
+	
 	
 	
 	

@@ -1,0 +1,1 @@
+ALTER TABLE dbo.publicacao_anexo ADD situacao varchar(30) NULL;

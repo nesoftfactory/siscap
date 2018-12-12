@@ -15,6 +15,7 @@ import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexo;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexoHistorico;
+import br.gov.pi.tce.siscap.api.model.enums.SituacaoPublicacao;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
@@ -64,6 +65,9 @@ public class PublicacaoAnexoService {
 		validarPublicacao(publicacaoAnexo);
 		atualizarDadosEdicao(publicacaoAnexo);
 		PublicacaoAnexo publicacaoAnexoSalvo = publicacaoAnexoRepository.save(publicacaoAnexo);
+		if(publicacaoAnexoSalvo != null && publicacaoAnexoSalvo.getSucesso()) {
+			publicacaoAnexoSalvo.setSituacao(SituacaoPublicacao.COLETA_REALIZADA.getDescricao());
+		}
 		
 		PublicacaoAnexoHistorico historico = atualizarHistoricoAdicao(publicacaoAnexoSalvo);
 		publicacaoAnexoHistoricoRepository.save(historico);

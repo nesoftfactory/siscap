@@ -27,8 +27,8 @@
 								
 								
 								<p:outputLabel value="Nome" for="nome"/>
-							 	<p:inputText id="nome" value="#{consultaPublicacaoController.nome}"  /> 
-
+							 	<p:inputText id="nome" value="#{consultaPublicacaoController.nome}"  />
+							 	
 								<p:outputLabel value="Fonte" for="fonte"/>
 								<p:selectOneMenu id="fonte" value="#{consultaPublicacaoController.fonte}" converter="fonteConverter">
 						            <f:selectItem itemLabel="Selecione" itemValue="" />
@@ -64,6 +64,11 @@
                             <p:column headerText="Nome" filterBy="#{publicacao.nome}" sortBy="#{publicacao.nome}">
                                 <h:outputText value="#{publicacao.nome}" />
                             </p:column>
+                            
+                             <p:column headerText="Situação" filterBy="#{publicacao.situacao}" sortBy="#{publicacao.situacao}">
+                                <h:outputText value="#{publicacao.situacao}" rendered="#{publicacao.situacao != null}"/>
+                                <h:outputText value="Não Coletado" rendered="#{publicacao.situacao == null}"/>
+                            </p:column>
 
                             <p:column headerText="Data" filterBy="#{publicacao.data}" sortBy="#{publicacao.data}" style="width:70px;">
                                 <h:outputText value="#{publicacao.dataString}" >
@@ -75,8 +80,16 @@
                            		  <h:outputText value="#{publicacao.textoSucesso}" />
                             </p:column>
                             
-                            <p:column headerText="Tentativas" filterBy="#{publicacao.quantidadeTentativas}">
+                            <p:column headerText="Tentativas de Download" filterBy="#{publicacao.quantidadeTentativas}">
                            		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tentativas de OCR" filterBy="#{publicacao.quantidadeTentativasOCR}">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativasOCR}" />
+                            </p:column>
+                            
+                            <p:column headerText="Tentativas de Indexação" filterBy="#{publicacao.quantidadeTentativasIndexacao}">
+                           		  <h:outputText value="#{publicacao.quantidadeTentativasIndexacao}" />
                             </p:column>
                             
                              <p:column headerText="Notificações">
@@ -97,6 +110,11 @@
                             
                             <p:column headerText="Nome Anexo" filterBy="#{publicacao.publicacaoAnexo.nome}" sortBy="#{publicacao.publicacaoAnexo.nome}">
                            		  <h:outputText value="#{publicacao.publicacaoAnexo.nome}" rendered="#{publicacao.possuiAnexo}"/>
+                            </p:column>
+                            
+                             <p:column headerText="Situação Anexo" filterBy="#{publicacao.publicacaoAnexo.situacao}" sortBy="#{publicacao.publicacaoAnexo.situacao}">
+                           		  <h:outputText value="#{publicacao.publicacaoAnexo.situacao}" rendered="#{publicacao.possuiAnexo}"/>
+                           		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>
                             
                             <p:column headerText="Arquivo do Anexo" style="width:65px;">
