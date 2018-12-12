@@ -105,4 +105,5 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
+	
 }

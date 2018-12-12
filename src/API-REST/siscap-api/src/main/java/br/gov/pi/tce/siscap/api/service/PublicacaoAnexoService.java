@@ -113,4 +113,22 @@ public class PublicacaoAnexoService {
 				orElseThrow(() -> new EmptyResultDataAccessException(1));
 		return publicacaoAnexoSalva;
 	}
+
+	public PublicacaoAnexo realizarOCRAnexo(Long id) {
+		// TODO Auto-generated method stub
+		//1 - Implementar OCR de cada página de um arquivo de um anexo publicação
+		//2 - Se der certo pra todos log que deu tudo certo e:
+		//	2.1 - Atualizar a coluna situação para  SituacaoPublicacao.OCR_REALIZADO
+		//	2.2 - Atualizar historico
+		//3 - Se der errado, log informando o erro e:
+		//	3.1 - Gravar notificação 
+		//	3.2 - Disparar notificação
+		//	3.3 - Retornar Anexo de Publicação sem a situação alterada e alguma mensagem para ser registrada no log do WEB
+		Optional<PublicacaoAnexo> publicacaoAnexoOptional = publicacaoAnexoRepository.findById(id);
+		PublicacaoAnexo pa = publicacaoAnexoOptional.isPresent() ? publicacaoAnexoOptional.get() : null;
+		if(pa != null) {
+			pa.setSituacao(SituacaoPublicacao.OCR_REALIZADO.getDescricao());
+		}
+		return pa;
+	}
 }

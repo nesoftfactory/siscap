@@ -110,4 +110,24 @@ public class PublicacaoService {
 		return publicacaoSalva;
 	}
 
+	public Publicacao realizarOCRPublicacao(Long id) {
+		// TODO Auto-generated method stub
+		//1 - Implementar OCR de cada página de um arquivo de publicação
+		//2 - Se der certo pra todos log que deu tudo certo e:
+		//	2.1 - Atualizar a coluna situação para  SituacaoPublicacao.OCR_REALIZADO
+		//	2.2 - Atualizar historico
+		//	2.3 - Atualizar a quantidadeTentativasOCR
+		//3 - Se der errado, log informando o erro e:
+		//	3.1 - Gravar notificação 
+		//	3.2 - Disparar notificação
+		//	3.3 - Retornar Publicação sem a situação alterada e alguma mensagem para ser registrada no log do WEB
+		
+		Optional<Publicacao> publicacaoOptional = publicacaoRepository.findById(id);
+		Publicacao p = publicacaoOptional.isPresent() ? publicacaoOptional.get() : null;
+		if(p != null) {
+			p.setSituacao(SituacaoPublicacao.OCR_REALIZADO.getDescricao());
+		}
+		return p;
+	}
+
 }

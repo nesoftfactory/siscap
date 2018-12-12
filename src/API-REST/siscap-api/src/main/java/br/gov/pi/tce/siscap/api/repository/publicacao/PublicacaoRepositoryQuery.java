@@ -8,5 +8,6 @@ import br.gov.pi.tce.siscap.api.repository.filter.PublicacaoFilter;
 public interface PublicacaoRepositoryQuery {
 	
 	public List<Publicacao> filtrar(PublicacaoFilter publicacaoFilter ) throws Exception;
+	
 
 }

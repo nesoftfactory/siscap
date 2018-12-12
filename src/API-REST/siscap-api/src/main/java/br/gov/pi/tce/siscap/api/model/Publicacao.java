@@ -17,7 +17,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -36,6 +35,21 @@ public class Publicacao extends BaseEntity {
 	private Long quantidadeTentativasOCR;
 	private Long quantidadeTentativasIndexacao;
 	private String situacao;
+	
+	
+	
+	public Publicacao() {
+		super();
+	}
+	
+	
+	
+	public Publicacao(Long id, String situacao) {
+		super();
+		setId(id);
+		setSituacao(situacao);
+	}
+	
 	
 	
 	@Column(name="situacao")

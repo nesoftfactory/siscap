@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
@@ -28,6 +27,15 @@ public class PublicacaoAnexo extends BaseEntity {
 	
 	public PublicacaoAnexo() {
 		super();
+	}
+	
+	public PublicacaoAnexo(Long id, Long idPublicacao, String situacao) {
+		super();
+		setId(id);
+		setSituacao(situacao);
+		Publicacao p = new Publicacao();
+		p.setId(idPublicacao);
+		setPublicacao(p);
 	}
 	
 	
