@@ -24,6 +24,10 @@ public class Arquivo extends BaseEntity {
 	}
 	
 	
+	public Arquivo(Long id) {
+		setId(id);
+	}
+	
 	public Arquivo(Long id, String nome,  Long tamanho, String tipo, String link, byte[] conteudo) throws IOException {
 		this.setId(id);
 		this.setNome(nome);

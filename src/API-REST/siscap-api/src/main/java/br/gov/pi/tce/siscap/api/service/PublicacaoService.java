@@ -1,6 +1,11 @@
 package br.gov.pi.tce.siscap.api.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -11,13 +16,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Fonte;
+import br.gov.pi.tce.siscap.api.model.Notificacao;
+import br.gov.pi.tce.siscap.api.model.PaginaOCRArquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoHistorico;
 import br.gov.pi.tce.siscap.api.model.enums.SituacaoPublicacao;
+import br.gov.pi.tce.siscap.api.repository.ArquivoRepository;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
+import br.gov.pi.tce.siscap.api.repository.PaginaArquivoOCRRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
 import br.gov.pi.tce.siscap.api.service.exception.FonteInexistenteOuInativaException;
+import br.gov.pi.tce.siscap.api.service.exception.OCRException;
 
 @Service
 public class PublicacaoService {
@@ -36,6 +46,12 @@ public class PublicacaoService {
 	
 	@Autowired
 	private UsuarioService usuarioService;
+	
+	@Autowired
+	private PaginaArquivoOCRRepository paginaArquivoOCRRepository;
+	
+	@Autowired
+	private ArquivoRepository arquivoRepository;
 	
 	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
 		atualizaDadosAdicao(publicacao);
@@ -110,24 +126,89 @@ public class PublicacaoService {
 		return publicacaoSalva;
 	}
 
-	public Publicacao realizarOCRPublicacao(Long id) {
-		// TODO Auto-generated method stub
-		//1 - Implementar OCR de cada página de um arquivo de publicação
-		//2 - Se der certo pra todos log que deu tudo certo e:
-		//	2.1 - Atualizar a coluna situação para  SituacaoPublicacao.OCR_REALIZADO
-		//	2.2 - Atualizar historico
-		//	2.3 - Atualizar a quantidadeTentativasOCR
-		//3 - Se der errado, log informando o erro e:
-		//	3.1 - Gravar notificação 
-		//	3.2 - Disparar notificação
-		//	3.3 - Retornar Publicação sem a situação alterada e alguma mensagem para ser registrada no log do WEB
+	public Publicacao realizarOCRPublicacao(Long idPublicacao) throws Exception {
 		
-		Optional<Publicacao> publicacaoOptional = publicacaoRepository.findById(id);
+		Publicacao p = buscarPublicacaoPeloCodigo(idPublicacao);
+		if(p == null || p.getSituacao() == null || !p.getSituacao().equals(SituacaoPublicacao.COLETA_REALIZADA.getDescricao())) {
+			throw new Exception("Esta publicação não existe, ou não está na situação ideal para ser feito o OCR");
+		}
+		Arquivo a = p.getArquivo();
+		if(a == null) {
+			throw new Exception("Não foi encontrado arquivo para essa publicação");
+		}
+		
+		Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo = getOCRPaginasArquivo(a.getId()); 
+		Publicacao publicacaoAtualizada = gravarPaginasArquivoPublicacao(idPublicacao, a.getId(), mapaPaginasArquivo);
+		return publicacaoAtualizada;
+	}
+
+	private Publicacao gravarPaginasArquivoPublicacao(Long idPublicacao, Long idArquivo, Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo) throws OCRException{
+		List<PaginaOCRArquivo> paginasArquivo = new ArrayList<PaginaOCRArquivo>();
+		PublicacaoHistorico ph = new PublicacaoHistorico();
+		Notificacao notificacao;
+		
+		for (Iterator iterator = mapaPaginasArquivo.keySet().iterator(); iterator.hasNext();) {
+			Integer pagina = (Integer) iterator.next();
+			PaginaOCRArquivo paginaOCRArquivo = mapaPaginasArquivo.get(pagina);
+			paginasArquivo.add(paginaOCRArquivo);
+		}
+		try {
+			paginaArquivoOCRRepository.gravarPaginasArquivo(paginasArquivo);
+			
+			//TODO Helton
+			//criaHistoricoSucesso();
+		}
+		catch (Exception e) {
+			//TODO Helton
+			//notificacao = criaNotificacaoErro(idPublicacao);
+			
+			//TODO Helton
+			//disparaNotificacao();			
+			//criaHistoricoErro();
+			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo);
+		}
+		
+		Optional<Publicacao> publicacaoOptional = publicacaoRepository.findById(idPublicacao);
 		Publicacao p = publicacaoOptional.isPresent() ? publicacaoOptional.get() : null;
+		p.setQuantidadeTentativasOCR(p.getQuantidadeTentativasOCR() != null ? (p.getQuantidadeTentativasOCR() + 1) : 1);
 		if(p != null) {
 			p.setSituacao(SituacaoPublicacao.OCR_REALIZADO.getDescricao());
 		}
-		return p;
+		Publicacao salva = publicacaoRepository.save(p);
+		return salva;
+	}
+
+
+// TODO Helton
+//	private Notificacao criaNotificacaoErro(Long idPublicacao) {
+//		Notificacao notificacao = new Notificacao();
+//		notificacao.setTipo(NotificacaoTipo.OCR);
+//		notificacao.setPublicacao(publicacao);
+//		notificacao.setUsuarios(usuarios);
+//		notificacao.setDataCriacao(dataCriacao);
+//		notificacao.setDataAtualizacao(dataAtualizacao);
+//		notificacao.setUsuarioAtualizacao(usuarioAtualizacao);
+//		notificacao.setUsuarioCriacao();
+//		
+//	}
+
+	private Map<Integer, PaginaOCRArquivo> getOCRPaginasArquivo(Long idArquivo) {
+		//TODO Antônio Moreira
+		Map mapaPaginasArquivo = new HashMap<>();
+		Optional<Arquivo> arquivoOptional = arquivoRepository.findById(idArquivo);
+		Arquivo arquivo = arquivoOptional.isPresent() ? arquivoOptional.get() : null;
+		if(arquivo == null) {
+			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo + ". O arquivo não foi encontrado");
+		}
+		
+		
+		//TODO Implementação mock
+		mapaPaginasArquivo.put(1, new PaginaOCRArquivo(1, "Pagina 1", arquivo));
+		mapaPaginasArquivo.put(2, new PaginaOCRArquivo(2, "Pagina 2", arquivo));
+		mapaPaginasArquivo.put(3, new PaginaOCRArquivo(3, "Pagina 3", arquivo));
+		mapaPaginasArquivo.put(4, new PaginaOCRArquivo(4, "Pagina 4", arquivo));
+		mapaPaginasArquivo.put(5, new PaginaOCRArquivo(5, "Pagina 5", arquivo));
+		return mapaPaginasArquivo;
 	}
 
 }
