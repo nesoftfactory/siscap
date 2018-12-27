@@ -1,6 +1,5 @@
 package br.gov.pi.tce.siscap.api.resource;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class PublicacaoOCRResource {
 
 	
 	@GetMapping("/{idPublicacaoAnexo}/anexo")
-	public ResponseEntity<PublicacaoAnexo> realizarOCRDOAnexoPublicacao(@PathVariable Long idPublicacaoAnexo) throws IOException {
+	public ResponseEntity<PublicacaoAnexo> realizarOCRDOAnexoPublicacao(@PathVariable Long idPublicacaoAnexo) throws Exception {
 		PublicacaoAnexo publicacaoAnexoSalva = publicacaoAnexoService.realizarOCRAnexo(idPublicacaoAnexo);
 		return ResponseEntity.ok(publicacaoAnexoSalva);
 	}

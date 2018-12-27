@@ -1,0 +1,1 @@
+ALTER TABLE publicacao_historico ALTER COLUMN mensagem VARCHAR(100);

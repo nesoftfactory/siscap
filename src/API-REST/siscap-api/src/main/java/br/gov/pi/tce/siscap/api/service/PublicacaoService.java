@@ -80,14 +80,14 @@ public class PublicacaoService {
 		if(publicacaoSalva != null && publicacaoSalva.getSucesso()) {
 			publicacaoSalva.setSituacao(SituacaoPublicacao.COLETA_REALIZADA.getDescricao());
 		}
-		atualizarHistorico(publicacaoSalva, mensagemLog);
+		atualizarHistorico(publicacaoSalva, mensagemLog, true);
 		
 		return publicacaoSalva;
 	}
 
-	private PublicacaoHistorico atualizarHistorico(Publicacao publicacao, String mensagemLog) {
+	private PublicacaoHistorico atualizarHistorico(Publicacao publicacao, String mensagemLog, boolean isSucesso) {
 		PublicacaoHistorico historico = new PublicacaoHistorico(publicacao, 
-				mensagemLog, true, usuarioService.getUsuarioLogado());
+				mensagemLog, isSucesso, usuarioService.getUsuarioLogado());
 		
 		publicacaoHistoricoRepository.save(historico);
 		
@@ -144,7 +144,6 @@ public class PublicacaoService {
 
 	private Publicacao gravarPaginasArquivoPublicacao(Long idPublicacao, Long idArquivo, Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo) throws OCRException{
 		List<PaginaOCRArquivo> paginasArquivo = new ArrayList<PaginaOCRArquivo>();
-		PublicacaoHistorico ph = new PublicacaoHistorico();
 		Notificacao notificacao;
 		
 		for (Iterator iterator = mapaPaginasArquivo.keySet().iterator(); iterator.hasNext();) {
@@ -152,11 +151,11 @@ public class PublicacaoService {
 			PaginaOCRArquivo paginaOCRArquivo = mapaPaginasArquivo.get(pagina);
 			paginasArquivo.add(paginaOCRArquivo);
 		}
+		Publicacao publicacao = buscarPublicacaoPeloCodigo(idPublicacao);
 		try {
 			paginaArquivoOCRRepository.gravarPaginasArquivo(paginasArquivo);
 			
-			//TODO Helton
-			//criaHistoricoSucesso();
+			atualizarHistorico(publicacao, "OCR realizado com sucesso", true);
 		}
 		catch (Exception e) {
 			//TODO Helton
@@ -164,7 +163,7 @@ public class PublicacaoService {
 			
 			//TODO Helton
 			//disparaNotificacao();			
-			//criaHistoricoErro();
+			atualizarHistorico(publicacao, "Erro ao tentar realizar OCR", false);
 			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo);
 		}
 		
@@ -192,7 +191,7 @@ public class PublicacaoService {
 //		
 //	}
 
-	private Map<Integer, PaginaOCRArquivo> getOCRPaginasArquivo(Long idArquivo) {
+	protected Map<Integer, PaginaOCRArquivo> getOCRPaginasArquivo(Long idArquivo) {
 		//TODO Antônio Moreira
 		Map mapaPaginasArquivo = new HashMap<>();
 		Optional<Arquivo> arquivoOptional = arquivoRepository.findById(idArquivo);

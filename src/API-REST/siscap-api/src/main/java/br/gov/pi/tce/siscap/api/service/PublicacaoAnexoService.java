@@ -1,6 +1,10 @@
 package br.gov.pi.tce.siscap.api.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -12,13 +16,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.gov.pi.tce.siscap.api.model.Arquivo;
+import br.gov.pi.tce.siscap.api.model.Notificacao;
+import br.gov.pi.tce.siscap.api.model.PaginaOCRArquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexo;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexoHistorico;
 import br.gov.pi.tce.siscap.api.model.enums.SituacaoPublicacao;
+import br.gov.pi.tce.siscap.api.repository.PaginaArquivoOCRRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoHistoricoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoAnexoRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoRepository;
+import br.gov.pi.tce.siscap.api.service.exception.OCRException;
 import br.gov.pi.tce.siscap.api.service.exception.PublicacaoInexistenteException;
 
 @Service
@@ -36,6 +44,13 @@ public class PublicacaoAnexoService {
 	@Autowired
 	private UsuarioService usuarioService;
 	
+	@Autowired
+	private PublicacaoService publicacaoService;
+	
+	@Autowired
+	private PaginaArquivoOCRRepository paginaArquivoOCRRepository;
+	
+	
 	private static final String PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO = "Anexo de Publicaçao incluído";
 	
 	public PublicacaoAnexo adicionar(PublicacaoAnexo publicacaoAnexo, MultipartFile partFile, String link) throws IOException {
@@ -44,10 +59,10 @@ public class PublicacaoAnexoService {
 		return publicacaoAnexoSalvo;
 	}
 
-	private PublicacaoAnexoHistorico atualizarHistoricoAdicao(PublicacaoAnexo publicacaoAnexo) {
+	private PublicacaoAnexoHistorico atualizarHistorico(PublicacaoAnexo publicacaoAnexo, String msg, boolean isSucesso) {
 		PublicacaoAnexoHistorico historico = new PublicacaoAnexoHistorico(publicacaoAnexo, 
-				PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO, true, usuarioService.getUsuarioLogado());
-		
+				msg, isSucesso, usuarioService.getUsuarioLogado());
+		publicacaoAnexoHistoricoRepository.save(historico);
 		return historico;
 	}
 
@@ -69,7 +84,7 @@ public class PublicacaoAnexoService {
 			publicacaoAnexoSalvo.setSituacao(SituacaoPublicacao.COLETA_REALIZADA.getDescricao());
 		}
 		
-		PublicacaoAnexoHistorico historico = atualizarHistoricoAdicao(publicacaoAnexoSalvo);
+		PublicacaoAnexoHistorico historico = atualizarHistorico(publicacaoAnexoSalvo, PUBLICACAO_ANEXO_MENSAGEM_INCLUSAO, true);
 		publicacaoAnexoHistoricoRepository.save(historico);
 		
 		Optional<Publicacao> publicacaoOptional = publicacaoRepository.findById(publicacaoAnexoSalvo.getPublicacao().getId());
@@ -114,21 +129,54 @@ public class PublicacaoAnexoService {
 		return publicacaoAnexoSalva;
 	}
 
-	public PublicacaoAnexo realizarOCRAnexo(Long id) {
-		// TODO Auto-generated method stub
-		//1 - Implementar OCR de cada página de um arquivo de um anexo publicação
-		//2 - Se der certo pra todos log que deu tudo certo e:
-		//	2.1 - Atualizar a coluna situação para  SituacaoPublicacao.OCR_REALIZADO
-		//	2.2 - Atualizar historico
-		//3 - Se der errado, log informando o erro e:
-		//	3.1 - Gravar notificação 
-		//	3.2 - Disparar notificação
-		//	3.3 - Retornar Anexo de Publicação sem a situação alterada e alguma mensagem para ser registrada no log do WEB
-		Optional<PublicacaoAnexo> publicacaoAnexoOptional = publicacaoAnexoRepository.findById(id);
+	public PublicacaoAnexo realizarOCRAnexo(Long idAnexoPublicacao) throws Exception {
+		PublicacaoAnexo pa = buscarPublicacaoAnexoPeloCodigo(idAnexoPublicacao);
+		if(pa == null || pa.getSituacao() == null || !pa.getSituacao().equals(SituacaoPublicacao.COLETA_REALIZADA.getDescricao())) {
+			throw new Exception("Este anexo de publicação não existe, ou não está na situação ideal para ser feito o OCR");
+		}
+		Arquivo a = pa.getArquivo();
+		if(a == null) {
+			throw new Exception("Não foi encontrado arquivo para esse anexo de publicação");
+		}
+		
+		Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo = publicacaoService.getOCRPaginasArquivo(a.getId()); 
+		PublicacaoAnexo publicacaoAnexoAtualizada = gravarPaginasArquivoAnexoPublicacao(idAnexoPublicacao, a.getId(), mapaPaginasArquivo);
+		return publicacaoAnexoAtualizada;
+	}
+	
+	
+	
+	private PublicacaoAnexo gravarPaginasArquivoAnexoPublicacao(Long idAnexoPublicacao, Long idArquivo, Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo) throws OCRException{
+		List<PaginaOCRArquivo> paginasArquivo = new ArrayList<PaginaOCRArquivo>();
+		Notificacao notificacao;
+		
+		for (Iterator iterator = mapaPaginasArquivo.keySet().iterator(); iterator.hasNext();) {
+			Integer pagina = (Integer) iterator.next();
+			PaginaOCRArquivo paginaOCRArquivo = mapaPaginasArquivo.get(pagina);
+			paginasArquivo.add(paginaOCRArquivo);
+		}
+		PublicacaoAnexo anexoPublicacao = buscarPublicacaoAnexoPeloCodigo(idAnexoPublicacao);
+		try {
+			paginaArquivoOCRRepository.gravarPaginasArquivo(paginasArquivo);
+			
+			atualizarHistorico(anexoPublicacao, "OCR realizado com sucesso", true);
+		}
+		catch (Exception e) {
+			//TODO Helton
+			//notificacao = criaNotificacaoErro(idPublicacao);
+			
+			//TODO Helton
+			//disparaNotificacao();			
+			atualizarHistorico(anexoPublicacao, "Erro ao tentar realizar OCR", false);
+			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo);
+		}
+		
+		Optional<PublicacaoAnexo> publicacaoAnexoOptional = publicacaoAnexoRepository.findById(idAnexoPublicacao);
 		PublicacaoAnexo pa = publicacaoAnexoOptional.isPresent() ? publicacaoAnexoOptional.get() : null;
 		if(pa != null) {
 			pa.setSituacao(SituacaoPublicacao.OCR_REALIZADO.getDescricao());
 		}
-		return pa;
+		PublicacaoAnexo salva = publicacaoAnexoRepository.save(pa);
+		return salva;
 	}
 }
