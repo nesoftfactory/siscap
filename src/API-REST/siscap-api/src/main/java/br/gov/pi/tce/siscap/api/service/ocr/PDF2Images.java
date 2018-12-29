@@ -1,4 +1,4 @@
-package br.gov.pi.tce.siscap.api.ocr;
+package br.gov.pi.tce.siscap.api.service.ocr;
 
 import java.util.Map;
 

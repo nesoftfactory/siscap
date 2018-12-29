@@ -2,7 +2,6 @@ package br.gov.pi.tce.siscap.api.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import br.gov.pi.tce.siscap.api.model.PaginaOCRArquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoHistorico;
 import br.gov.pi.tce.siscap.api.model.enums.SituacaoPublicacao;
-import br.gov.pi.tce.siscap.api.repository.ArquivoRepository;
 import br.gov.pi.tce.siscap.api.repository.FonteRepository;
 import br.gov.pi.tce.siscap.api.repository.PaginaArquivoOCRRepository;
 import br.gov.pi.tce.siscap.api.repository.PublicacaoHistoricoRepository;
@@ -51,7 +49,7 @@ public class PublicacaoService {
 	private PaginaArquivoOCRRepository paginaArquivoOCRRepository;
 	
 	@Autowired
-	private ArquivoRepository arquivoRepository;
+	private OCRService ocrService;
 	
 	public Publicacao adicionar(Publicacao publicacao, MultipartFile partFile, String link) throws IOException {
 		atualizaDadosAdicao(publicacao);
@@ -137,7 +135,7 @@ public class PublicacaoService {
 			throw new Exception("Não foi encontrado arquivo para essa publicação");
 		}
 		
-		Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo = getOCRPaginasArquivo(a.getId()); 
+		Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo = ocrService.getOCRPaginasArquivo(a.getId()); 
 		Publicacao publicacaoAtualizada = gravarPaginasArquivoPublicacao(idPublicacao, a.getId(), mapaPaginasArquivo);
 		return publicacaoAtualizada;
 	}
@@ -191,23 +189,5 @@ public class PublicacaoService {
 //		
 //	}
 
-	protected Map<Integer, PaginaOCRArquivo> getOCRPaginasArquivo(Long idArquivo) {
-		//TODO Antônio Moreira
-		Map mapaPaginasArquivo = new HashMap<>();
-		Optional<Arquivo> arquivoOptional = arquivoRepository.findById(idArquivo);
-		Arquivo arquivo = arquivoOptional.isPresent() ? arquivoOptional.get() : null;
-		if(arquivo == null) {
-			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo + ". O arquivo não foi encontrado");
-		}
-		
-		
-		//TODO Implementação mock
-		mapaPaginasArquivo.put(1, new PaginaOCRArquivo(1, "Pagina 1", arquivo));
-		mapaPaginasArquivo.put(2, new PaginaOCRArquivo(2, "Pagina 2", arquivo));
-		mapaPaginasArquivo.put(3, new PaginaOCRArquivo(3, "Pagina 3", arquivo));
-		mapaPaginasArquivo.put(4, new PaginaOCRArquivo(4, "Pagina 4", arquivo));
-		mapaPaginasArquivo.put(5, new PaginaOCRArquivo(5, "Pagina 5", arquivo));
-		return mapaPaginasArquivo;
-	}
 
 }

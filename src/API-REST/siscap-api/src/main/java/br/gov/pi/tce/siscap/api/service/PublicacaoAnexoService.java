@@ -45,7 +45,7 @@ public class PublicacaoAnexoService {
 	private UsuarioService usuarioService;
 	
 	@Autowired
-	private PublicacaoService publicacaoService;
+	private OCRService ocrService;
 	
 	@Autowired
 	private PaginaArquivoOCRRepository paginaArquivoOCRRepository;
@@ -139,7 +139,7 @@ public class PublicacaoAnexoService {
 			throw new Exception("Não foi encontrado arquivo para esse anexo de publicação");
 		}
 		
-		Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo = publicacaoService.getOCRPaginasArquivo(a.getId()); 
+		Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo = ocrService.getOCRPaginasArquivo(a.getId()); 
 		PublicacaoAnexo publicacaoAnexoAtualizada = gravarPaginasArquivoAnexoPublicacao(idAnexoPublicacao, a.getId(), mapaPaginasArquivo);
 		return publicacaoAnexoAtualizada;
 	}

@@ -1,4 +1,4 @@
-package br.gov.pi.tce.siscap.api.ocr;
+package br.gov.pi.tce.siscap.api.service.ocr;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -11,9 +11,11 @@ import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
+import org.springframework.stereotype.Component;
 
 import br.gov.pi.tce.siscap.api.service.exception.OCRException;
 
+@Component
 public class PDFBoxImages implements PDF2Images {
 
 	@Override

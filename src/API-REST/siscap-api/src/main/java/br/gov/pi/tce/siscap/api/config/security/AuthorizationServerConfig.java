@@ -29,7 +29,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.secret("{noop}tc3p!")
 			.scopes("read", "write")
 			.authorizedGrantTypes("password")
-			.accessTokenValiditySeconds(60 * 30);
+			.accessTokenValiditySeconds(60 * 60 * 24 * 30); // 30 dias
 	}
 	
 	@Override
