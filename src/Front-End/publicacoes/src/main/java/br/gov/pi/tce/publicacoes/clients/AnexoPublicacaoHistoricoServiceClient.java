@@ -16,34 +16,33 @@ import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.AnexoPublicacaoHistorico;
 
 @Local
-@Stateless(name="AnexoPublicacaoHistoricoServiceClient")
+@Stateless(name = "AnexoPublicacaoHistoricoServiceClient")
 public class AnexoPublicacaoHistoricoServiceClient {
-	
+
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI_HISTORICO_PUBLICACAO = "http://localhost:7788/historico_anexo_publicacao/";
 
 	private Client client;
 	private WebTarget webTarget;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(AnexoPublicacaoHistoricoServiceClient.class);
-	
-	public AnexoPublicacaoHistoricoServiceClient(){
-		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
+
+	public AnexoPublicacaoHistoricoServiceClient() {
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());
 	}
-	
-	
-	public List<AnexoPublicacaoHistorico> consultarAnexoPublicacaoHistoricoPeloIdAnexoPublicacao(Long id){
+
+	public List<AnexoPublicacaoHistorico> consultarAnexoPublicacaoHistoricoPeloIdAnexoPublicacao(Long id) {
 		try {
-			this.webTarget = this.client.target(URI_HISTORICO_PUBLICACAO+ id);
-			Response response =  this.webTarget.request(RESPONSE_TYPE).get();
-			List<AnexoPublicacaoHistorico> list = response.readEntity(new GenericType<List<AnexoPublicacaoHistorico>>() {});
+			this.webTarget = this.client.target(URI_HISTORICO_PUBLICACAO + id);
+			Response response = this.webTarget.request(RESPONSE_TYPE).get();
+			List<AnexoPublicacaoHistorico> list = response
+					.readEntity(new GenericType<List<AnexoPublicacaoHistorico>>() {
+					});
 			return list;
-		}	
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error("Erro ao consultar todas as publicacoes");
 			throw e;
 		}
 	}
-	
 
 }

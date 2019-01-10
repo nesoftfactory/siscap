@@ -12,28 +12,28 @@ public class AutenticadorToken implements ClientRequestFilter {
 
 	private final String token;
 
-    public AutenticadorToken() {
-        this.token = (String) SessionUtil.getParam("token");
-    }
-    
-    public AutenticadorToken(String token) {
+	public AutenticadorToken() {
+		this.token = (String) SessionUtil.getParam("token");
+	}
+
+	public AutenticadorToken(String token) {
 		if (token != null) {
 			this.token = token;
-		}else {
+		} else {
 			this.token = (String) SessionUtil.getParam("token");
 		}
-    }
+	}
 
-    @Override
-    public void filter(ClientRequestContext requestContext) throws IOException {
-        MultivaluedMap<String, Object> headers = requestContext.getHeaders();
-        final String basicAuthentication = getBasicAuthentication();
-        headers.add("Authorization", basicAuthentication);
+	@Override
+	public void filter(ClientRequestContext requestContext) throws IOException {
+		MultivaluedMap<String, Object> headers = requestContext.getHeaders();
+		final String basicAuthentication = getBasicAuthentication();
+		headers.add("Authorization", basicAuthentication);
 
-    }
+	}
 
-    private String getBasicAuthentication() {
-        return "Bearer " + this.token;
-    }
-	
+	private String getBasicAuthentication() {
+		return "Bearer " + this.token;
+	}
+
 }

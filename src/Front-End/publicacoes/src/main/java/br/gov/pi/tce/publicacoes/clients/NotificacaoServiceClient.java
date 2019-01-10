@@ -18,35 +18,35 @@ import br.gov.pi.tce.publicacoes.modelo.Notificacao;
 
 /**
  * 
- * @author Erick Guilherme Cavalcanti 
+ * @author Erick Guilherme Cavalcanti
  *
  */
 @Local
-@Stateless(name="NotificacaoServiceClient")
-public class NotificacaoServiceClient{
-	
+@Stateless(name = "NotificacaoServiceClient")
+public class NotificacaoServiceClient {
+
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI_NOTIFICACOES = "http://localhost:7788/notificacoes/";
-	
+
 	private static final Logger LOGGER = Logger.getLogger(NotificacaoServiceClient.class);
 
 	private Client client;
 	private WebTarget webTarget;
-	
-	public NotificacaoServiceClient(){
-		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
+
+	public NotificacaoServiceClient() {
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());
 	}
-	
-	public List<Notificacao> consultarNotificacoesPorIdPublicacao(Long idPublicacao) throws Exception{
+
+	public List<Notificacao> consultarNotificacoesPorIdPublicacao(Long idPublicacao) throws Exception {
 		this.webTarget = this.client.target(URI_NOTIFICACOES).queryParam("idPublicacao", idPublicacao);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Invocation.Builder invocationBuilder = this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			List<Notificacao> notificacoes = response.readEntity(new GenericType<List<Notificacao>>() {});
-			return  notificacoes;
+		} else {
+			List<Notificacao> notificacoes = response.readEntity(new GenericType<List<Notificacao>>() {
+			});
+			return notificacoes;
 		}
 	}
 

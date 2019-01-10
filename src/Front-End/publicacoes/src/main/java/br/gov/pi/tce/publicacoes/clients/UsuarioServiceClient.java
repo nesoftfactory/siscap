@@ -17,88 +17,80 @@ import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Local
-@Stateless(name="UsuarioServiceClient")
-public class UsuarioServiceClient{
-	
+@Stateless(name = "UsuarioServiceClient")
+public class UsuarioServiceClient {
+
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	private String URI = "http://localhost:7788/usuarios/";
 
-	
 	private Client client;
 	private WebTarget webTarget;
-	
-	public UsuarioServiceClient(){
-		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
+
+	public UsuarioServiceClient() {
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());
 	}
-	
-	public List<Usuario> consultarTodos(){
+
+	public List<Usuario> consultarTodos() {
 		try {
 			this.webTarget = this.client.target(URI);
-			Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+			Invocation.Builder invocationBuilder = this.webTarget.request(RESPONSE_TYPE);
 			Response response = invocationBuilder.get();
-			List<Usuario> list = response.readEntity(new GenericType<List<Usuario>>() {});
+			List<Usuario> list = response.readEntity(new GenericType<List<Usuario>>() {
+			});
 			return list;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw e;
 		}
 	}
-	
-	
-	public Usuario cadastrarUsuario(Usuario usuario) throws Exception{
+
+	public Usuario cadastrarUsuario(Usuario usuario) throws Exception {
 		this.webTarget = this.client.target(URI);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Invocation.Builder invocationBuilder = this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.post(Entity.entity(usuario, RESPONSE_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Usuario.class);
 	}
 
 	private void trataRetorno(Response response) throws Exception {
-		if(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+		if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
 			List erros = response.readEntity(List.class);
-			if(erros != null && !erros.isEmpty()) {
+			if (erros != null && !erros.isEmpty()) {
 				Map p;
-				String msg = (String)((Map)erros.get(0)).get("mensagemUsuario");
+				String msg = (String) ((Map) erros.get(0)).get("mensagemUsuario");
 				throw new Exception(msg);
-			}
-			else {
+			} else {
 				throw new Exception("Erro interno.");
 			}
 		}
 	}
 
-
-
-	public Usuario alterarUsuario(Usuario usuario) throws Exception{
+	public Usuario alterarUsuario(Usuario usuario) throws Exception {
 		this.webTarget = this.client.target(URI).path(String.valueOf(usuario.getId()));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Invocation.Builder invocationBuilder = this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.put(Entity.entity(usuario, RESPONSE_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Usuario.class);
 
 	}
 
-
-	public Usuario consultarUsuarioPorCodigo(Long id){
+	public Usuario consultarUsuarioPorCodigo(Long id) {
 		this.webTarget = this.client.target(URI).path(String.valueOf(id));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Invocation.Builder invocationBuilder = this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			return  response.readEntity(Usuario.class);
+		} else {
+			return response.readEntity(Usuario.class);
 		}
 	}
 
-
-	public String excluirUsuarioPorCodigo(Long id){
+	public String excluirUsuarioPorCodigo(Long id) {
 		this.webTarget = this.client.target(URI).path(String.valueOf(id));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(RESPONSE_TYPE);
+		Invocation.Builder invocationBuilder = this.webTarget.request(RESPONSE_TYPE);
 		Response response = invocationBuilder.delete();
-		if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
 			return null;
-		}	
+		}
 		return response.readEntity(String.class);
 
 	}

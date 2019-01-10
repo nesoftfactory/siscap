@@ -13,7 +13,6 @@ import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
 import br.gov.pi.tce.publicacoes.controller.beans.SegurancaController;
 import br.gov.pi.tce.publicacoes.modelo.RespostaToken;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
-//import br.gov.pi.tce.publicacoes.util.SessionUtil;
 
 /**
  * Classe responsável por executar o agendamento das coletas das publicações nos sites.
@@ -35,14 +34,11 @@ public class ColetorPublicacoesService {
 	
 	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-//	@PostConstruct
-//	public void init() {
 	private String getToken() {
 		String token = null;
 		Propriedades propriedades = Propriedades.getInstance();
 		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"), propriedades.getValorString("TOKEN_USERNAME"), propriedades.getValorString("TOKEN_PASSWORD"), propriedades.getValorString("TOKEN_GRAND_TYPE"));
 		if (respostaToken != null) {
-//			SessionUtil.setParam("token", respostaToken.getAccess_token());
 			token = respostaToken.getAccess_token();
 		}
 		return token;

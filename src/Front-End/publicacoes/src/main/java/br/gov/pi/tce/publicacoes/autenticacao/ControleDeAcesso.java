@@ -14,12 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//
-//import io.jsonwebtoken.Claims;
-//import io.jsonwebtoken.Jwts;
-
 @WebFilter(servletNames = { "Faces Servlet" })
 public class ControleDeAcesso implements Filter {
 
@@ -42,61 +36,11 @@ public class ControleDeAcesso implements Filter {
 
 			// redireciona("/index.xhtml", response);
 
-//			HttpServletRequest httpRequest = (HttpServletRequest) request;
-//			String header = httpRequest.getHeader(SecurityConstants.HEADER_STRING);
-//			if (header == null || !header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-//				chain.doFilter(httpRequest, response);
-//				return;
-//			}
-//
-//			UsernamePasswordAuthenticationToken authentication = getToken(httpRequest);
-//			SecurityContextHolder.getContext().setAuthentication(authentication);
-
 			chain.doFilter(request, response);
 		} else {
 			redireciona("/publicacoes/login2.xhtml", response);
 		}
 	}
-
-//	@SuppressWarnings("unchecked")
-//	private UsernamePasswordAuthenticationToken getToken(HttpServletRequest request) {
-//
-//		String token = request.getHeader(SecurityConstants.HEADER_STRING);
-//
-//		System.out.println("-----------------------------------------------------");
-//		System.out.println("Token: " + token);
-//		System.out.println("-----------------------------------------------------");
-//
-//		if (token != null) {
-//
-//			Claims claims = Jwts.parser().setSigningKey(SecurityConstants.SECRET.getBytes())
-//					.parseClaimsJws(token.replace(SecurityConstants.TOKEN_PREFIX, "")).getBody();
-//			String user = claims.getSubject();
-//
-//			ArrayList<String> roles = (ArrayList<String>) claims.get("roles");
-//
-//			ArrayList<MyGrantedAuthority> rolesList = new ArrayList<>();
-//
-//			if (roles != null) {
-//				for (String role : roles) {
-//					rolesList.add(new MyGrantedAuthority(role));
-//				}
-//			}
-//			if (user != null) {
-//				return new UsernamePasswordAuthenticationToken(user, null, null);
-//			}
-//			return null;
-//		}
-//		return null;
-//	}
-
-//	private String resolveToken(HttpServletRequest request) {
-//		String bearerToken = request.getHeader(HEADER_STRING);
-//		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-//			return bearerToken.substring(7, bearerToken.length());
-//		}
-//		return null;
-//	}
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 

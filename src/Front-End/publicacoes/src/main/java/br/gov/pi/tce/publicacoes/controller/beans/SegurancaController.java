@@ -13,8 +13,6 @@ import br.gov.pi.tce.publicacoes.clients.SegurancaServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.RequisicaoToken;
 import br.gov.pi.tce.publicacoes.modelo.RespostaToken;
 
-//@Named
-//@ViewScoped
 @Stateless
 public class SegurancaController extends BeanController {
 
@@ -24,11 +22,6 @@ public class SegurancaController extends BeanController {
 	private SegurancaServiceClient segurancaServiceClient;
 
 	private static final Logger LOGGER = Logger.getLogger(SegurancaController.class);
-
-//	@PostConstruct
-//	public void init() {
-//
-//	}
 
 	public RespostaToken pegarToken(String client, String username, String password, String grant_type) {
 		RespostaToken respostaToken = null;

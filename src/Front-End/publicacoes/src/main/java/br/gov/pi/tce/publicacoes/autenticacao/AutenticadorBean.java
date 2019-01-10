@@ -24,23 +24,21 @@ public class AutenticadorBean implements Serializable {
 
 	private String login;
 	private String senha;
-	
+
 	@Inject
 	private SegurancaController segurancaController;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(AutenticadorBean.class);
 
 	public String autenticador() {
 
 		Propriedades propriedades = Propriedades.getInstance();
-		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"), login, senha, propriedades.getValorString("TOKEN_GRAND_TYPE"));
+		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"), login,
+				senha, propriedades.getValorString("TOKEN_GRAND_TYPE"));
 		if (respostaToken != null) {
-			// ADD usuario na Session
 			Object b = new Object();
 			SessionUtil.setParam("USUARIOLogado", b);
 			SessionUtil.setParam("token", respostaToken.getAccess_token());
-//			SessionUtil.setParam("login", login);
-//			SessionUtil.setParam("senha", senha);
 			return "/index.xhtml?faces-redirect=true";
 		} else {
 			return null;
@@ -48,13 +46,12 @@ public class AutenticadorBean implements Serializable {
 	}
 
 	public String logout() {
-		// Remover usuario da session
 		LOGGER.info("Logout realizado.");
-	    FacesContext fc = FacesContext.getCurrentInstance();
-	    ExternalContext ec = fc.getExternalContext();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		ExternalContext ec = fc.getExternalContext();
 
-	    final HttpServletRequest r = (HttpServletRequest)ec.getRequest();
-	    r.getSession( false ).invalidate();
+		final HttpServletRequest r = (HttpServletRequest) ec.getRequest();
+		r.getSession(false).invalidate();
 
 		return "/publicacoes/login2.xhtml?faces-redirect=true";
 	}

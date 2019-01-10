@@ -48,186 +48,208 @@ import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
  * 
- * @author Erick Guilherme Cavalcanti 
+ * @author Erick Guilherme Cavalcanti
  *
  */
 @Local
-@Stateless(name="PublicacaoServiceClient")
-public class PublicacaoServiceClient{
-	
+@Stateless(name = "PublicacaoServiceClient")
+public class PublicacaoServiceClient {
+
 	private static final int BUFFER_SIZE = 6124;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(PublicacaoServiceClient.class);
 
 	private Client client;
 	private WebTarget webTarget;
-	
-	public PublicacaoServiceClient(){
-		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
+
+	public PublicacaoServiceClient() {
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());
 	}
-	
-	public PublicacaoServiceClient(String token){
-		this.client = ClientBuilder.newClient().register(new AutenticadorToken(token));  
+
+	public PublicacaoServiceClient(String token) {
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken(token));
 	}
-	
-	public List<Publicacao> consultarTodasPublicacoes(Boolean sucesso){
+
+	public List<Publicacao> consultarTodasPublicacoes(Boolean sucesso) {
 		try {
 			Propriedades propriedades = Propriedades.getInstance();
 			if (sucesso == null) {
-				this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
+				this.webTarget = this.client.target(
+						propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
 			} else {
-				this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).queryParam("sucesso", sucesso);
+				this.webTarget = this.client
+						.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"))
+						.queryParam("sucesso", sucesso);
 			}
-			Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+			Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 			Response response = invocationBuilder.get();
-			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {});
+			List<Publicacao> list = response.readEntity(new GenericType<List<Publicacao>>() {
+			});
 			return list;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			LOGGER.error("Erro ao consultar todas as publicacoes");
 			throw e;
 		}
 	}
-	
-	public void cadastrarPublicacaoPorUpload (Publicacao publicacao, Arquivo arquivo, PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
-		
+
+	public void cadastrarPublicacaoPorUpload(Publicacao publicacao, Arquivo arquivo, PublicacaoAnexo publicacaoAnexo,
+			Arquivo arquivoAnexo) throws Exception {
+
 		List<Publicacao> publicacoes = consultarTodasPublicacoes(null);
-		
+
 		for (Publicacao publicacaoElement : publicacoes) {
-	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
-	        	throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
-	        }
-	        
-	        if (publicacaoElement.getFonte().equals(publicacao.getFonte()) && publicacaoElement.getData().equals(publicacao.getData())) {
-	        	throw new Exception("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
-	        }
-	    }
-		
+			if (publicacaoElement.getNome().equals(publicacao.getNome())) {
+				throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+			}
+
+			if (publicacaoElement.getFonte().equals(publicacao.getFonte())
+					&& publicacaoElement.getData().equals(publicacao.getData())) {
+				throw new Exception(
+						"Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+			}
+		}
+
 		publicacao.setSucesso(true);
 		publicacao.setQuantidadeTentativas((long) 1);
 		publicacao = cadastrarPublicacao(publicacao, arquivo, true);
 		publicacaoAnexo.setPublicacao(publicacao);
 		publicacaoAnexo.setSucesso(true);
-		if(publicacao.getPossuiAnexo()) {
+		if (publicacao.getPossuiAnexo()) {
 			cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, true);
 		}
 	}
-	
-	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual) throws Exception{
+
+	public Publicacao cadastrarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual)
+			throws Exception {
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		Propriedades propriedades = Propriedades.getInstance();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
-			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
+			dataOutput.addFormData("partFile", "",
+					MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
 		} else {
-			if(isUploadManual) {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
-			}
-			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
+			if (isUploadManual) {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(),
+						MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")),
+						arquivo.getNome());
+			} else {
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()),
+						MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")),
+						arquivo.getNome());
 			}
 		}
-		
+
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("fonte", publicacao.getFonte().getId(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("data", asLocalDate(convertStringToDate(publicacao.getData())), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("data", asLocalDate(convertStringToDate(publicacao.getData())),
+				MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("codigo", publicacao.getCodigo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacao.getSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("possuiAnexo", publicacao.getPossuiAnexo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("quantidadeTentativas", publicacao.getQuantidadeTentativas(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("link", encodeString(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE);
-		
-		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
-		
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
+
+		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) {
+		};
+
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"));
+		Invocation.Builder invocationBuilder = this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Publicacao.class);
 	}
-	
-	public PublicacaoAnexo cadastrarPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo, Arquivo arquivo, boolean isUploadManual) throws Exception{
+
+	public PublicacaoAnexo cadastrarPublicacaoAnexo(PublicacaoAnexo publicacaoAnexo, Arquivo arquivo,
+			boolean isUploadManual) throws Exception {
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		Propriedades propriedades = Propriedades.getInstance();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
-			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
+			dataOutput.addFormData("partFile", "",
+					MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
 		} else {
-			if(isUploadManual) {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
-			}
-			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
+			if (isUploadManual) {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(),
+						MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")),
+						arquivo.getNome());
+			} else {
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()),
+						MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")),
+						arquivo.getNome());
 			}
 		}
-		
+
 		dataOutput.addFormData("nome", publicacaoAnexo.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("publicacao", publicacaoAnexo.getPublicacao().getId(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacaoAnexo.isSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("link", encodeString(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE);
-		
-		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
-		
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES_ANEXOS"));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
+
+		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) {
+		};
+
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES_ANEXOS"));
+		Invocation.Builder invocationBuilder = this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
 		return response.readEntity(PublicacaoAnexo.class);
 	}
-	
+
 	public String encodeString(String palavra) {
-        char one;
-        StringBuffer n = new StringBuffer(palavra.length());
-        for (int i = 0; i < palavra.length(); i++) {
-            one = palavra.charAt(i);
-            switch (one) {
-                case ' ':
-                    n.append('%');
-                    n.append('2');
-                    n.append('0');
-                    break;
-                default:
-                    n.append(one);
-            }
-        }
-        return n.toString();
-    }
-	
+		char one;
+		StringBuffer n = new StringBuffer(palavra.length());
+		for (int i = 0; i < palavra.length(); i++) {
+			one = palavra.charAt(i);
+			switch (one) {
+			case ' ':
+				n.append('%');
+				n.append('2');
+				n.append('0');
+				break;
+			default:
+				n.append(one);
+			}
+		}
+		return n.toString();
+	}
+
 	public void armazenarArquivo(Arquivo arquivo) {
 		try {
-			
+
 			File result = new File(arquivo.getLink());
 			FileOutputStream fileOutputStream = new FileOutputStream(result);
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int bulk;
 
-		    while (true) {
-		    	bulk = arquivo.getInputStream().read(buffer);
-		        if (bulk < 0) {
-		        	break;
-		        }
-		        
-		        fileOutputStream.write(buffer, 0, bulk);
-		        fileOutputStream.flush();
-		    }
+			while (true) {
+				bulk = arquivo.getInputStream().read(buffer);
+				if (bulk < 0) {
+					break;
+				}
 
-		    fileOutputStream.close();
+				fileOutputStream.write(buffer, 0, bulk);
+				fileOutputStream.flush();
+			}
+
+			fileOutputStream.close();
 
 		} catch (IOException e) {
-		    e.printStackTrace();
-		    FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR, "The files were not uploaded!", "");
-		       FacesContext.getCurrentInstance().addMessage(null, error);
-		} 
-	} 
-	
+			e.printStackTrace();
+			FacesMessage error = new FacesMessage(FacesMessage.SEVERITY_ERROR, "The files were not uploaded!", "");
+			FacesContext.getCurrentInstance().addMessage(null, error);
+		}
+	}
+
 	public FileInputStream realizarDownload(String linkArquivo) {
 		URL url;
 		FileInputStream fileInputStream = null;
 		try {
 			url = new URL(encodeString(linkArquivo));
 			Propriedades propriedades = Propriedades.getInstance();
-			File file = new File(System.getProperty("java.io.tmpdir")+File.separator+propriedades.getValorString("DOWNLOAD_TEMPORARIO"));
+			File file = new File(System.getProperty("java.io.tmpdir") + File.separator
+					+ propriedades.getValorString("DOWNLOAD_TEMPORARIO"));
 			FileUtils.copyURLToFile(url, file);
 			fileInputStream = new FileInputStream(file);
-			
+
 		} catch (MalformedURLException e) {
 			LOGGER.error(e.getMessage());
 		} catch (IOException e) {
@@ -236,171 +258,189 @@ public class PublicacaoServiceClient{
 		return fileInputStream;
 	}
 
-	public Publicacao alterarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual) throws Exception{
+	public Publicacao alterarPublicacao(Publicacao publicacao, Arquivo arquivo, boolean isUploadManual)
+			throws Exception {
 		MultipartFormDataOutput dataOutput = new MultipartFormDataOutput();
 		Propriedades propriedades = Propriedades.getInstance();
 		if (arquivo.getLink() == null || arquivo.getLink().equals("")) {
-			dataOutput.addFormData("partFile", "", MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
+			dataOutput.addFormData("partFile", "",
+					MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), "");
 		} else {
-			if(isUploadManual) {
-				dataOutput.addFormData("partFile", arquivo.getInputStream(), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
-			}
-			else {
-				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")), arquivo.getNome());
+			if (isUploadManual) {
+				dataOutput.addFormData("partFile", arquivo.getInputStream(),
+						MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")),
+						arquivo.getNome());
+			} else {
+				dataOutput.addFormData("partFile", realizarDownload(arquivo.getLink()),
+						MediaType.TEXT_PLAIN_TYPE.withCharset(propriedades.getValorString("ENCODE_PADRAO")),
+						arquivo.getNome());
 			}
 		}
-		
+
 		dataOutput.addFormData("nome", publicacao.getNome(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("fonte", publicacao.getFonte().getId(), MediaType.TEXT_PLAIN_TYPE);
-		dataOutput.addFormData("data", asLocalDate(convertStringToDate(publicacao.getData())), MediaType.TEXT_PLAIN_TYPE);
+		dataOutput.addFormData("data", asLocalDate(convertStringToDate(publicacao.getData())),
+				MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("codigo", publicacao.getCodigo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("sucesso", publicacao.getSucesso(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("possuiAnexo", publicacao.getPossuiAnexo(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("quantidadeTentativas", publicacao.getQuantidadeTentativas(), MediaType.TEXT_PLAIN_TYPE);
 		dataOutput.addFormData("link", encodeString(arquivo.getLink()), MediaType.TEXT_PLAIN_TYPE);
-		
-		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) { };
-		
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).path(String.valueOf(publicacao.getId()));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(MediaType.APPLICATION_JSON);
+
+		GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(dataOutput) {
+		};
+
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"))
+				.path(String.valueOf(publicacao.getId()));
+		Invocation.Builder invocationBuilder = this.webTarget.request(MediaType.APPLICATION_JSON);
 		Response response = invocationBuilder.put(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE));
 		trataRetorno(response);
 		return response.readEntity(Publicacao.class);
 	}
 
-	public Publicacao consultarPublicacaoPorCodigo(Long id){
+	public Publicacao consultarPublicacaoPorCodigo(Long id) {
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).path(String.valueOf(id));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"))
+				.path(String.valueOf(id));
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			return  response.readEntity(Publicacao.class);
+		} else {
+			return response.readEntity(Publicacao.class);
 		}
 	}
-	
-	public Fonte consultarFontePorCodigo(Long id){
-		//new PublicacaoServiceClient("token");
+
+	public Fonte consultarFontePorCodigo(Long id) {
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FONTES")).path(String.valueOf(id));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FONTES"))
+				.path(String.valueOf(id));
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
+		} else {
 			Fonte tf = response.readEntity(Fonte.class);
-			return  tf;
+			return tf;
 		}
 	}
-	
-	public List<Feriado> consultarFeriadoPorFontePeriodo(Long idFonte, LocalDate periodoDe, LocalDate periodoAte){
+
+	public List<Feriado> consultarFeriadoPorFontePeriodo(Long idFonte, LocalDate periodoDe, LocalDate periodoAte) {
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FERIADOS")).queryParam("idFonte", idFonte).queryParam("periodoDe", periodoDe).queryParam("periodoAte", periodoAte);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FERIADOS"))
+				.queryParam("idFonte", idFonte).queryParam("periodoDe", periodoDe).queryParam("periodoAte", periodoAte);
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			List<Feriado> tf = response.readEntity(new GenericType<List<Feriado>>() {});
-			return  tf;
+		} else {
+			List<Feriado> tf = response.readEntity(new GenericType<List<Feriado>>() {
+			});
+			return tf;
 		}
 	}
-	
-	public List<Publicacao> consultarPublicacaoPorFonteDataNome(Long idFonte, LocalDate data, String nome){
+
+	public List<Publicacao> consultarPublicacaoPorFonteDataNome(Long idFonte, LocalDate data, String nome) {
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).queryParam("idFonte", idFonte).queryParam("data", data).queryParam("nome", nome);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"))
+				.queryParam("idFonte", idFonte).queryParam("data", data).queryParam("nome", nome);
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			List<Publicacao> tf = response.readEntity(new GenericType<List<Publicacao>>() {});
-			return  tf;
+		} else {
+			List<Publicacao> tf = response.readEntity(new GenericType<List<Publicacao>>() {
+			});
+			return tf;
 		}
 	}
-	
-	public List<NotificacaoConfig> consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo tipo, Boolean ativo){
+
+	public List<NotificacaoConfig> consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo tipo, Boolean ativo) {
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES_CONFIG")).queryParam("ativo", ativo).queryParam("tipo", tipo.toString());
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES_CONFIG"))
+				.queryParam("ativo", ativo).queryParam("tipo", tipo.toString());
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			List<NotificacaoConfig> tf = response.readEntity(new GenericType<List<NotificacaoConfig>>() {});
-			return  tf;
+		} else {
+			List<NotificacaoConfig> tf = response.readEntity(new GenericType<List<NotificacaoConfig>>() {
+			});
+			return tf;
 		}
 	}
-	
-	public Notificacao cadastrarNotificacao(NotificacaoN notificacao) throws Exception{
+
+	public Notificacao cadastrarNotificacao(NotificacaoN notificacao) throws Exception {
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES"));
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
-		Response response = invocationBuilder.post(Entity.entity(notificacao, propriedades.getValorString("RESPONSE_TYPE")));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES"));
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		Response response = invocationBuilder
+				.post(Entity.entity(notificacao, propriedades.getValorString("RESPONSE_TYPE")));
 		trataRetorno(response);
 		return response.readEntity(Notificacao.class);
 	}
-	
-	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim, Boolean sucesso, String data) throws Exception{
+
+	public List<Publicacao> consultarPublicacaoPorFiltro(Long idFonte, String nome, String dataInicio, String dataFim,
+			Boolean sucesso, String data) throws Exception {
 		LocalDate dtInicio = null;
 		LocalDate dtFim = null;
 		LocalDate dt = null;
-		if(data == null) {
-			if(dataInicio == null || dataFim == null) {
+		if (data == null) {
+			if (dataInicio == null || dataFim == null) {
 				throw new Exception("Data Inicio e Data Fim são obrigatórios");
 			}
 			try {
 				dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 				dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new Exception("Data Inválida");
 			}
-		}
-		else {
+		} else {
 			try {
 				dt = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new Exception("Data Inválida");
 			}
 		}
-		
+
 		Propriedades propriedades = Propriedades.getInstance();
-		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES")).queryParam("idFonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim).queryParam("nome", nome).queryParam("sucesso", sucesso).queryParam("data", dt);
-		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
+		this.webTarget = this.client
+				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"))
+				.queryParam("idFonte", idFonte).queryParam("dataInicio", dtInicio).queryParam("dataFim", dtFim)
+				.queryParam("nome", nome).queryParam("sucesso", sucesso).queryParam("data", dt);
+		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
 		trataRetorno(response);
-		if(response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
+		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
-		}	
-		else {
-			List<Publicacao> tf = response.readEntity(new GenericType<List<Publicacao>>() {});
-			return  tf;
+		} else {
+			List<Publicacao> tf = response.readEntity(new GenericType<List<Publicacao>>() {
+			});
+			return tf;
 		}
 	}
-	
+
 	private void trataRetorno(Response response) throws Exception {
-		if(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
+		if (response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode()) {
 			List erros = response.readEntity(List.class);
-			if(erros != null && !erros.isEmpty()) {
+			if (erros != null && !erros.isEmpty()) {
 				Map p;
-				String msg = (String)((Map)erros.get(0)).get("mensagemUsuario");
+				String msg = (String) ((Map) erros.get(0)).get("mensagemUsuario");
 				throw new Exception(msg);
-			}
-			else {
+			} else {
 				LOGGER.error("Erro interno.");
 				throw new Exception("Erro interno.");
 			}
 		}
 	}
-	
+
 	/**
 	 * Converte uma string no formato dd/MM/yyyy em data.
 	 * 
@@ -419,7 +459,7 @@ public class PublicacaoServiceClient{
 		}
 		return data;
 	}
-	
+
 	/**
 	 * Converte um Date em LocalDate.
 	 * 
@@ -433,20 +473,22 @@ public class PublicacaoServiceClient{
 	public void alterarPublicacaoPorUpload(Publicacao publicacaoExistente, Publicacao publicacao, Arquivo arquivo,
 			PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo) throws Exception {
 		List<Publicacao> publicacoes = consultarTodasPublicacoes(null);
-		
+
 		for (Publicacao publicacaoElement : publicacoes) {
-	        if (publicacaoElement.getNome().equals(publicacao.getNome())) {
-	        	throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
-	        }
-	        
-	        if (publicacaoElement.getFonte().equals(publicacao.getFonte()) && publicacaoElement.getData().equals(publicacao.getData())) {
-	        	throw new Exception("Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
-	        }
-	    }
-		
+			if (publicacaoElement.getNome().equals(publicacao.getNome())) {
+				throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+			}
+
+			if (publicacaoElement.getFonte().equals(publicacao.getFonte())
+					&& publicacaoElement.getData().equals(publicacao.getData())) {
+				throw new Exception(
+						"Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+			}
+		}
+
 		publicacao.setSucesso(true);
 		publicacao.setQuantidadeTentativas(publicacaoExistente.getQuantidadeTentativas() + 1);
-		
+
 		publicacaoExistente.setQuantidadeTentativas(publicacaoExistente.getQuantidadeTentativas() + 1);
 		publicacaoExistente.setNome(publicacao.getNome());
 		publicacaoExistente.setFonte(publicacao.getFonte());
@@ -454,16 +496,16 @@ public class PublicacaoServiceClient{
 		publicacaoExistente.setCodigo(publicacao.getCodigo());
 		publicacaoExistente.setSucesso(publicacao.getSucesso());
 		publicacaoExistente.setPossuiAnexo(publicacao.getPossuiAnexo());
-		
+
 		publicacaoExistente = alterarPublicacao(publicacaoExistente, arquivo, true);
-		
+
 		publicacaoAnexo.setPublicacao(publicacao);
 		publicacaoAnexo.setSucesso(true);
-		if(publicacao.getPossuiAnexo()) {
+		if (publicacao.getPossuiAnexo()) {
 			publicacaoAnexo.setPublicacao(publicacaoExistente);
 			cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, true);
 		}
-		
+
 	}
 
 }
