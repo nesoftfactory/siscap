@@ -13,6 +13,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.TipoFonte;
 
@@ -29,7 +30,7 @@ public class FonteServiceClient {
 	private WebTarget webTarget;
 	
 	public FonteServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());
 	}
 	
 	private Invocation.Builder chamadaFontesAPI(Long id, Boolean inativar) {

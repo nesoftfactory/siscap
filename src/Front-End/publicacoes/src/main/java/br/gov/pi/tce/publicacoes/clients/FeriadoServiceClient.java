@@ -1,8 +1,5 @@
 package br.gov.pi.tce.publicacoes.clients;
 
-import java.io.Console;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +13,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
-import br.gov.pi.tce.publicacoes.modelo.Fonte;
 
 @Local
 @Stateless(name="FeriadoServiceClient")
@@ -30,7 +27,7 @@ public class FeriadoServiceClient{
 	private WebTarget webTarget;
 	
 	public FeriadoServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
 	}
 	
 	private Invocation.Builder chamadaAPI(Long id) {

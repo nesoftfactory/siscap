@@ -7,6 +7,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 
 @Local
@@ -20,7 +21,7 @@ public class ArquivoServiceClient {
 	private WebTarget webTarget;
 	
 	public ArquivoServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
 	}
 	
 	

@@ -13,6 +13,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 
 @Local
@@ -27,7 +28,7 @@ public class UsuarioServiceClient{
 	private WebTarget webTarget;
 	
 	public UsuarioServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
 	}
 	
 	public List<Usuario> consultarTodos(){

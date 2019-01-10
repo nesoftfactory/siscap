@@ -10,7 +10,10 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.controller.beans.PublicacaoController;
+import br.gov.pi.tce.publicacoes.controller.beans.SegurancaController;
+import br.gov.pi.tce.publicacoes.modelo.RespostaToken;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
+//import br.gov.pi.tce.publicacoes.util.SessionUtil;
 
 /**
  * Classe responsável por executar o agendamento das coletas das publicações nos sites.
@@ -25,49 +28,79 @@ public class ColetorPublicacoesService {
 	@Inject
 	private PublicacaoController publicacaoController;
 	
+	@Inject
+	private SegurancaController segurancaController;
+	
+	private String tokenService;
+	
 	private static final Logger LOGGER = Logger.getLogger(ColetorPublicacoesService.class);
 	
-	@Schedule(hour="21", minute = "48")
+//	@PostConstruct
+//	public void init() {
+	private String getToken() {
+		String token = null;
+		Propriedades propriedades = Propriedades.getInstance();
+		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"), propriedades.getValorString("TOKEN_USERNAME"), propriedades.getValorString("TOKEN_PASSWORD"), propriedades.getValorString("TOKEN_GRAND_TYPE"));
+		if (respostaToken != null) {
+//			SessionUtil.setParam("token", respostaToken.getAccess_token());
+			token = respostaToken.getAccess_token();
+		}
+		return token;
+	}
+	
+	@Schedule(hour="03", minute = "35")
 	public void coletarDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
+		if(tokenService==null || tokenService.equals("")) {
+			tokenService = getToken();
+		}
 		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"), dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"), dataInicial, dataFinal, tokenService);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="21", minute = "50")
+	@Schedule(hour="03", minute = "40")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
+		if(tokenService==null || tokenService.equals("")) {
+			tokenService = getToken();
+		}
 		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"), dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"), dataInicial, dataFinal, tokenService);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	@Schedule(hour="21", minute = "52")
+	@Schedule(hour="03", minute = "45")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
+		if(tokenService==null || tokenService.equals("")) {
+			tokenService = getToken();
+		}
 		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal);
+		publicacaoController.getDiariosEmDiarioOficialPI(dataInicial, dataFinal, tokenService);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");
 	}
 	
-	@Schedule(hour="21", minute = "54")
+	@Schedule(hour="03", minute = "50")
 	public void coletarDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
+		if(tokenService==null || tokenService.equals("")) {
+			tokenService = getToken();
+		}
 		Propriedades propriedades = Propriedades.getInstance();
 		Date data = new Date();
 		Date dataInicial = getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data, propriedades.getValorInt("QUANTIDADE_DIAS_PARA_COLETA"));
 		Date dataFinal = getData23Horas59Minutos59Seguntos(data);
-		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), dataInicial, dataFinal);
+		publicacaoController.getDiariosDOM(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), dataInicial, dataFinal, tokenService);
 		LOGGER.info("Finalizando a Coleta do Diario Oficial dos Municipios");
 	}
 	

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
@@ -35,9 +36,12 @@ public class PublicacaoOCRServiceClient{
 	private static final String RESPONSE_TYPE = "application/json;charset=UTF-8";
 	
 	public PublicacaoOCRServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
 	}
 	
+	public PublicacaoOCRServiceClient(String token){
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken(token));  
+	}
 
 	public List<Publicacao> consultarTodasPublicacoesAptasParaOCR(Long fonte) {
 		try {

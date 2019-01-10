@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.PublicacaoOCRServiceClient;
+import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
 import br.gov.pi.tce.publicacoes.modelo.enums.SituacaoPublicacao;
@@ -32,35 +33,38 @@ public class PublicacaoOCRController extends BeanController{
 	
 	Propriedades propriedades = Propriedades.getInstance();
 
-	public void realizarOCRDiarioOficialParnaiba() {
-		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"));
-		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"));
+	public void realizarOCRDiarioOficialParnaiba(String token) {
+		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"), token);
+		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PARNAIBA"), token);
 		
 	}
 
-	public void realizarOCRDiarioOficialMunicipios() {
-		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"));
-		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"));
+	public void realizarOCRDiarioOficialMunicipios(String token) {
+		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), token);
+		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS"), token);
 		
 	}
 
-	public void realizarOCRDiarioOficialPiaui() {
-		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PIAUI"));
-		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PIAUI"));
+	public void realizarOCRDiarioOficialPiaui(String token) {
+		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PIAUI"), token);
+		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_PIAUI"), token);
 		
 	}
 
-	public void realizarOCRDiarioOficialTeresina() {
-		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"));
-		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"));
+	public void realizarOCRDiarioOficialTeresina(String token) {
+		realizarOCRPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"), token);
+		realizarOCRAnexoPublicacaoGenerico(propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_TERESINA"), token);
 	}
 	
 	
-	public void realizarOCRPublicacaoGenerico(Long fonte) {
+	public void realizarOCRPublicacaoGenerico(Long fonte, String token) {
 		try {
 			LOGGER.info("Iniciando processo de OCR de publicações");
 			
 			LOGGER.info("Iniciando busca das publicações que devem ter OCR realizado");
+			if (token != null) {
+				publicacaoOCRServiceClient = new PublicacaoOCRServiceClient(token);
+			}
 			List<Publicacao> listaPublicacoesParaOCR = publicacaoOCRServiceClient.consultarTodasPublicacoesAptasParaOCR(fonte);
 			LOGGER.info("Finalizando busca publicações que devem ter OCR realizado com sucesso");
 			
@@ -95,11 +99,14 @@ public class PublicacaoOCRController extends BeanController{
 	}
 	
 	
-	public void realizarOCRAnexoPublicacaoGenerico(Long fonte) {
+	public void realizarOCRAnexoPublicacaoGenerico(Long fonte, String token) {
 		try {
 			LOGGER.info("Iniciando processo de OCR de anexo de publicações");
 			
 			LOGGER.info("Iniciando busca de anexos das publicações que devem ter OCR realizado");
+			if (token != null) {
+				publicacaoOCRServiceClient = new PublicacaoOCRServiceClient(token);
+			}
 			List<PublicacaoAnexo> listaAnexosPublicacoesParaOCR = publicacaoOCRServiceClient.consultarTodosAnexosPublicacoesAptosParaOCR(fonte);
 			LOGGER.info("Finalizando busca de anexos de publicações que devem ter OCR realizado com sucesso");
 			

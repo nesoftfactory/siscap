@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.AnexoPublicacaoHistorico;
 
 @Local
@@ -27,7 +28,7 @@ public class AnexoPublicacaoHistoricoServiceClient {
 	private static final Logger LOGGER = Logger.getLogger(AnexoPublicacaoHistoricoServiceClient.class);
 	
 	public AnexoPublicacaoHistoricoServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
 	}
 	
 	

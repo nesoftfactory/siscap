@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Notificacao;
 
 /**
@@ -33,7 +34,7 @@ public class NotificacaoServiceClient{
 	private WebTarget webTarget;
 	
 	public NotificacaoServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
 	}
 	
 	public List<Notificacao> consultarNotificacoesPorIdPublicacao(Long idPublicacao) throws Exception{

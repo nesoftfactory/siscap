@@ -34,6 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
 
+import br.gov.pi.tce.publicacoes.autenticacao.AutenticadorToken;
 import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Feriado;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
@@ -62,7 +63,11 @@ public class PublicacaoServiceClient{
 	private WebTarget webTarget;
 	
 	public PublicacaoServiceClient(){
-		this.client = ClientBuilder.newClient();  
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken());  
+	}
+	
+	public PublicacaoServiceClient(String token){
+		this.client = ClientBuilder.newClient().register(new AutenticadorToken(token));  
 	}
 	
 	public List<Publicacao> consultarTodasPublicacoes(Boolean sucesso){
@@ -277,6 +282,7 @@ public class PublicacaoServiceClient{
 	}
 	
 	public Fonte consultarFontePorCodigo(Long id){
+		//new PublicacaoServiceClient("token");
 		Propriedades propriedades = Propriedades.getInstance();
 		this.webTarget = this.client.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_FONTES")).path(String.valueOf(id));
 		Invocation.Builder invocationBuilder =  this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
