@@ -26,7 +26,9 @@ public class PaginaArquivoOCRRepositoryImpl implements PaginaArquivoOCRRepositor
 	public void gravarPaginasArquivo(List<PaginaOCRArquivo> paginasArquivo) {
 		for (Iterator iterator = paginasArquivo.iterator(); iterator.hasNext();) {
 			PaginaOCRArquivo paginaOCRArquivo = (PaginaOCRArquivo) iterator.next();
-			paginaArquivoOCRRepository.save(paginaOCRArquivo);
+			if(paginaArquivoOCRRepository.buscaPorPaginaDoArquivo(paginaOCRArquivo.getArquivo().getId(), paginaOCRArquivo.getPagina()) == null) {
+				paginaArquivoOCRRepository.save(paginaOCRArquivo);
+			}
 		}
 	}
 

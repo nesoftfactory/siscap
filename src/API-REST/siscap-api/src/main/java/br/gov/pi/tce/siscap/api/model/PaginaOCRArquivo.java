@@ -22,6 +22,11 @@ public class PaginaOCRArquivo extends BaseEntity {
 	public PaginaOCRArquivo() {
 	}
 	
+	public PaginaOCRArquivo(Long id) {
+		super();
+		setId(id);
+	}
+	
 	
 	public PaginaOCRArquivo(Integer pagina, String ocr, Arquivo arquivo) {
 		super();

@@ -11,8 +11,14 @@ import javax.inject.Inject;
 import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.PublicacaoOCRServiceClient;
+import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
+import br.gov.pi.tce.publicacoes.modelo.Notificacao;
+import br.gov.pi.tce.publicacoes.modelo.NotificacaoConfig;
+import br.gov.pi.tce.publicacoes.modelo.NotificacaoN;
 import br.gov.pi.tce.publicacoes.modelo.Publicacao;
 import br.gov.pi.tce.publicacoes.modelo.PublicacaoAnexo;
+import br.gov.pi.tce.publicacoes.modelo.PublicacaoN;
+import br.gov.pi.tce.publicacoes.modelo.enums.NotificacaoTipo;
 import br.gov.pi.tce.publicacoes.modelo.enums.SituacaoPublicacao;
 import br.gov.pi.tce.publicacoes.services.NotificacaoService;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
@@ -26,6 +32,9 @@ public class PublicacaoOCRController extends BeanController {
 
 	@Inject
 	private PublicacaoOCRServiceClient publicacaoOCRServiceClient;
+	
+	@Inject
+	private PublicacaoServiceClient publicacaoServiceClient;
 
 	@EJB
 	private NotificacaoService notificacao;
@@ -56,19 +65,25 @@ public class PublicacaoOCRController extends BeanController {
 	}
 
 	public void realizarOCRPublicacaoGenerico(Long fonte, String token) {
+		
+		Publicacao publicacaoAtual = null;
 		try {
 			LOGGER.info("Iniciando processo de OCR de publicações");
 
 			LOGGER.info("Iniciando busca das publicações que devem ter OCR realizado");
 			if (token != null) {
 				publicacaoOCRServiceClient = new PublicacaoOCRServiceClient(token);
+				publicacaoServiceClient = new PublicacaoServiceClient(token);
 			}
+			
+			
 			List<Publicacao> listaPublicacoesParaOCR = publicacaoOCRServiceClient
 					.consultarTodasPublicacoesAptasParaOCR(fonte);
 			LOGGER.info("Finalizando busca publicações que devem ter OCR realizado com sucesso");
 
 			LOGGER.info("Iniciando OCR de cada publicação apta");
 			for (Publicacao publicacao : listaPublicacoesParaOCR) {
+				publicacaoAtual = publicacao;
 				LOGGER.info("Iniciando OCR da publicação:" + publicacao.getId());
 				Publicacao publicacaoOCR = publicacaoOCRServiceClient.realizarOCRPublicacao(publicacao);
 				if (publicacaoOCR != null
@@ -78,6 +93,7 @@ public class PublicacaoOCRController extends BeanController {
 				} else {
 					LOGGER.error("OCR da publicação:" + publicacao.getId() + " NÃO realizado. Situação: "
 							+ publicacaoOCR.getSituacao());
+					realizarNotificacaoOCR(publicacaoAtual);
 				}
 				LOGGER.info("Finalizando OCR da publicação:" + publicacao.getId());
 			}
@@ -88,17 +104,74 @@ public class PublicacaoOCRController extends BeanController {
 		} catch (EJBException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: OCR de publicações.", e.getMessage());
 			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
-			e.printStackTrace();
+			if(publicacaoAtual != null) {
+				realizarNotificacaoOCR(publicacaoAtual);
+			}
 		} catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao realizar OCR de publicações." + e.getMessage(),
 					e.getMessage());
 			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
-			e.printStackTrace();
+			if(publicacaoAtual != null) {
+				realizarNotificacaoOCR(publicacaoAtual);
+			}
 		}
+		
+		
+		
+		
 
 	}
 
+	private void realizarNotificacaoOCR(Publicacao publicacaoAtual) {
+		String tituloNotificacao = propriedades.getValorString("EMAIL_SUBJECT_PUB")
+				+ publicacaoAtual.getFonte().getNome() + propriedades.getValorString("EMAIL_SUBJECT_2")
+				+ publicacaoAtual.getData();
+		String conteudoNotificacao = propriedades.getValorString("EMAIL_CONTENT_OCR_PUB")+ publicacaoAtual.getFonte().getNome() + "(ID="+ publicacaoAtual.getId() + ")  " + propriedades.getValorString("EMAIL_CONTENT_2")
+				+ publicacaoAtual.getData();
+		List<NotificacaoConfig> notificacaoConfigList = consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo.OCR, Boolean.TRUE);
+		PublicacaoN publicacaoNotif = new PublicacaoN(publicacaoAtual.getId());
+		NotificacaoN notificacaoN = new NotificacaoN(NotificacaoTipo.OCR,notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
+		cadastrarNotificacao(notificacaoN);
+		notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"),
+				propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
+	}
+	
+	
+	private void realizarNotificacaoOCRAnexo(PublicacaoAnexo publicacaoAnexoAtual) {
+		String tituloNotificacao = propriedades.getValorString("EMAIL_SUBJECT_ANEXO_PUB")
+				+ publicacaoAnexoAtual.getPublicacao().getFonte().getNome() + propriedades.getValorString("EMAIL_SUBJECT_2")
+				+ publicacaoAnexoAtual.getPublicacao().getData();
+		String conteudoNotificacao = propriedades.getValorString("EMAIL_CONTENT_OCR_ANEXO_PUB")+ publicacaoAnexoAtual.getPublicacao().getFonte().getNome() + "(ID="+ publicacaoAnexoAtual.getId() + ")  " + propriedades.getValorString("EMAIL_CONTENT_2")
+				+ publicacaoAnexoAtual.getPublicacao().getData();
+		List<NotificacaoConfig> notificacaoConfigList = consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo.OCR, Boolean.TRUE);
+		
+		PublicacaoN publicacaoNotif = new PublicacaoN(publicacaoAnexoAtual.getPublicacao().getId());
+		NotificacaoN notificacaoN = new NotificacaoN(NotificacaoTipo.OCR,notificacaoConfigList.get(0).getUsuarios(), publicacaoNotif, conteudoNotificacao);
+		cadastrarNotificacao(notificacaoN);
+		notificacao.sendEmail(propriedades.getValorString("EMAIL_TO"),
+				propriedades.getValorString("EMAIL_FROM"), tituloNotificacao, conteudoNotificacao);
+	}
+	
+	
+	private List<NotificacaoConfig> consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo tipo, Boolean ativo) {
+		List<NotificacaoConfig> notificacaoConfigList = publicacaoServiceClient.consultarNotificacaoConfigPorTipoAtivo(tipo, ativo);
+		return notificacaoConfigList;
+	}
+
+	
+	private Notificacao cadastrarNotificacao(NotificacaoN notif) {
+		Notificacao notificacao = null;
+		try {
+			notificacao = publicacaoServiceClient.cadastrarNotificacao(notif);
+		} catch (Exception e) {
+			LOGGER.error("Erro na criação da notificacao");
+			LOGGER.error(e.getMessage());
+		}
+		return notificacao;
+	}
+
 	public void realizarOCRAnexoPublicacaoGenerico(Long fonte, String token) {
+		PublicacaoAnexo publicacaoAnexoAtual = null;
 		try {
 			LOGGER.info("Iniciando processo de OCR de anexo de publicações");
 
@@ -112,6 +185,7 @@ public class PublicacaoOCRController extends BeanController {
 
 			LOGGER.info("Iniciando OCR de cada anexo de publicação apta");
 			for (PublicacaoAnexo publicacaoAnexo : listaAnexosPublicacoesParaOCR) {
+				publicacaoAnexoAtual = publicacaoAnexo;
 				LOGGER.info("Iniciando OCR do anexo: " + publicacaoAnexo.getId() + ", da publicação:"
 						+ publicacaoAnexo.getPublicacao().getId());
 				PublicacaoAnexo publicacaoAnexoOCR = publicacaoOCRServiceClient.realizarOCRAnexo(publicacaoAnexo);
@@ -134,12 +208,16 @@ public class PublicacaoOCRController extends BeanController {
 		} catch (EJBException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: OCR de publicações.", e.getMessage());
 			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
-			e.printStackTrace();
+			if(publicacaoAnexoAtual != null) {
+				realizarNotificacaoOCRAnexo(publicacaoAnexoAtual);
+			}
 		} catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao realizar OCR de publicações." + e.getMessage(),
 					e.getMessage());
 			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
-			e.printStackTrace();
+			if(publicacaoAnexoAtual != null) {
+				realizarNotificacaoOCRAnexo(publicacaoAnexoAtual);
+			}
 		}
 
 	}

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import br.gov.pi.tce.siscap.api.model.Arquivo;
-import br.gov.pi.tce.siscap.api.model.Notificacao;
 import br.gov.pi.tce.siscap.api.model.PaginaOCRArquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoAnexo;
@@ -134,6 +133,7 @@ public class PublicacaoAnexoService {
 		if(pa == null || pa.getSituacao() == null || !pa.getSituacao().equals(SituacaoPublicacao.COLETA_REALIZADA.getDescricao())) {
 			throw new Exception("Este anexo de publicação não existe, ou não está na situação ideal para ser feito o OCR");
 		}
+		
 		Arquivo a = pa.getArquivo();
 		if(a == null) {
 			throw new Exception("Não foi encontrado arquivo para esse anexo de publicação");
@@ -148,7 +148,6 @@ public class PublicacaoAnexoService {
 	
 	private PublicacaoAnexo gravarPaginasArquivoAnexoPublicacao(Long idAnexoPublicacao, Long idArquivo, Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo) throws OCRException{
 		List<PaginaOCRArquivo> paginasArquivo = new ArrayList<PaginaOCRArquivo>();
-		Notificacao notificacao;
 		
 		for (Iterator iterator = mapaPaginasArquivo.keySet().iterator(); iterator.hasNext();) {
 			Integer pagina = (Integer) iterator.next();
@@ -162,11 +161,6 @@ public class PublicacaoAnexoService {
 			atualizarHistorico(anexoPublicacao, "OCR realizado com sucesso", true);
 		}
 		catch (Exception e) {
-			//TODO Helton
-			//notificacao = criaNotificacaoErro(idPublicacao);
-			
-			//TODO Helton
-			//disparaNotificacao();			
 			atualizarHistorico(anexoPublicacao, "Erro ao tentar realizar OCR", false);
 			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo);
 		}

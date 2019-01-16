@@ -51,6 +51,17 @@ public class Publicacao extends BaseEntity {
 	}
 	
 	
+	public Publicacao(Long id, String situacao, Long idFonte, String nomeFonte, LocalDate data) {
+		super();
+		setId(id);
+		setSituacao(situacao);
+		Fonte f = new Fonte();
+		f.setId(idFonte);
+		f.setNome(nomeFonte);
+		setFonte(f);
+		setData(data);
+	}
+	
 	
 	@Column(name="situacao")
 	public String getSituacao() {

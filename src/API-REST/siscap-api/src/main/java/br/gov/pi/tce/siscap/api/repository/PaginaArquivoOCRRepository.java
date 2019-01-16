@@ -14,5 +14,8 @@ public interface PaginaArquivoOCRRepository extends JpaRepository<PaginaOCRArqui
 
 	@Query("SELECT new br.gov.pi.tce.siscap.api.model.Publicacao(p.id, p.situacao)  FROM Publicacao p WHERE p.situacao = :situacao AND p.fonte.id = :idFonte")
 	public List<Publicacao> buscarPublicacoesAptasParaOCR(Long idFonte, String situacao);
+
+	@Query("SELECT new br.gov.pi.tce.siscap.api.model.PaginaOCRArquivo(p.id)  FROM PaginaOCRArquivo p WHERE p.arquivo.id = :idArquivo AND p.pagina = :pagina")
+	public PaginaOCRArquivo buscaPorPaginaDoArquivo(Long idArquivo, Integer pagina);
 	
 }

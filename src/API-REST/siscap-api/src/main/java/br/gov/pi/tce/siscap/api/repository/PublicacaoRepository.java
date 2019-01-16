@@ -11,6 +11,6 @@ import br.gov.pi.tce.siscap.api.repository.publicacao.PublicacaoRepositoryQuery;
 public interface PublicacaoRepository extends JpaRepository<Publicacao, Long>, PublicacaoRepositoryQuery {
 
 
-	@Query("SELECT new br.gov.pi.tce.siscap.api.model.Publicacao(p.id, p.situacao)  FROM Publicacao p WHERE p.situacao = :situacao AND p.fonte.id = :idFonte")
+	@Query("SELECT new br.gov.pi.tce.siscap.api.model.Publicacao(p.id, p.situacao, p.fonte.id, p.fonte.nome, p.data)  FROM Publicacao p WHERE p.situacao = :situacao AND p.fonte.id = :idFonte")
 	public List<Publicacao> buscarPublicacoesAptasParaOCR(Long idFonte, String situacao);
 }

@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.gov.pi.tce.siscap.api.model.Arquivo;
 import br.gov.pi.tce.siscap.api.model.Fonte;
-import br.gov.pi.tce.siscap.api.model.Notificacao;
 import br.gov.pi.tce.siscap.api.model.PaginaOCRArquivo;
 import br.gov.pi.tce.siscap.api.model.Publicacao;
 import br.gov.pi.tce.siscap.api.model.PublicacaoHistorico;
@@ -125,11 +124,13 @@ public class PublicacaoService {
 	}
 
 	public Publicacao realizarOCRPublicacao(Long idPublicacao) throws Exception {
-		
 		Publicacao p = buscarPublicacaoPeloCodigo(idPublicacao);
 		if(p == null || p.getSituacao() == null || !p.getSituacao().equals(SituacaoPublicacao.COLETA_REALIZADA.getDescricao())) {
 			throw new Exception("Esta publicação não existe, ou não está na situação ideal para ser feito o OCR");
 		}
+		p.setQuantidadeTentativasOCR(p.getQuantidadeTentativasOCR() != null ? (p.getQuantidadeTentativasOCR() + 1) : 1);
+		publicacaoRepository.save(p);
+		
 		Arquivo a = p.getArquivo();
 		if(a == null) {
 			throw new Exception("Não foi encontrado arquivo para essa publicação");
@@ -142,7 +143,6 @@ public class PublicacaoService {
 
 	private Publicacao gravarPaginasArquivoPublicacao(Long idPublicacao, Long idArquivo, Map<Integer, PaginaOCRArquivo> mapaPaginasArquivo) throws OCRException{
 		List<PaginaOCRArquivo> paginasArquivo = new ArrayList<PaginaOCRArquivo>();
-		Notificacao notificacao;
 		
 		for (Iterator iterator = mapaPaginasArquivo.keySet().iterator(); iterator.hasNext();) {
 			Integer pagina = (Integer) iterator.next();
@@ -156,38 +156,17 @@ public class PublicacaoService {
 			atualizarHistorico(publicacao, "OCR realizado com sucesso", true);
 		}
 		catch (Exception e) {
-			//TODO Helton
-			//notificacao = criaNotificacaoErro(idPublicacao);
-			
-			//TODO Helton
-			//disparaNotificacao();			
 			atualizarHistorico(publicacao, "Erro ao tentar realizar OCR", false);
 			throw new OCRException("Erro ao realizar OCR do arquivo: " + idArquivo);
 		}
 		
 		Optional<Publicacao> publicacaoOptional = publicacaoRepository.findById(idPublicacao);
 		Publicacao p = publicacaoOptional.isPresent() ? publicacaoOptional.get() : null;
-		p.setQuantidadeTentativasOCR(p.getQuantidadeTentativasOCR() != null ? (p.getQuantidadeTentativasOCR() + 1) : 1);
 		if(p != null) {
 			p.setSituacao(SituacaoPublicacao.OCR_REALIZADO.getDescricao());
 		}
 		Publicacao salva = publicacaoRepository.save(p);
 		return salva;
 	}
-
-
-// TODO Helton
-//	private Notificacao criaNotificacaoErro(Long idPublicacao) {
-//		Notificacao notificacao = new Notificacao();
-//		notificacao.setTipo(NotificacaoTipo.OCR);
-//		notificacao.setPublicacao(publicacao);
-//		notificacao.setUsuarios(usuarios);
-//		notificacao.setDataCriacao(dataCriacao);
-//		notificacao.setDataAtualizacao(dataAtualizacao);
-//		notificacao.setUsuarioAtualizacao(usuarioAtualizacao);
-//		notificacao.setUsuarioCriacao();
-//		
-//	}
-
 
 }

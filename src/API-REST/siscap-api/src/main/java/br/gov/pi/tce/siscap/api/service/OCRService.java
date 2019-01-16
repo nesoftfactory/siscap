@@ -35,9 +35,8 @@ public class OCRService {
 		for (Map.Entry<Integer, byte[]> pair : pages.entrySet()) {
 			byte[] conteudoPagina = pair.getValue();
 			String textoPagina = image2Text.convertToText(conteudoPagina);
-			mapaPaginasArquivo.put(pair.getKey(), new PaginaOCRArquivo(pair.getKey(), textoPagina, arquivo));
+			mapaPaginasArquivo.put(pair.getKey(), new PaginaOCRArquivo(pair.getKey() + 1 , textoPagina, arquivo));
 		}
-		
 		return mapaPaginasArquivo;
 	}
 

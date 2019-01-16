@@ -1,5 +1,6 @@
 package br.gov.pi.tce.siscap.api.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
@@ -35,6 +36,20 @@ public class PublicacaoAnexo extends BaseEntity {
 		setSituacao(situacao);
 		Publicacao p = new Publicacao();
 		p.setId(idPublicacao);
+		setPublicacao(p);
+	}
+	
+	public PublicacaoAnexo(Long id, Long idPublicacao, String situacao, Long idFonte, String nomeFonte, LocalDate dataPublicacao) {
+		super();
+		setId(id);
+		setSituacao(situacao);
+		Publicacao p = new Publicacao();
+		p.setId(idPublicacao);
+		p.setData(dataPublicacao);
+		Fonte f = new Fonte();
+		f.setId(idFonte);
+		f.setNome(nomeFonte);
+		p.setFonte(f);
 		setPublicacao(p);
 	}
 	

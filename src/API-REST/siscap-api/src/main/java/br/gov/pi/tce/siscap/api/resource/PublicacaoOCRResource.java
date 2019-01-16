@@ -75,7 +75,7 @@ public class PublicacaoOCRResource {
 	
 	@ExceptionHandler(OCRException.class)
 	public ResponseEntity<Object> handleOCRException(OCRException ex) {
-		String mensagemUsuario = messageSource.getMessage("fonte.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+		String mensagemUsuario = messageSource.getMessage("ocr.erro", null, LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor = ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		
