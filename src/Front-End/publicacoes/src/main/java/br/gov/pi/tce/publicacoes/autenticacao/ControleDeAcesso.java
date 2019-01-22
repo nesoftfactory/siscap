@@ -28,7 +28,7 @@ public class ControleDeAcesso implements Filter {
 				|| (req.getRequestURI().contains("javax.faces.resource/"))) {
 
 			//if (req.getRequestURI().contains("/admin/")) {
-			if (req.getRequestURI().contains("Admin") && session.getAttribute("ADMINLogado") != null) {
+			if (req.getRequestURI().contains("Admin") && session.getAttribute("USUARIOLogado") != null) {
 				redireciona("/publicacoes/index.xhtml", response);
 			}
 //			if (req.getRequestURI().endsWith("login2.xhtml")) {

@@ -1,7 +1,10 @@
 package br.gov.pi.tce.publicacoes.autenticacao;
 
 import java.io.Serializable;
+import java.security.Key;
+import java.util.List;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -15,6 +18,9 @@ import br.gov.pi.tce.publicacoes.controller.beans.SegurancaController;
 import br.gov.pi.tce.publicacoes.modelo.RespostaToken;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
 import br.gov.pi.tce.publicacoes.util.SessionUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @RequestScoped
 @ManagedBean
@@ -37,8 +43,23 @@ public class AutenticadorBean implements Serializable {
 				senha, propriedades.getValorString("TOKEN_GRAND_TYPE"));
 		if (respostaToken != null) {
 			Object b = new Object();
-			SessionUtil.setParam("USUARIOLogado", b);
 			SessionUtil.setParam("token", respostaToken.getAccess_token());
+			SessionUtil.setParam("login", login);
+			
+			byte[] apiKeySecretBytes = "nesoft".getBytes();
+		    Key signingKey = new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
+			
+			Claims claims = Jwts.parser()         
+				       .setSigningKey(signingKey)
+				       .parseClaimsJws(respostaToken.getAccess_token()).getBody();
+			if(claims.get("authorities")!=null) {
+				List<String> lista = (List<String>) claims.get("authorities");
+				if(!lista.isEmpty() && lista.get(0).equals("ROLE_ADMIN")) {
+					SessionUtil.setParam("ADMINLogado", b);
+				}else {
+					SessionUtil.setParam("USUARIOLogado", b);
+				}
+			}
 			return "/index.xhtml?faces-redirect=true";
 		} else {
 			return null;
@@ -84,4 +105,7 @@ public class AutenticadorBean implements Serializable {
 		this.senha = senha;
 	}
 
+	public String getLoginLogado() {
+		return (String) SessionUtil.getParam("login");
+	}
 }
