@@ -346,22 +346,28 @@ public class PublicacaoServiceClient {
 
 	public List<Publicacao> consultarPublicacaoPorFonteDataNome(Long idFonte, LocalDate data, String nome) {
 		Propriedades propriedades = Propriedades.getInstance();
+		LOGGER.info("INICIANDO RESPONSE PUBLICACAO");
+
 		this.webTarget = this.client
 				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_PUBLICACOES"))
 				.queryParam("idFonte", idFonte).queryParam("data", data).queryParam("nome", nome);
 		Invocation.Builder invocationBuilder = this.webTarget.request(propriedades.getValorString("RESPONSE_TYPE"));
 		Response response = invocationBuilder.get();
+
 		if (response.getStatus() == Response.Status.NOT_FOUND.getStatusCode()) {
 			return null;
 		} else {
 			List<Publicacao> tf = response.readEntity(new GenericType<List<Publicacao>>() {
 			});
+			LOGGER.info("FINALIZANDO O RESPONSE PUBLICACAO");
+
 			return tf;
 		}
 	}
 
 	public List<NotificacaoConfig> consultarNotificacaoConfigPorTipoAtivo(NotificacaoTipo tipo, Boolean ativo) {
 		Propriedades propriedades = Propriedades.getInstance();
+
 		this.webTarget = this.client
 				.target(propriedades.getValorString("URI_API") + propriedades.getValorString("URI_NOTIFICACOES_CONFIG"))
 				.queryParam("ativo", ativo).queryParam("tipo", tipo.toString());
@@ -372,8 +378,10 @@ public class PublicacaoServiceClient {
 		} else {
 			List<NotificacaoConfig> tf = response.readEntity(new GenericType<List<NotificacaoConfig>>() {
 			});
+
 			return tf;
 		}
+
 	}
 
 	public Notificacao cadastrarNotificacao(NotificacaoN notificacao) throws Exception {

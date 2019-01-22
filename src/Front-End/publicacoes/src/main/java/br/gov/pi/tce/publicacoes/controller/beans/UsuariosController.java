@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.UsuarioServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
+import br.gov.pi.tce.publicacoes.services.ColetorPublicacoesService;
 
 @Named
 @ViewScoped
@@ -20,6 +21,10 @@ public class UsuariosController extends BeanController {
 	
 	@Inject
 	private UsuarioServiceClient usuarioServiceClient;
+	
+	@Inject
+	private ColetorPublicacoesService coletorPublicacoesService;
+	
 
 	private static final long serialVersionUID = 1L;
 
@@ -123,6 +128,73 @@ public class UsuariosController extends BeanController {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public void testapublicacaoTeresina() {
+		try {
+			coletorPublicacoesService.coletarDiarioOficialTeresina();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void testapublicacaoParnaiba() {
+		try {
+			coletorPublicacoesService.coletarDiarioOficialParnaiba();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	public void testapublicacaoEstado() {
+		try {
+			coletorPublicacoesService.coletarDiarioOficialPiaui();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void testapublicacaoMunicipios() {
+		try {
+			coletorPublicacoesService.coletarDiarioOficialMunicipios();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
 	}
 
 	

@@ -145,6 +145,7 @@ public class PublicacaoController extends BeanController {
 			}
 			salvarPublicacaoInexistente(diasUteisList, fonte, token);
 		} else if (propriedades.getValorLong("ID_FONTE_DIARIO_OFICIAL_DOS_MUNICIPIOS").equals(idFonte)) {
+			LOGGER.info("Consultando fonte dos municípios");
 			List<String> listaMesAnoHtml = getListaMesAnoHtml(dataInicial, dataFinal);
 			for (String mesAnoHtml : listaMesAnoHtml) {
 				List<String> listHtmls = getPaginasAnoMesDiarioOficialMunicipios(
@@ -154,6 +155,8 @@ public class PublicacaoController extends BeanController {
 							diasUteisList, token);
 				}
 			}
+			LOGGER.info("SALVANDO PUBLICAÇÃO INEXISTENTE (FINAL DE TUDO)");
+
 			salvarPublicacaoInexistente(diasUteisList, fonte, token);
 		} else {
 			salvarPublicacaoInexistente(diasUteisList, fonte, token);
@@ -230,6 +233,7 @@ public class PublicacaoController extends BeanController {
 				regexForPDF = "[D][M]\\s+[0-9A-Za-z]+.(pdf)";
 				erroUrlFonte = Boolean.FALSE;
 			}
+			LOGGER.info("Pegando o REGEX para pegar o diário oficial");
 
 			if (erroUrlFonte) {
 				LOGGER.error("Erro: A Fonte " + fonte.getUrl() + " não foi Encontrada.");
@@ -261,6 +265,8 @@ public class PublicacaoController extends BeanController {
 		Matcher matcher = null;
 
 		try {
+			LOGGER.error("Iniciando a busca das páginas para pegar o diário oficial dos Municipios");
+
 			URL url = new URL(urlString);
 			BufferedReader fonteHTML = new BufferedReader(new InputStreamReader(url.openStream()));
 			Pattern pdfPattern = Pattern.compile(regexForPDF);
@@ -274,6 +280,8 @@ public class PublicacaoController extends BeanController {
 					}
 				}
 			}
+			LOGGER.error("Finalizando a busca das páginas para pegar o diário oficial dos Municipios");
+
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Erro: HTML da página não foi encontrado.");
 			LOGGER.error(e.getMessage());
@@ -318,9 +326,12 @@ public class PublicacaoController extends BeanController {
 			urlFonte = propriedades.getValorString("URL_COLETA_DIARIO_OFICIAL_DOS_MUNICIPIOS") + pageDom;
 		}
 		url = new URL(urlFonte);
+		LOGGER.info("ABRINDO O STREAM DA URL");
+
 		BufferedReader fonteHTML = new BufferedReader(new InputStreamReader(url.openStream()));
 		Pattern datePattern = Pattern.compile(regexForDate);
 		Pattern pdfPattern = Pattern.compile(regexForPDF);
+		LOGGER.info("LENDO A LINHA DA FONTE HTML PUBLICACAO");
 
 		while ((linhaHTML = fonteHTML.readLine()) != null) {
 
@@ -371,6 +382,8 @@ public class PublicacaoController extends BeanController {
 											convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE,
 											"Sucesso", null, null, codigo, publicacaoName, token);
 								} else {
+									LOGGER.info("INICIANDO O SALVAR PUBLICACAO DOS MUNICIPIOS");
+
 									Calendar c = Calendar.getInstance();
 									c.setTime(date);
 									String mes = String.format("%02d", c.get(Calendar.MONTH) + 1);
@@ -380,6 +393,8 @@ public class PublicacaoController extends BeanController {
 													+ ano + mes + "/" + arquivoStr,
 											convertDateToString(date), arquivoStr, Boolean.TRUE, Boolean.FALSE,
 											"Sucesso", null, null, "", arquivoStr, token);
+									LOGGER.info("FINALIZANDO O SALVAR PUBLICACAO DOS MUNICIPIOS");
+
 								}
 								LocalDate localDate = asLocalDate(date);
 								if (diasUteisList.contains(localDate)) {
@@ -499,6 +514,7 @@ public class PublicacaoController extends BeanController {
 	private void salvarPublicacao(Fonte fonte, String linkArquivoPublicacao, String dataPublicacao,
 			String nomeArquivoPublicacao, Boolean isSucesso, Boolean isAnexo, String mensagemErro,
 			PublicacaoAnexo publicacaoAnexo, Arquivo arquivoAnexo, String codigo, String publicacaoName, String token) {
+		LOGGER.info("INICIANDO DENTRO DO METODO SALVAR PUBLICACAO DOS MUNICIPIOS");
 
 		if (token != null) {
 			publicacaoServiceClient = new PublicacaoServiceClient(token);
@@ -587,6 +603,7 @@ public class PublicacaoController extends BeanController {
 		if (publicacaolist != null && !publicacaolist.isEmpty()) {
 			publicacaoConsultada = publicacaolist.get(0);
 		}
+		System.out.println("RETORNANDO A PUBLICACAO CONSULTADA");
 		return publicacaoConsultada;
 	}
 
