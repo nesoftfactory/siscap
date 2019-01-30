@@ -24,14 +24,14 @@ public class ControleDeAcesso implements Filter {
 
 		if ((session.getAttribute("ADMINLogado") != null) || (session.getAttribute("USUARIOLogado") != null)
 		// || (session.getAttribute("SUPERADMINLogado") != null)
-				|| (req.getRequestURI().endsWith("login2.xhtml"))
+				|| (req.getRequestURI().endsWith("login.xhtml"))
 				|| (req.getRequestURI().contains("javax.faces.resource/"))) {
 
 			//if (req.getRequestURI().contains("/admin/")) {
 			if (req.getRequestURI().contains("Admin") && session.getAttribute("USUARIOLogado") != null) {
 				redireciona("/publicacoes/index.xhtml", response);
 			}
-//			if (req.getRequestURI().endsWith("login2.xhtml")) {
+//			if (req.getRequestURI().endsWith("login.xhtml")) {
 //				redireciona("/usuario/index.xhtml", response);
 //			}
 
@@ -39,7 +39,7 @@ public class ControleDeAcesso implements Filter {
 
 			chain.doFilter(request, response);
 		} else {
-			redireciona("/publicacoes/login2.xhtml", response);
+			redireciona("/publicacoes/login.xhtml", response);
 		}
 	}
 
