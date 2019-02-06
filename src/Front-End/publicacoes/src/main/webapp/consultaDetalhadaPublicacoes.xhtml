@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/paradise/template.xhtml">
+
+	<ui:define name="title">Consulta Avançada de Publicações</ui:define>
+	<ui:define name="msgPostConstruct">
+	    <h:inputHidden value="#{consultaDetalhadaPublicacaoController.msgPostConstruct}"></h:inputHidden>
+    </ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<div class="ui-g">
+				<div class="ui-g-12">
+                    <div class="card card-w-title">
+						<p:panel header="Consulta Avançada de Publicações" style="margin-bottom:20px">
+							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
+                                styleClass="ui-panelgrid-blank form-group form-elements">
+								
+								<p:outputLabel value="Descrição" for="pesquisa"/>
+							 	<p:inputText id="nome" value="#{consultaDetalhadaPublicacaoController.descricao}"  />
+							</p:panelGrid>
+							<p:toolbar>
+								<p:toolbarGroup>
+ 									<p:commandButton value="Limpar" action="#{consultaDetalhadaPublicacaoController.limpar()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
+										
+									<p:commandButton id="btn_consultar" value="Consultar" icon="fa fa-search White" iconPos="right" update="@form"
+										action="#{consultaDetalhadaPublicacaoController.consultar()}" >
+            						</p:commandButton>
+								</p:toolbarGroup>
+							</p:toolbar>	
+						</p:panel>
+						
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaDetalhadaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesTable"
+                 emptyMessage="Informações não encontradas.">
+                            <f:facet name="header">
+                                Lista de Resultados
+                            </f:facet>
+
+                            <p:column headerText="Fonte" filterBy="#{publicacao.nomeFonte}" sortBy="#{publicacao.nomeFonte}">
+                                <h:outputText value="#{publicacao.nomeFonte}" />
+                            </p:column>
+
+                            <p:column headerText="Arquivo da publicação" style="width:65px;">
+                            	  <h:commandLink value="Download" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}" mmediate="true"/>
+                            </p:column>
+                       
+                        </p:dataTable>
+                    </div>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
