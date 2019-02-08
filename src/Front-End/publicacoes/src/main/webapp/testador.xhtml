@@ -17,7 +17,7 @@
                     <div class="card card-w-title">
 						<p:panel header="Página de Teste" style="margin-bottom:20px">
 							
-						                        <p:toolbar>
+						     <p:toolbar>
 								<p:toolbarGroup>
  									<p:commandButton value="Testar Teres" action="#{usuariosController.testapublicacaoTeresina()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;" />
@@ -31,6 +31,20 @@
 										<p:commandButton value="Testar Municipios" action="#{usuariosController.testapublicacaoMunicipios()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;" />
 									
+ 									<p:commandButton value="Testar OCR TERESINA " action="#{usuariosController.testOCRteresina()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;" />
+										
+								<p:commandButton value="Testar OCR PARNAIBA" action="#{usuariosController.testOCRparnaiba()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;" />
+										
+											
+								<p:commandButton value="Testar OCR ESTADO" action="#{usuariosController.testOCRestado()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;" />
+								
+											
+								<p:commandButton value="Testar OCR MUNICIPIOS" action="#{usuariosController.testOCRmunicipios()}" process="@this" update="@form"
+										icon="fa fa-eraser White" iconPos="right" style="width:auto;" />
+										
 								</p:toolbarGroup>
 							</p:toolbar>
 							

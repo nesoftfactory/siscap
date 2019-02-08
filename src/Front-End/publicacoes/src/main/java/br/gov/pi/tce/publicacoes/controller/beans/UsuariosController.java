@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import br.gov.pi.tce.publicacoes.clients.UsuarioServiceClient;
 import br.gov.pi.tce.publicacoes.modelo.Usuario;
 import br.gov.pi.tce.publicacoes.services.ColetorPublicacoesService;
+import br.gov.pi.tce.publicacoes.services.OCRPublicacoesService;
 
 @Named
 @ViewScoped
@@ -25,6 +26,9 @@ public class UsuariosController extends BeanController {
 	@Inject
 	private ColetorPublicacoesService coletorPublicacoesService;
 	
+	@Inject
+	private OCRPublicacoesService ocrPublicacoesService;
+
 
 	private static final long serialVersionUID = 1L;
 
@@ -183,6 +187,79 @@ public class UsuariosController extends BeanController {
 	public void testapublicacaoMunicipios() {
 		try {
 			coletorPublicacoesService.coletarDiarioOficialMunicipios();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void testOCRmunicipios() {
+		try {
+			ocrPublicacoesService.realizarOCRDiarioOficialMunicipios();
+					}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void testOCRparnaiba() {
+		try {
+			
+			ocrPublicacoesService.realizarOCRDiarioOficialParnaiba();
+			
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void testOCRpiaui() {
+		try {
+			
+			ocrPublicacoesService.realizarOCRDiarioOficialPiaui();
+			
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
+			LOGGER.error("teste" + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void testOCRteresina() {
+		try {
+	
+			ocrPublicacoesService.realizarOCRDiarioOficialTeresina();
 		}
 		catch (EJBException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "teste", e.getMessage());
