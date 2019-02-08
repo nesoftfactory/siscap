@@ -237,7 +237,7 @@ public class UsuariosController extends BeanController {
 		
 	}
 	
-	public void testOCRpiaui() {
+	public void testOCRestado() {
 		try {
 			
 			ocrPublicacoesService.realizarOCRDiarioOficialPiaui();
