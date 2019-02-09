@@ -26,17 +26,17 @@ public class OCRPublicacoesService {
 
 	private String getToken() {
 		String token = null;
-		Propriedades propriedades = Propriedades.getInstance();
-		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"),
-				propriedades.getValorString("TOKEN_USERNAME"), propriedades.getValorString("TOKEN_PASSWORD"),
-				propriedades.getValorString("TOKEN_GRAND_TYPE"));
-		if (respostaToken != null) {
-			token = respostaToken.getAccess_token();
-		}
+//		Propriedades propriedades = Propriedades.getInstance();
+//		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"),
+//				propriedades.getValorString("TOKEN_USERNAME"), propriedades.getValorString("TOKEN_PASSWORD"),
+//				propriedades.getValorString("TOKEN_GRAND_TYPE"));
+//		if (respostaToken != null) {
+//			token = respostaToken.getAccess_token();
+//		}
 		return token;
 	}
 
-	@Schedule(hour = "23", minute = "20")
+	//@Schedule(hour = "19", minute = "11")
 	public void realizarOCRDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial de Parnaiba");
 		if (tokenService == null || tokenService.equals("")) {
@@ -46,7 +46,7 @@ public class OCRPublicacoesService {
 		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial de Parnaiba");
 	}
 
-	@Schedule(hour = "23", minute = "30")
+	//@Schedule(hour = "09", minute = "11")
 	public void realizarOCRDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial dos Municipios");
 		if (tokenService == null || tokenService.equals("")) {
@@ -56,7 +56,7 @@ public class OCRPublicacoesService {
 		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial dos Municipios");
 	}
 
-	@Schedule(hour = "23", minute = "40")
+	//@Schedule(hour = "09", minute = "11")
 	public void realizarOCRDiarioOficialPiaui() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial do Piaui");
 		if (tokenService == null || tokenService.equals("")) {
@@ -66,7 +66,7 @@ public class OCRPublicacoesService {
 		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial do Piaui");
 	}
 
-	@Schedule(hour = "23", minute = "50")
+	@Schedule(hour = "19", minute = "46")
 	public void realizarOCRDiarioOficialTeresina() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial de Teresina");
 		if (tokenService == null || tokenService.equals("")) {

@@ -1,28 +1,25 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
-import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
-import br.gov.pi.tce.publicacoes.clients.PublicacaoServiceClient;
-import br.gov.pi.tce.publicacoes.modelo.Arquivo;
-import br.gov.pi.tce.publicacoes.modelo.Fonte;
-import br.gov.pi.tce.publicacoes.modelo.Publicacao;
+import br.gov.pi.tce.publicacoes.clients.ElasticServiceClient;
+import br.gov.pi.tce.publicacoes.modelo.elastic.BucketArquivo;
+import br.gov.pi.tce.publicacoes.modelo.elastic.BucketDataPublicacao;
+import br.gov.pi.tce.publicacoes.modelo.elastic.BucketFonte;
+import br.gov.pi.tce.publicacoes.modelo.elastic.BucketPagina;
+import br.gov.pi.tce.publicacoes.modelo.elastic.BucketPublicacao;
+import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticAggregate;
+import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticGeral;
+import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticTO;
 
 @Named
 @ViewScoped
@@ -32,277 +29,128 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 	
 	private static final Logger LOGGER = Logger.getLogger(ConsultaDetalhadaPublicacaoController.class);
 	
-	private List<Fonte> fontes = Collections.EMPTY_LIST;
 
-	private List<Publicacao> publicacoes;
-	
-	private String dataInicio;
-	
-	private String nome;
-	
-	private Fonte fonte;
-	
-	private String dataFim;
-	
-	private Boolean sucesso;
-	
 	@Inject
-	private PublicacaoServiceClient publicacaoServiceClient;
+	private ElasticServiceClient elasticServiceClient;
+
 	
-	@Inject
-	private FonteServiceClient fonteServiceClient;
+	private String descricao;
 	
-	@Inject
-	private ArquivoServiceClient arquivoServiceClient;
-	
-	private static final String HEADER_CONTENT_DISPOSITION = "Content-disposition";
-	private static final String ATTACHMENT_FILENAME = "attachment; filename=";
-	
+	private List<PublicacaoElasticTO> listaPublicacoes = new ArrayList<PublicacaoElasticTO>();
 
 	@PostConstruct
 	public void init() {
 		limpar();
-		iniciaFontes();
-		if(!((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI().contains("publicacoesUsuario")) {
-			iniciaPublicacoes(null);
-		}else {
-			iniciaPublicacoes(Boolean.TRUE);
-		}
 	}
 	
 	
 	public void consultar() {
-		consultarPorFiltroSucesso(null);
+		//consultar(descricao);
+		//consultarComAgregacao(descricao);
+		consultarComAgregacao(descricao);
+		System.out.println();
 	}
 
-	public void consultarSomenteComSucesso() {
-		consultarPorFiltroSucesso(Boolean.TRUE);
+	
+	private void consultarComAgregacao(String descricao) {
+		PublicacaoElasticAggregate res = elasticServiceClient.consultarComAgragador(descricao);
+		if(res != null) {
+			listaPublicacoes = getListaPublicacoesElasticTO(res);
+		}
+		//TODO se lista for vazia colcoar mensagem que não foram encontrados dados
+		//FAzer testes de dados de entrada antes de consultar e antes de montar o query
+		//colocar os campos de data e deixar já preparado caso as datas venham preenchidas
 	}
 
-	private void consultarPorFiltroSucesso(Boolean filtroSucesso) {
-		try {
-			if(dataInicio == null || dataFim == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e fim são obrigatórias.", "");
+
+	private List<PublicacaoElasticTO> getListaPublicacoesElasticTO(PublicacaoElasticAggregate res) {
+		listaPublicacoes = new ArrayList<PublicacaoElasticTO>();
+		if(res != null) {
+			for (Iterator iterator = res.getAggregations().getArquivo().getBuckets().iterator(); iterator.hasNext();) {
+				BucketArquivo bucketArquivo = (BucketArquivo) iterator.next();
+				PublicacaoElasticTO peTO = new PublicacaoElasticTO();
+				peTO.setIdArquivo(bucketArquivo.getKey());
+				BucketPublicacao bucketPublicacao = bucketArquivo.getPublicacao().getBuckets().get(0);
+				peTO.setNomePublicacao(bucketPublicacao.getKey());
+				BucketDataPublicacao bucketDataPublicacao = bucketPublicacao.getDataPublicacao().getBuckets().get(0);
+				peTO.setDataPublicacao(bucketDataPublicacao.getKey_as_string());
+				BucketFonte bucketFonte= bucketDataPublicacao.getFonte().getBuckets().get(0);
+				peTO.setFonte(bucketFonte.getKey());
+				List<BucketPagina> listaBucketPagina = bucketFonte.getPaginas().getBuckets();
+				for (BucketPagina bucketPagina : listaBucketPagina) {
+					peTO.getPaginas().add(bucketPagina.getKey()+"");
+				}
+				listaPublicacoes.add(peTO);
 			}
-			else {
-				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,filtroSucesso, null);
-			}
 		}
-		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
-			LOGGER.error("Erro ao consultar publicações.:" + e.getMessage());
-			e.printStackTrace();
-		}
-		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao consultar publicações", e.getMessage());
-			LOGGER.error("Erro ao consultar publicações:" + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
-
-	private void iniciaFontes() {
-		try {
-			fontes = fonteServiceClient.consultarTodasFontes();
-		}
-		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Fontes.", e.getMessage());
-			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
-			e.printStackTrace();
-		}
-		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
-			LOGGER.error("Erro ao iniciar fontes:" + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
-	
-	
-	public Fonte getFonte() {
-		return fonte;
-	}
-
-
-	public void setFonte(Fonte fonte) {
-		this.fonte = fonte;
-	}
-
-
-	public String getNome() {
-		return nome;
-	}
-
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-
-	public Boolean getSucesso() {
-		return sucesso;
+		return listaPublicacoes;
 	}
 
 
 
-
-
-	public void setSucesso(Boolean sucesso) {
-		this.sucesso = sucesso;
+	private PublicacaoElasticGeral consultar(String texto) {
+		PublicacaoElasticGeral res = elasticServiceClient.consultar(texto);
+		return res;
 	}
 
 
-
-
-
-	public List<Fonte> getFontes() {
-		return fontes;
+	public String getDescricao() {
+		return descricao;
 	}
 
 
-
-
-	public void setFontes(List<Fonte> fontes) {
-		this.fontes = fontes;
-	}
-
-
-
-
-	public String getDataInicio() {
-		return dataInicio;
-	}
-
-
-
-
-	public void setDataInicio(String dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-
-
-
-	public String getDataFim() {
-		return dataFim;
-	}
-
-
-
-
-	public void setDataFim(String dataFim) {
-		this.dataFim = dataFim;
-	}
-
-
-
-
-	public List<SelectItem> getFontesParaSelectItems(){
-		return getSelectItens(fontes, "nome");
-	}
-	
-
-	public List<Publicacao> getPublicacoes() {
-		return publicacoes;
-	}
-
-
-
-	public void setPublicacoes(List<Publicacao> publicacoes) {
-		this.publicacoes = publicacoes;
-	}
-
-	
-
-	
-	private void iniciaPublicacoes(Boolean sucesso) {
-		try {
-			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes(sucesso);
-		}
-		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
-			LOGGER.error("Erro ao iniciar publicações.:" + e.getMessage());
-			e.printStackTrace();
-		}
-		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());
-			LOGGER.error("Erro ao iniciar publicações:" + e.getMessage());
-			e.printStackTrace();
-		}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 
 	public void limpar() {
-		this.dataInicio = "";		
-		this.nome = "";		
-		this.fonte = null;		
-		this.dataFim = "";		
-		this.sucesso = null;
-		
+		descricao = "";
+		listaPublicacoes = new ArrayList<>();
 	}
 	
 	
+	
+	
+	public List<PublicacaoElasticTO> getListaPublicacoes() {
+		return listaPublicacoes;
+	}
+
+
+	public void setListaPublicacoes(List<PublicacaoElasticTO> listaPublicacoes) {
+		this.listaPublicacoes = listaPublicacoes;
+	}
+	
+	
+
+
 	public void downloadArquivo(){
 		
-		try {
-			Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getArquivo());
-			
-			
-			ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
-			HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
-			
-			response.reset();
-			response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
-			try {
-				response.getOutputStream().write(arquivo.getConteudo());
-				response.flushBuffer();
-			} catch (Exception e) {
-				LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
-				LOGGER.error(e.getMessage());
-				e.printStackTrace();
-			}
-			FacesContext.getCurrentInstance().responseComplete();
-		}
-		catch(Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
-			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
-			e.printStackTrace();
-		}
-		
-	}
-	
-	
-	public void getHistoricoPublicacao(){
-		Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("publicacaoSelecionada", publicacao);
-	}
-	
-	public void downloadArquivoAnexo(){
-		try {
-			Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-			if(publicacao != null && publicacao.getPossuiAnexo()) {
-				Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getPublicacaoAnexo().getArquivo());
-				ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
-				HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
-				response.reset();
-				response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
-				try {
-					response.getOutputStream().write(arquivo.getConteudo());
-					response.flushBuffer();
-				} catch (Exception e) {
-					LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
-					LOGGER.error(e.getMessage());
-					e.printStackTrace();
-				}
-				FacesContext.getCurrentInstance().responseComplete();
-			}
-		}
-		catch(Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de anexo de publicações.", e.getMessage());
-			LOGGER.error("Erro realizar download de anexo de publicações:" + e.getMessage());
-			e.printStackTrace();
-		}
+//		try {
+//			Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+//			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getArquivo());
+//			
+//			
+//			ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
+//			HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
+//			
+//			response.reset();
+//			response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
+//			try {
+//				response.getOutputStream().write(arquivo.getConteudo());
+//				response.flushBuffer();
+//			} catch (Exception e) {
+//				LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
+//				LOGGER.error(e.getMessage());
+//				e.printStackTrace();
+//			}
+//			FacesContext.getCurrentInstance().responseComplete();
+//		}
+//		catch(Exception e) {
+//			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
+//			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
+//			e.printStackTrace();
+//		}
 		
 	}
 	

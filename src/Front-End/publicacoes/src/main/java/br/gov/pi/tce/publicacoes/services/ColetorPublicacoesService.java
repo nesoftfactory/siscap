@@ -36,11 +36,11 @@ public class ColetorPublicacoesService {
 	
 	private String getToken() {
 		String token = null;
-		Propriedades propriedades = Propriedades.getInstance();
-		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"), propriedades.getValorString("TOKEN_USERNAME"), propriedades.getValorString("TOKEN_PASSWORD"), propriedades.getValorString("TOKEN_GRAND_TYPE"));
-		if (respostaToken != null) {
-			token = respostaToken.getAccess_token();
-		}
+//		Propriedades propriedades = Propriedades.getInstance();
+//		RespostaToken respostaToken = segurancaController.pegarToken(propriedades.getValorString("TOKEN_CLIENT"), propriedades.getValorString("TOKEN_USERNAME"), propriedades.getValorString("TOKEN_PASSWORD"), propriedades.getValorString("TOKEN_GRAND_TYPE"));
+//		if (respostaToken != null) {
+//			token = respostaToken.getAccess_token();
+//		}
 		return token;
 	}
 	
@@ -72,7 +72,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	//@Schedule(hour="03", minute = "45")
+	@Schedule(hour="19", minute = "49")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
 		if(tokenService==null || tokenService.equals("")) {

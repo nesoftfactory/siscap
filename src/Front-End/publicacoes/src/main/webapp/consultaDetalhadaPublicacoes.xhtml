@@ -20,7 +20,7 @@
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								
 								<p:outputLabel value="Descrição" for="pesquisa"/>
-							 	<p:inputText id="nome" value="#{consultaDetalhadaPublicacaoController.descricao}"  />
+							 	<p:inputText id="pesquisa" value="#{consultaDetalhadaPublicacaoController.descricao}"  />
 							</p:panelGrid>
 							<p:toolbar>
 								<p:toolbarGroup>
@@ -33,22 +33,38 @@
 								</p:toolbarGroup>
 							</p:toolbar>	
 						</p:panel>
-						
-						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaDetalhadaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesTable"
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" reflow="true" paginator="true" rows="6" widgetVar="publicacoesTable"
                  emptyMessage="Informações não encontradas.">
                             <f:facet name="header">
                                 Lista de Resultados
                             </f:facet>
-
-                            <p:column headerText="Fonte" filterBy="#{publicacao.nomeFonte}" sortBy="#{publicacao.nomeFonte}">
-                                <h:outputText value="#{publicacao.nomeFonte}" />
+                            <p:column headerText="Nome" >
+                                <h:outputText value="#{publicacao.nomePublicacao}" />
                             </p:column>
 
-                            <p:column headerText="Arquivo da publicação" style="width:65px;">
-                            	  <h:commandLink value="Download" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}" mmediate="true"/>
+                            <p:column headerText="Fonte">
+                                <h:outputText value="#{publicacao.fonte}" />
                             </p:column>
-                       
+
+							<p:column headerText="Páginas">
+                                <h:outputText value="#{publicacao.paginas}" />
+                            </p:column>
+                            
+                            <p:column headerText="Data" style="width:70px;">
+                            <h:outputText value="#{publicacao.dataPublicacao}" >
+                               <!--  <h:outputText value="#{publicacao.dataString}" >
+                                	<f:convertDateTime pattern="dd/MM/yyyy" />
+                                --> 	
+                                </h:outputText>
+                            </p:column>
+                            
+                            <p:column headerText="Arquivo" style="width:65px;">
+                            	  <h:commandLink value="Download" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}"  immediate="true"/>
+                            </p:column>
+                            
                         </p:dataTable>
+						
+						
                     </div>
 				</div>
 			</div>
