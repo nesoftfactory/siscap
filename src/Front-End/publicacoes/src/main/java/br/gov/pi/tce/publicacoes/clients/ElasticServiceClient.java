@@ -25,6 +25,7 @@ import br.gov.pi.tce.publicacoes.modelo.elastic.Match;
 import br.gov.pi.tce.publicacoes.modelo.elastic.Must;
 import br.gov.pi.tce.publicacoes.modelo.elastic.Order;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PaginaGroupBy;
+import br.gov.pi.tce.publicacoes.modelo.elastic.PaginaOcrElastic;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticAggregate;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticGeral;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoGroupBy;
@@ -114,6 +115,15 @@ public class ElasticServiceClient {
 		
 		body.setQuery(query);
 		return body;
+	}
+
+	public PaginaOcrElastic getPagina(Long idArquivo, String pagina) {
+		//TODO
+		PaginaOcrElastic novo = new PaginaOcrElastic();
+		novo.setIdArquivo(idArquivo);
+		novo.setNumPagina(Long.valueOf(pagina));
+		novo.setTextoOcr("TEste de OCR");
+		return novo;
 	}
 
 }

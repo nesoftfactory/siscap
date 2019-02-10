@@ -3,6 +3,8 @@ package br.gov.pi.tce.publicacoes.modelo.elastic;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PublicacaoElasticTO {
 	
 	private Long idArquivo;
@@ -10,9 +12,17 @@ public class PublicacaoElasticTO {
 	private String dataPublicacao;
 	private List<String> paginas = new ArrayList<>();
 	private String fonte;
+	private List<PaginaOcrElastic> paginasOcr;
 	
 	
 	
+	@JsonIgnore
+	public List<PaginaOcrElastic> getPaginasOcr() {
+		return paginasOcr;
+	}
+	public void setPaginasOcr(List<PaginaOcrElastic> paginasOcr) {
+		this.paginasOcr = paginasOcr;
+	}
 	public List<String> getPaginas() {
 		return paginas;
 	}

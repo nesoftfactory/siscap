@@ -33,6 +33,69 @@
 								</p:toolbarGroup>
 							</p:toolbar>	
 						</p:panel>
+						
+						<p:carousel value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" headerText="Resultado" var="publicacao" itemStyle="text-align:center" responsive="true">
+					        <p:panelGrid columns="1" style="width:100%;margin:10px 0px" columnClasses="label,value" layout="grid" styleClass="ui-panelgrid-blank">
+					            <f:facet name="header">
+					                 <h:commandLink value="Download" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}"  immediate="true"/>
+					            </f:facet>
+					 
+					            <h:outputText value="Fonte: #{publicacao.fonte}" />
+					 <!-- 
+					            <h:outputText value="Páginas" />
+					            <h:outputText value="#{publicacao.paginas}" />
+					 --> 
+					            <h:outputText value="Data da Publicação: #{publicacao.dataPublicacao}" />
+					            
+					            <p:carousel value="#{publicacao.paginasOcr}" headerText="Páginas" var="pagina" itemStyle="height:200px;text-align:center" numVisible="1" easing="easeOutBounce" style="width:250px" circular="true">
+							        <h:panelGrid columns="1" style="width:100%" columnClasses="label,value">
+							            <f:facet name="header">
+							                   <h:outputText value="Página: #{pagina.numPagina}" />
+							            </f:facet>
+							            	Blablabla<span style="background-color: #FFFF00"><b>#{pagina.textoOcr}</b></span>blabla bla
+							            <f:facet name="footer">
+							                   
+							            </f:facet>
+							        </h:panelGrid>
+							    </p:carousel> 
+						
+					        </p:panelGrid>
+ 
+					        <f:facet name="footer">
+					               Teste
+					        </f:facet>
+					    </p:carousel>
+					    
+					    
+					    <!-- 
+					    <p:carousel value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" headerText="Custom" var="publicacao" itemStyle="height:200px;text-align:center" numVisible="1" easing="easeOutBounce" style="width:250px" circular="true">
+					        <h:panelGrid columns="2" style="width:100%" columnClasses="label,value">
+					            <f:facet name="header">
+					                  <h:commandLink value="Download" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}"  immediate="true"/>
+					            </f:facet>
+					 
+					            <h:outputText value="Nome da publicação" />
+					            <h:outputText value="#{publicacao.nomePublicacao}" />
+					 
+					            <h:outputText value="Fonte" />
+					            <h:outputText value="#{publicacao.fonte}" />
+					 
+					            <h:outputText value="Páginas" />
+					            <h:outputText value="#{publicacao.paginas}" />
+					 
+					            <h:outputText value="Data da Publicação" />
+					            <h:outputText value="#{publicacao.dataPublicacao}" />
+					 
+					            <f:facet name="footer">
+					                   <h:commandLink value="Download" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}"  immediate="true"/>
+					            </f:facet>
+					        </h:panelGrid>
+					    </p:carousel> 
+						
+						 -->
+						
+						
+						<!-- 
 						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" reflow="true" paginator="true" rows="6" widgetVar="publicacoesTable"
                  emptyMessage="Informações não encontradas.">
                             <f:facet name="header">
@@ -52,9 +115,6 @@
                             
                             <p:column headerText="Data" style="width:70px;">
                             <h:outputText value="#{publicacao.dataPublicacao}" >
-                               <!--  <h:outputText value="#{publicacao.dataString}" >
-                                	<f:convertDateTime pattern="dd/MM/yyyy" />
-                                --> 	
                                 </h:outputText>
                             </p:column>
                             
@@ -63,7 +123,7 @@
                             </p:column>
                             
                         </p:dataTable>
-						
+					 -->	
 						
                     </div>
 				</div>
