@@ -90,7 +90,7 @@
                             </p:column>
                             
                             <p:column headerText="Ações">
-								<p:commandButton id="bt1" icon="fa fa-edit" title="editar" process="@this" onclick="parent.scrollTo(0,0);"
+								<p:commandButton id="bt1" icon="fa fa-edit" title="editar" process="@this" onclick="parent.scrollTo(0,0);" resetValues="true"
 									action="#{usuariosController.editar(usuario)}" update="@form" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"/>
 									
 								<p:commandButton id="bt2" icon="fa fa-trash" title="excluir" update="usuariosTable" process="@this"

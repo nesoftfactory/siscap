@@ -49,8 +49,10 @@ public class UsuariosController extends BeanController {
 	}
 
 	public void editar(Usuario usuarioEditar) {
+		limpar();
 		usuario = usuarioEditar;
 	}
+	
 	
 	public void excluir(Usuario usuarioExcluir) {
 		try {
