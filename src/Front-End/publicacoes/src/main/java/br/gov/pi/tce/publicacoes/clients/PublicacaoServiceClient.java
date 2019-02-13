@@ -402,13 +402,14 @@ public class PublicacaoServiceClient {
 		LocalDate dt = null;
 		if (data == null) {
 			if (dataInicio == null || dataFim == null) {
-				throw new Exception("Data Inicio e Data Fim são obrigatórios");
-			}
-			try {
-				dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			} catch (Exception e) {
-				throw new Exception("Data Inválida");
+				//throw new Exception("Data Inicio e Data Fim são obrigatórios");
+			}else {
+				try {
+					dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+					dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+				} catch (Exception e) {
+					throw new Exception("Data Inválida");
+				}
 			}
 		} else {
 			try {

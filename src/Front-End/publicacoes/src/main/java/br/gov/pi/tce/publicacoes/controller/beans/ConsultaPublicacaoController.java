@@ -81,12 +81,12 @@ public class ConsultaPublicacaoController extends BeanController {
 
 	private void consultarPorFiltroSucesso(Boolean filtroSucesso) {
 		try {
-			if(dataInicio == null || dataFim == null) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e fim são obrigatórias.", "");
-			}
-			else {
-				publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,filtroSucesso, null);
-			}
+//			if(dataInicio == null || dataFim == null) {
+//				addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e fim são obrigatórias.", "");
+//			}
+//			else {
+			publicacoes = publicacaoServiceClient.consultarPublicacaoPorFiltro(fonte!=null?fonte.getId():null, nome, dataInicio, dataFim,filtroSucesso, null);
+//			}
 		}
 		catch (EJBException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());

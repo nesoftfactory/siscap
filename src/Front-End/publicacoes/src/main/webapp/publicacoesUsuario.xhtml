@@ -21,10 +21,10 @@
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 								
 								 <p:outputLabel value="Data Inicio" for="dataInicio" />
-								 <p:calendar id="dataInicio" value="#{consultaPublicacaoController.dataInicio}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
+								 <p:calendar id="dataInicio" value="#{consultaPublicacaoController.dataInicio}" showOn="button" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
 							 	
 							 	<p:outputLabel value="Data Fim" for="dataFim"/>
-							 	<p:calendar id="dataFim" value="#{consultaPublicacaoController.dataFim}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter"/>
+							 	<p:calendar id="dataFim" value="#{consultaPublicacaoController.dataFim}" showOn="button" pattern="dd/MM/yyyy" mask="true" converter="dataConverter"/>
 								
 								<p:outputLabel value="Fonte" for="fonte"/>
 								<p:selectOneMenu id="fonte" value="#{consultaPublicacaoController.fonte}" converter="fonteConverter">
@@ -45,7 +45,7 @@
 							</p:toolbar>	
 						</p:panel>
 						
-						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="6" widgetVar="publicacoesTable"
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesTable"
                  emptyMessage="Informações não encontradas.">
                             <f:facet name="header">
                                 Lista de Publicações

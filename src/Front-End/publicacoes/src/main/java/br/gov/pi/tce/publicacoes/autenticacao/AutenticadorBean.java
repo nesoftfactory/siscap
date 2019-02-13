@@ -74,7 +74,7 @@ public class AutenticadorBean implements Serializable {
 		final HttpServletRequest r = (HttpServletRequest) ec.getRequest();
 		r.getSession(false).invalidate();
 
-		return "/publicacoes/login.xhtml?faces-redirect=true";
+		return "login.xhtml";
 	}
 
 	/**

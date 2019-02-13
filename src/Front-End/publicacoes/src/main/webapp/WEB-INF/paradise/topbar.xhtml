@@ -6,6 +6,7 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:pa="http://primefaces.org/paradise">
 
+<h:form id="formTopBar">
     <div class="topbar">
         <h:link outcome="/dashboard" styleClass="topbar-logo">
             <p:graphicImage name="logo-tce.png" style="border: 0px;" library="images" />
@@ -30,7 +31,7 @@
                     <span class="topbar-item-name">Profile</span>
                 </a>
                 <ul>
-                    <li role="menuitem">
+                    <!--<li role="menuitem">
                         <a href="#">
                             <i class="fa fa-fw fa-user"></i>
                             <span>Profile</span>
@@ -47,16 +48,15 @@
                             <i class="fa fa-fw fa-cog"></i>
                             <span>Settings</span>
                         </a>
-                    </li>
+                    </li>-->
                     <li role="menuitem">
-                        <a href="login.xhtml">
-                            <i class="fa fa-fw fa-sign-out"></i>
-                            <span>Logout</span>
-                        </a>
+                    		<h:commandLink value="Logout" action="#{autenticadorBean.logout}" ajax="false">
+                            <i class="fa fa-sign-out"></i>
+                    		</h:commandLink>
                     </li>
                 </ul>
             </li>
-            <li>
+            <!--<li>
                 <a href="#">
                     <i class="topbar-icon fa fa-fw fa-cog"></i>
                     <span class="topbar-item-name">Settings</span>
@@ -161,8 +161,9 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li>-->
         </ul>
     </div>
+    </h:form>
 
 </ui:composition>
