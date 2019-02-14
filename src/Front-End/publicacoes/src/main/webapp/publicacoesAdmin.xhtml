@@ -56,40 +56,28 @@
                                 Lista de Publicações
                             </f:facet>
 
-                            <p:column headerText="Fonte" filterBy="#{publicacao.fonte.nome}" sortBy="#{publicacao.fonte.nome}">
+                            <p:column headerText="Fonte" sortBy="#{publicacao.fonte.nome}">
                                 <h:outputText value="#{publicacao.fonte.nome}" />
                             </p:column>
-
-                            <!--<p:column headerText="Nome" filterBy="#{publicacao.nome}" sortBy="#{publicacao.nome}">
-                                <h:outputText value="#{publicacao.nome}" />
-                            </p:column>-->
                             
-                             <p:column headerText="Situação" filterBy="#{publicacao.situacao}" sortBy="#{publicacao.situacao}">
+                             <p:column headerText="Situação" sortBy="#{publicacao.situacao}">
                                 <h:outputText value="#{publicacao.situacao}" rendered="#{publicacao.situacao != null}"/>
                                 <h:outputText value="Não Coletado" rendered="#{publicacao.situacao == null}"/>
                             </p:column>
 
-                            <p:column headerText="Data" filterBy="#{publicacao.data}" sortBy="#{publicacao.data}" style="width:70px;">
+                            <p:column headerText="Data" sortBy="#{publicacao.data}" style="width:70px;">
                                 <h:outputText value="#{publicacao.dataString}" >
                                 	<f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>	
                             </p:column>
                             
-                            <!--<p:column headerText="Sucesso (Sim/Não)" filterBy="#{publicacao.textoSucesso}">
-                           		  <h:outputText value="#{publicacao.textoSucesso}" />
-                            </p:column>-->
-                            
-                            <p:column headerText="Tentativas de Download" filterBy="#{publicacao.quantidadeTentativas}">
+                            <p:column headerText="Tentativas de Download">
                            		  <h:outputText value="#{publicacao.quantidadeTentativas}" />
                             </p:column>
                             
-                            <p:column headerText="Tentativas de OCR" filterBy="#{publicacao.quantidadeTentativasOCR}">
+                            <p:column headerText="Tentativas de OCR">
                            		  <h:outputText value="#{publicacao.quantidadeTentativasOCR}" />
                             </p:column>
-                            
-                            <!--<p:column headerText="Tentativas de Indexação" filterBy="#{publicacao.quantidadeTentativasIndexacao}">
-                           		  <h:outputText value="#{publicacao.quantidadeTentativasIndexacao}" />
-                            </p:column>-->
                             
                              <p:column headerText="Notificações">
                             	  <h:commandLink value="Notificações" onclick="window.open('notificacoesPublicacaoHistorico.xhtml?id='+ '#{publicacao.id}' ,'popUpWindow','height=450,width=800,left=50,top=50,resizable=no,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes');" immediate="true" rendered="#{publicacao.possuiNotificacao}"/>
@@ -108,11 +96,7 @@
                            		  
                             </p:column>
                             
-                            <!--<p:column headerText="Nome Anexo" filterBy="#{publicacao.publicacaoAnexo.nome}" sortBy="#{publicacao.publicacaoAnexo.nome}">
-                           		  <h:outputText value="#{publicacao.publicacaoAnexo.nome}" rendered="#{publicacao.possuiAnexo}"/>
-                            </p:column>-->
-                            
-                             <p:column headerText="Situação Anexo" filterBy="#{publicacao.publicacaoAnexo.situacao}" sortBy="#{publicacao.publicacaoAnexo.situacao}">
+                             <p:column headerText="Situação Anexo" sortBy="#{publicacao.publicacaoAnexo.situacao}">
                            		  <h:outputText value="#{publicacao.publicacaoAnexo.situacao}" rendered="#{publicacao.possuiAnexo}"/>
                            		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>

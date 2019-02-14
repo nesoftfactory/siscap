@@ -104,8 +104,9 @@ public class FonteServiceClient {
 		}
 	}
 
-	public String excluirFontePorCodigo(Long id) {
+	public String excluirFontePorCodigo(Long id) throws Exception {
 		Response response = chamadaFontesAPI(id, false).delete();
+		trataRetorno(response);
 		if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
 			return null;
 		}

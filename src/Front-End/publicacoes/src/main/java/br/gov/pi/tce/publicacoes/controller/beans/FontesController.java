@@ -159,7 +159,7 @@ public class FontesController extends BeanController {
 			e.printStackTrace();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao excluir fonte.", "");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Não é permitido excluir uma Fonte que já está associada.", "");
 			LOGGER.error("Erro ao excluir fonte:" + e.getMessage());
 			e.printStackTrace();
 		}
