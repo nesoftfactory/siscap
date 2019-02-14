@@ -77,7 +77,7 @@ public class PublicacaoService {
 		if(publicacaoSalva != null && publicacaoSalva.getSucesso()) {
 			publicacaoSalva.setSituacao(SituacaoPublicacao.COLETA_REALIZADA.getDescricao());
 		}
-		atualizarHistorico(publicacaoSalva, mensagemLog, true);
+		atualizarHistorico(publicacaoSalva, mensagemLog, publicacaoSalva.getSucesso().booleanValue());
 		
 		return publicacaoSalva;
 	}
