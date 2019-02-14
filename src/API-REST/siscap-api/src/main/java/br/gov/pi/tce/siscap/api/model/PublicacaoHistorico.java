@@ -137,7 +137,7 @@ public class PublicacaoHistorico  {
 	@Transient
 	public String getDataCriacaoString() {
 		if(getDataCriacao() != null) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
 	        String dataCriacaoFormatada = getDataCriacao().format(formatter);
 			return dataCriacaoFormatada;
 		}
