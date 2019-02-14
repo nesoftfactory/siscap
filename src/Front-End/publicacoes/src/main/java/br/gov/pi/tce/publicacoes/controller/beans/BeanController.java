@@ -2,6 +2,8 @@ package br.gov.pi.tce.publicacoes.controller.beans;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -28,7 +30,7 @@ public class BeanController implements Serializable {
 	public static final String BUNDLE_PADRAO = "Mensagens";
 	private boolean msgPostConstruct = true;
 	
-	public String validaData(String data) {
+	public String validaData(String data) throws ParseException {
 		// Tratamento para data
 		String[] dataSplit = data.split("/");
 		String dt = "";
@@ -41,6 +43,14 @@ public class BeanController implements Serializable {
 				return null;
 			}
 		}
+		
+    	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    	try {
+    		format.setLenient(false);
+    		format.parse(dt);
+    	} catch (ParseException e) {
+    		throw e;
+    	}
 		return dt;
 	}
 

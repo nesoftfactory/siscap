@@ -1,5 +1,6 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 
@@ -165,13 +166,21 @@ public class FeriadosController extends BeanController {
 			LOGGER.error("Erro ao salvar feriado.:" + e.getMessage());
 			e.printStackTrace();
 		}
+		catch (ParseException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar feriado. Data Inválida.", e.getMessage());
+			LOGGER.error("Erro ao salvar feriado. Data Inválida:" + e.getMessage());
+			e.printStackTrace();
+		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar feriado.", e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao salvar feriado." + e.getMessage(), e.getMessage());
+			feriado.ajustaFormatoDataParaExibir();
+
 			LOGGER.error("Erro ao salvar feriado.:" + e.getMessage());
 			e.printStackTrace();
 		}
+		
 	}
-	
+
 	
 	public void excluir(Feriado feriado) {
 		try {

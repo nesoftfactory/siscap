@@ -1,0 +1,2 @@
+update dbo.usuario set email = 'ficticio@teste.com' where nome = 'Administrador Automático' and login = 'adminAut';
+update dbo.usuario set email = 'segundo@teste.com' where nome = 'Administrador' and login = 'adminInicial';
