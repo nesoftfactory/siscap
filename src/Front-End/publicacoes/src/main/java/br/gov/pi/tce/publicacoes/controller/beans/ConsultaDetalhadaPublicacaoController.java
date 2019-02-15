@@ -17,7 +17,6 @@ import br.gov.pi.tce.publicacoes.modelo.elastic.BucketDataPublicacao;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketFonte;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketPagina;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketPublicacao;
-import br.gov.pi.tce.publicacoes.modelo.elastic.PaginaOcrElastic;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticAggregate;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticGeral;
 import br.gov.pi.tce.publicacoes.modelo.elastic.PublicacaoElasticTO;
@@ -80,8 +79,10 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 				List<BucketPagina> listaBucketPagina = bucketFonte.getPaginas().getBuckets();
 				for (BucketPagina bucketPagina : listaBucketPagina) {
 					peTO.getPaginas().add(bucketPagina.getKey()+"");
+					if(peTO.getConteudoPrimeiraPagina() == null || peTO.getConteudoPrimeiraPagina().equalsIgnoreCase("")) {
+						carregaTextosOcrsPaginas(peTO, bucketPagina.getKey(), peTO.getPaginas().size() == listaBucketPagina.size());
+					}
 				}
-				carregaTExtosOcrsPaginas(peTO);
 				listaPublicacoes.add(peTO);
 			}
 		}
@@ -90,13 +91,9 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 
 
 
-	private void carregaTExtosOcrsPaginas(PublicacaoElasticTO peTO) {
-		List<PaginaOcrElastic> paginasOcr = new ArrayList<>();
-		for (String pagina : peTO.getPaginas()) {
-			PaginaOcrElastic poe = elasticServiceClient.getPagina(peTO.getIdArquivo(), pagina);
-			paginasOcr.add(poe);
-		}
-		peTO.setPaginasOcr(paginasOcr);
+	private void carregaTextosOcrsPaginas(PublicacaoElasticTO peTO, int pagina, boolean ultimaPAgina) {
+		String texto = elasticServiceClient.getPagina(peTO.getIdArquivo(), pagina, descricao, ultimaPAgina);
+		peTO.setConteudoPrimeiraPagina(texto);
 	}
 
 

@@ -12,17 +12,14 @@ public class PublicacaoElasticTO {
 	private String dataPublicacao;
 	private List<String> paginas = new ArrayList<>();
 	private String fonte;
-	private List<PaginaOcrElastic> paginasOcr;
 	
 	
 	
 	@JsonIgnore
-	public List<PaginaOcrElastic> getPaginasOcr() {
-		return paginasOcr;
-	}
-	public void setPaginasOcr(List<PaginaOcrElastic> paginasOcr) {
-		this.paginasOcr = paginasOcr;
-	}
+	private String conteudoPrimeiraPagina;
+	
+	
+	
 	public List<String> getPaginas() {
 		return paginas;
 	}
@@ -53,6 +50,14 @@ public class PublicacaoElasticTO {
 	public void setDataPublicacao(String dataPublicacao) {
 		this.dataPublicacao = dataPublicacao;
 	}
+	public String getConteudoPrimeiraPagina() {
+		return conteudoPrimeiraPagina;
+	}
+	public void setConteudoPrimeiraPagina(String conteudoPrimeiraPagina) {
+		this.conteudoPrimeiraPagina = conteudoPrimeiraPagina;
+	}
+	
+	
 
 	
 
