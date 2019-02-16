@@ -33,17 +33,22 @@
 								</p:toolbarGroup>
 							</p:toolbar>	
 						</p:panel>
-						<p:carousel value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" headerText="Resultado" var="publicacao" itemStyle="text-align:center" responsive="true" numVisible="10" vertical="true">
+						<p:carousel id="carousel" value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" headerText="Resultado" var="publicacao" itemStyle="text-align:center" 
+							responsive="true" numVisible="10" vertical="true" rowIndexVar="rowIndex">
 					        <p:panelGrid columns="1" style="width:100%;margin:10px 0px" columnClasses="label,value" layout="grid" styleClass="ui-panelgrid-blank">
 					            <f:facet name="header">
 					                 <h:commandLink value="Fonte: #{publicacao.fonte} - #{publicacao.dataPublicacao} - Páginas: #{publicacao.paginas}" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}" style="text-decoration: underline;"  immediate="true"/>
-					            </f:facet>
- 					            <h:outputText value="#{publicacao.conteudoPrimeiraPagina}" />
-					 <!-- 
-					            <h:outputText value="Páginas" />
-					            <h:outputText value="#{publicacao.paginas}" />
-					 --> 
-<!-- 					            <h:outputText value="Data da Publicação: #{publicacao.dataPublicacao}" />  -->
+					            </f:facet>		
+					            
+					            
+					           <h:inputHidden id="conteudoPrimeiraPaginaHidden" value="#{publicacao.conteudoPrimeiraPagina}"/>
+					            
+					           <div id="conteudoPrimeiraPagina#{rowIndex}" align="justify">Teste</div> 	
+					             
+					            <script type="text/javascript">
+					            	updateConteudo(#{rowIndex});
+ 					            </script>
+ 					            
 					        </p:panelGrid>
  
 					        <f:facet name="footer">
@@ -54,6 +59,53 @@
 				</div>
 			</div>
 		</h:form>
+		
+	<script type="text/javascript">
+
+		function updateConteudo2(cont){
+			  var conteudo = document.getElementById("form:carousel:"+cont+":conteudoPrimeiraPaginaHidden").value;	
+			  var div = document.getElementById("conteudoPrimeiraPagina"+cont);
+			  var descricao = document.getElementById("form:pesquisa").value;
+			  var regexp = new RegExp('('+descricao+')', 'ig');
+			  var old_string = conteudo;
+			  var new_string = old_string.replace(regexp, '<span style="background-color: #FFFF00"><b>'+descricao+'</b></span>');
+ 			  div.innerHTML  = '<div>'+new_string+'</div>';
+		 }
+
+
+		
+
+		function updateConteudo(cont){
+			  var conteudo = document.getElementById("form:carousel:"+cont+":conteudoPrimeiraPaginaHidden").value;	
+			  var div = document.getElementById("conteudoPrimeiraPagina"+cont);
+			  var descricao = document.getElementById("form:pesquisa").value;
+
+			  var mySplit = descricao.split(' ');
+  			  var old_string = conteudo;
+  			  var new_string = null;
+  			   for (i in mySplit ){
+  				 var prx = mySplit[i];
+				  if( prx.trim() != ''){
+					    alert(prx);
+					  	var regexp = new RegExp('('+prx+')', 'ig');
+						var new_string = old_string.replace(regexp, '<span style="background-color: #FFFF00"><b>'+prx+'</b></span>');
+					 	old_string = new_string;
+					 }
+  				
+			   }
+			   if(new_string != null){
+	  			   div.innerHTML  = '<div>'+new_string+'</div>';
+
+				}
+		 }
+
+
+	
+	</script>	
+		
+		
+		
+		
 	</ui:define>
 
 </ui:composition>
