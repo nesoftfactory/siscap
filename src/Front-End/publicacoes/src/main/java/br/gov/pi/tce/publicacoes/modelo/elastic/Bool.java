@@ -4,7 +4,10 @@ import java.util.List;
 
 public class Bool {
 	
-	public List<Must> must;
+	private List<Must> must;
+	
+	private List<Filter> filter;
+	
 
 	public List<Must> getMust() {
 		return must;
@@ -14,6 +17,14 @@ public class Bool {
 		this.must = must;
 	}
 
+	public List<Filter> getFilter() {
+		return filter;
+	}
+
+	public void setFilter(List<Filter> filter) {
+		this.filter = filter;
+	}
+	
 	
 	
 	

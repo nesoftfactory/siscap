@@ -57,6 +57,17 @@ public class PublicacaoElasticTO {
 		this.conteudoPrimeiraPagina = conteudoPrimeiraPagina;
 	}
 	
+	@JsonIgnore
+	/*
+	 * A data ta vindo do elastic no formato 2018-11-07T00:00:00.000Z
+	 */
+	public String getDataPublicacaoFormatada() {
+		String data = (dataPublicacao.substring(0,10)).replaceAll("-", "/");
+		String[] s = data.split("/");
+		String novaData = s[2]+"/"+s[1]+"/"+s[0];
+		return novaData;
+	}
+	
 	
 
 	

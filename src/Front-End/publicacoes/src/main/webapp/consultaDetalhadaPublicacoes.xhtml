@@ -18,10 +18,23 @@
 						<p:panel header="Consulta Avançada de Publicações" style="margin-bottom:20px">
 							<p:panelGrid columns="4" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
+                                
+                                <p:outputLabel value="Data Inicio" for="dataInicio" />
+								<p:calendar id="dataInicio" value="#{consultaDetalhadaPublicacaoController.dataInicio}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter" />
+							 	
+							 	<p:outputLabel value="Data Fim" for="dataFim"/>
+							 	<p:calendar id="dataFim" value="#{consultaDetalhadaPublicacaoController.dataFim}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" converter="dataConverter"/>
+								
+								<p:outputLabel value="Fonte" for="fonte"/>
+								<p:selectOneMenu id="fonte" value="#{consultaDetalhadaPublicacaoController.fonte}" converter="fonteConverter">
+						            <f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{consultaDetalhadaPublicacaoController.fontesParaSelectItems}" />
+						        </p:selectOneMenu>
 								
 								<p:outputLabel value="Descrição" for="pesquisa"/>
-							 	<p:inputText id="pesquisa" value="#{consultaDetalhadaPublicacaoController.descricao}"  />
+							 	<p:inputText id="pesquisa" value="#{consultaDetalhadaPublicacaoController.descricao}"  required="true" maxlength="50" size="50"/>
 							</p:panelGrid>
+							
 							<p:toolbar>
 								<p:toolbarGroup>
  									<p:commandButton value="Limpar" action="#{consultaDetalhadaPublicacaoController.limpar()}" process="@this" update="@form"
@@ -33,17 +46,17 @@
 								</p:toolbarGroup>
 							</p:toolbar>	
 						</p:panel>
-						<p:carousel id="carousel" value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" headerText="Resultado" var="publicacao" itemStyle="text-align:center" 
+						<p:carousel id="carousel" value="#{consultaDetalhadaPublicacaoController.listaPublicacoes}" headerText="Resultado da Consulta" var="publicacao" itemStyle="text-align:center" 
 							responsive="true" numVisible="10" vertical="true" rowIndexVar="rowIndex">
 					        <p:panelGrid columns="1" style="width:100%;margin:10px 0px" columnClasses="label,value" layout="grid" styleClass="ui-panelgrid-blank">
 					            <f:facet name="header">
-					                 <h:commandLink value="Fonte: #{publicacao.fonte} - #{publicacao.dataPublicacao} - Páginas: #{publicacao.paginas}" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}" style="text-decoration: underline;"  immediate="true"/>
+					                 <h:commandLink value="Fonte: #{publicacao.fonte} - #{publicacao.dataPublicacaoFormatada} - Páginas: #{publicacao.paginas}" action="#{consultaDetalhadaPublicacaoController.downloadArquivo()}" style="text-decoration: underline;"  immediate="true"/>
 					            </f:facet>		
 					            
 					            
 					           <h:inputHidden id="conteudoPrimeiraPaginaHidden" value="#{publicacao.conteudoPrimeiraPagina}"/>
 					            
-					           <div id="conteudoPrimeiraPagina#{rowIndex}" align="justify">Teste</div> 	
+					           <div id="conteudoPrimeiraPagina#{rowIndex}" align="justify">.</div> 	
 					             
 					            <script type="text/javascript">
 					            	updateConteudo(#{rowIndex});
@@ -52,7 +65,7 @@
 					        </p:panelGrid>
  
 					        <f:facet name="footer">
-					               Teste
+					               
 					        </f:facet>
 					    </p:carousel>
                     </div>
@@ -86,7 +99,6 @@
   			   for (i in mySplit ){
   				 var prx = mySplit[i];
 				  if( prx.trim() != ''){
-					    alert(prx);
 					  	var regexp = new RegExp('('+prx+')', 'ig');
 						var new_string = old_string.replace(regexp, '<span style="background-color: #FFFF00"><b>'+prx+'</b></span>');
 					 	old_string = new_string;

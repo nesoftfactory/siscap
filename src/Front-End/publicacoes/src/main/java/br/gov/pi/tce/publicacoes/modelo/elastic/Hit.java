@@ -11,10 +11,4 @@ public class Hit {
 	public void set_source(SourceElastic _source) {
 		this._source = _source;
 	}
-
-	
-
-	
-	
-
 }

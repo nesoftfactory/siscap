@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Hits {
 	
-	 public List<Hit> hits;
+	private List<Hit> hits;
 
 	public List<Hit> getHits() {
 		return hits;

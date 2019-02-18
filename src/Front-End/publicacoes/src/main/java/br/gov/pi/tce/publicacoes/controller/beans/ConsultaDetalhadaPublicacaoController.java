@@ -1,10 +1,16 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
+import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -12,6 +18,8 @@ import javax.inject.Named;
 import org.apache.log4j.Logger;
 
 import br.gov.pi.tce.publicacoes.clients.ElasticServiceClient;
+import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
+import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketArquivo;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketDataPublicacao;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketFonte;
@@ -37,29 +45,83 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 	private String descricao;
 	
 	private List<PublicacaoElasticTO> listaPublicacoes = new ArrayList<PublicacaoElasticTO>();
+	
+	private String dataInicio;
+	
+	private Fonte fonte;
+	
+	private String dataFim;
+	
+	private List<Fonte> fontes = Collections.EMPTY_LIST;
+	
+	@Inject
+	private FonteServiceClient fonteServiceClient;
 
 	@PostConstruct
 	public void init() {
 		limpar();
+		iniciaFontes();
 	}
 	
 	
+	private void iniciaFontes() {
+		try {
+			fontes = fonteServiceClient.consultarTodasFontes();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes.:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar fontes.", e.getMessage());
+			LOGGER.error("Erro ao iniciar fontes:" + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
 	public void consultar() {
-		//consultar(descricao);
-		//consultarComAgregacao(descricao);
 		consultarComAgregacao(descricao);
 		System.out.println();
 	}
 
 	
 	private void consultarComAgregacao(String descricao) {
-		PublicacaoElasticAggregate res = elasticServiceClient.consultarComAgragador(descricao);
-		if(res != null) {
-			listaPublicacoes = getListaPublicacoesElasticTO(res);
+		try {
+			LocalDate dtInicio = null;
+			LocalDate dtFim = null;
+			if(dataInicio == null || dataFim == null) {
+				addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e fim são obrigatórias.", "");
+				return;
+			}
+			else {
+				try {
+					dtInicio = LocalDate.parse(dataInicio, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+					dtFim = LocalDate.parse(dataFim, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+					
+					if(dtFim.isBefore(dtInicio)) {
+						addMessage(FacesMessage.SEVERITY_ERROR, "A data final deve ser maior que a data inicial.", "");
+						return;
+					}
+				} catch (Exception e) {
+					addMessage(FacesMessage.SEVERITY_ERROR, "As datas inicio e/ou fim estão no formato errado (dd/MM/yyyy).", "");
+					throw new Exception("Data Inválida");
+				}
+
+			}
+			PublicacaoElasticAggregate res = elasticServiceClient.consultarComAgragador(fonte!=null?fonte.getId():null, dataInicio, dataFim, descricao);
+			if(res != null) {
+				listaPublicacoes = getListaPublicacoesElasticTO(res);
+			}
+			else {
+				addMessage(FacesMessage.SEVERITY_INFO, "Nenhum resultado foi encontrado.");
+			}
 		}
-		//TODO se lista for vazia colcoar mensagem que não foram encontrados dados
-		//FAzer testes de dados de entrada antes de consultar e antes de montar o query
-		//colocar os campos de data e deixar já preparado caso as datas venham preenchidas
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: ElasticSearch.", e.getMessage());
+			LOGGER.error("Erro ao consultar publicações (ElasticSearch):" + e.getMessage());
+		}
+		
 	}
 
 
@@ -130,7 +192,10 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 		this.listaPublicacoes = listaPublicacoes;
 	}
 	
-	
+
+	public List<SelectItem> getFontesParaSelectItems(){
+		return getSelectItens(fontes, "nome");
+	}
 
 
 	public void downloadArquivo(){
@@ -162,6 +227,48 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 //		}
 		
 	}
+
+
+	public String getDataInicio() {
+		return dataInicio;
+	}
+
+
+	public void setDataInicio(String dataInicio) {
+		this.dataInicio = dataInicio;
+	}
+
+
+	public Fonte getFonte() {
+		return fonte;
+	}
+
+
+	public void setFonte(Fonte fonte) {
+		this.fonte = fonte;
+	}
+
+
+	public String getDataFim() {
+		return dataFim;
+	}
+
+
+	public void setDataFim(String dataFim) {
+		this.dataFim = dataFim;
+	}
+
+
+	public List<Fonte> getFontes() {
+		return fontes;
+	}
+
+
+	public void setFontes(List<Fonte> fontes) {
+		this.fontes = fontes;
+	}
+	
+	
 	
 	
 	
