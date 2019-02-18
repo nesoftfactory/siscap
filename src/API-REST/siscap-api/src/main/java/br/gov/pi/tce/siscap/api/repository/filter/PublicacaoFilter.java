@@ -1,5 +1,7 @@
 package br.gov.pi.tce.siscap.api.repository.filter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +31,14 @@ public class PublicacaoFilter {
 	
 	public String getNome() {
 		return nome;
+	}
+
+	public String getNomeDecoded() {
+		try {
+			return URLDecoder.decode(getNome(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return getNome();
+		}
 	}
 
 	public void setNome(String nome) {

@@ -45,6 +45,7 @@ public class ColetorPublicacoesService {
 	}
 	
 	@Schedule(hour="03", minute = "35")
+	//@Schedule(hour="08", minute = "56")
 	public void coletarDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
 		if(tokenService==null || tokenService.equals("")) {
@@ -59,6 +60,7 @@ public class ColetorPublicacoesService {
 	}
 	
 	@Schedule(hour="03", minute = "40")
+	//@Schedule(hour="08", minute = "58")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
 		if(tokenService==null || tokenService.equals("")) {
@@ -73,6 +75,7 @@ public class ColetorPublicacoesService {
 	}
 	
 	@Schedule(hour="03", minute = "45")
+	//@Schedule(hour="09", minute = "00")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
 		if(tokenService==null || tokenService.equals("")) {
@@ -87,6 +90,7 @@ public class ColetorPublicacoesService {
 	}
 	
 	@Schedule(hour="03", minute = "50")
+	//@Schedule(hour="09", minute = "03")
 	public void coletarDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
 		if(tokenService==null || tokenService.equals("")) {

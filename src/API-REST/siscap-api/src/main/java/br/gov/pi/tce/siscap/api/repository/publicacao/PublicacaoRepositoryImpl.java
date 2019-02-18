@@ -83,7 +83,7 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 		
 		
 		if (StringUtils.isNotEmpty(publicacaoFilter.getNome())) {
-			predicates.add(builder.equal(root.get("nome"), publicacaoFilter.getNome()));
+			predicates.add(builder.equal(root.get("nome"), publicacaoFilter.getNomeDecoded()));
 		}
 		
 		if (publicacaoFilter.getSucesso() != null && publicacaoFilter.getSucesso().booleanValue()) {
