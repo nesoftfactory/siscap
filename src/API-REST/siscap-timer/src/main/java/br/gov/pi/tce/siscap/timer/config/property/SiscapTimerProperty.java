@@ -2,11 +2,6 @@ package br.gov.pi.tce.siscap.timer.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import br.gov.pi.tce.siscap.timer.collect.MunicipiosColetor;
-import br.gov.pi.tce.siscap.timer.collect.ParnaibaColetor;
-import br.gov.pi.tce.siscap.timer.collect.PiauiColetor;
-import br.gov.pi.tce.siscap.timer.collect.TeresinaColetor;
-
 @ConfigurationProperties("siscap")
 public class SiscapTimerProperty {
 
@@ -82,6 +77,7 @@ public class SiscapTimerProperty {
 		public void setPassword(String password) {
 			this.password = password;
 		}
+
 	}
 	public static class Fontes {
 		private int municipios = 10;

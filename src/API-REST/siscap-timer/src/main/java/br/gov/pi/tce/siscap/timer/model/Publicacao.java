@@ -24,9 +24,6 @@ public class Publicacao {
 	private Long quantidadeTentativasIndexacao = 0L;
 	private String situacao;
 
-	/**
-	 * 
-	 */
 	public Publicacao() {
 		super();
 	}
@@ -40,19 +37,6 @@ public class Publicacao {
 	}
 
 
-	/**
-	 * @param id
-	 * @param fonte
-	 * @param nome
-	 * @param data
-	 * @param codigo
-	 * @param arquivo
-	 * @param sucesso
-	 * @param anexo
-	 * @param quantidadeTentativas
-	 * @param dataCriacao
-	 * @param usuarioCriacao
-	 */
 	public Publicacao(Long id, Fonte fonte, String nome, LocalDate data, String codigo, Long arquivo, Boolean sucesso,
 			Boolean anexo, Long quantidadeTentativas, String dataCriacao, Usuario usuarioCriacao) {
 		super();
@@ -70,23 +54,6 @@ public class Publicacao {
 	}
 	
 	
-//	public Publicacao(Long id, Fonte fonte, String nome, String data, String codigo, Long arquivo, Boolean sucesso,
-//			Boolean anexo, Long quantidadeTentativas, String dataCriacao, Usuario usuarioCriacao, String situacao) {
-//		this(id,fonte,nome,data,codigo,arquivo,sucesso,anexo,quantidadeTentativas,dataCriacao,usuarioCriacao);
-//		this.situacao = situacao;
-//	}
-	
-
-	/**
-	 * @param fonte
-	 * @param nome
-	 * @param data
-	 * @param codigo
-	 * @param arquivo
-	 * @param sucesso
-	 * @param anexo
-	 * @param quantidadeTentativas
-	 */
 	public Publicacao(Fonte fonte, String nome, LocalDate data, String codigo, Long arquivo, Boolean sucesso,
 			Boolean anexo, Long quantidadeTentativas) {
 		super();
@@ -100,20 +67,6 @@ public class Publicacao {
 		setQuantidadeTentativas(quantidadeTentativas);
 	}
 
-	/**
-	 * @param id
-	 * @param fonte
-	 * @param nome
-	 * @param data
-	 * @param codigo
-	 * @param arquivo
-	 * @param usuarioCriacao
-	 * @param dataAtualizacao
-	 * @param usuarioAtualizacao
-	 * @param sucesso
-	 * @param anexo
-	 * @param quantidadeTentativas
-	 */
 	public Publicacao(Long id, Fonte fonte, String nome, LocalDate data, String codigo, Long arquivo,
 			String usuarioCriacao, Date dataAtualizacao, String usuarioAtualizacao, Boolean sucesso, Boolean anexo,
 			Long quantidadeTentativas) {
@@ -121,16 +74,11 @@ public class Publicacao {
 		this.id = id;
 	}
 	
-	/**
-	 * @param id
-	 */
 	public Publicacao(Long id) {
 		super();
 		setId(id);
 	}
 	
-	
-
 	public String getDataString() {
 		return dataString;
 	}
@@ -155,128 +103,74 @@ public class Publicacao {
 		this.publicacaoAnexo = publicacaoAnexo;
 	}
 
-	/**
-	 * @return the id
-	 */
 	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the fonte
-	 */
 	public Fonte getFonte() {
 		return fonte;
 	}
 
-	/**
-	 * @param fonte the fonte to set
-	 */
 	public void setFonte(Fonte fonte) {
 		this.fonte = fonte;
 	}
 
-	/**
-	 * @return the nome
-	 */
 	public String getNome() {
 		return nome;
 	}
 
-	/**
-	 * @param nome the nome to set
-	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	/**
-	 * @return the data
-	 */
 	public LocalDate getData() {
 		return data;
 	}
 
-	/**
-	 * @param data the data to set
-	 */
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
 
-	/**
-	 * @return the codigo
-	 */
 	public String getCodigo() {
 		return codigo;
 	}
 
-	/**
-	 * @param codigo the codigo to set
-	 */
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 
-	/**
-	 * @return the sucesso
-	 */
 	public Boolean getSucesso() {
 		return sucesso;
 	}
 
-	/**
-	 * @param sucesso the sucesso to set
-	 */
 	public void setSucesso(Boolean sucesso) {
 		this.sucesso = sucesso;
 	}
 
-	/**
-	 * @return the possuiAnexo
-	 */
 	public Boolean getPossuiAnexo() {
 		return possuiAnexo;
 	}
 
-	/**
-	 * @param possuiAnexo the possuiAnexo to set
-	 */
 	public void setPossuiAnexo(Boolean possuiAnexo) {
 		this.possuiAnexo = possuiAnexo;
 	}
 
-	/**
-	 * @return the quantidadeTentativas
-	 */
 	public Long getQuantidadeTentativas() {
 		return quantidadeTentativas;
 	}
 
-	/**
-	 * @param quantidadeTentativas the quantidadeTentativas to set
-	 */
 	public void setQuantidadeTentativas(Long quantidadeTentativas) {
 		this.quantidadeTentativas = quantidadeTentativas;
 	}
 
-	/**
-	 * @return the arquivo
-	 */
 	public Long getArquivo() {
 		return arquivo;
 	}
 
-	/**
-	 * @param arquivo the arquivo to set
-	 */
 	public void setArquivo(Long arquivo) {
 		this.arquivo = arquivo;
 	}

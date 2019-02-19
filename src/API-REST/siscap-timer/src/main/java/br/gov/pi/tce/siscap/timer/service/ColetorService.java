@@ -101,8 +101,6 @@ public class ColetorService {
 			logger.error(e.getMessage());
 		}
 		if (!isSucesso) {
-			// TODO Criar serviço de notificação
-		
 			Long qtTentativasColetar = publicacaoRetorno.getQuantidadeTentativas();
 			Long qtTentativasNotificar = new Long(property.getQuantidadeTentativasNofiticar());
 			if (qtTentativasColetar > 0 && 
@@ -110,7 +108,7 @@ public class ColetorService {
 						|| (qtTentativasColetar	% qtTentativasNotificar) == 0)
 					) {
 				
-				//notificacaoService.cadastrarNotificacao(notificacao);
+				notificacaoService.cadastrarNotificacao(publicacaoRetorno);
 			}
 
 		}
