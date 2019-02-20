@@ -44,7 +44,7 @@ public class ColetorPublicacoesService {
 		return token;
 	}
 	
-	@Schedule(hour="03", minute = "35")
+	//@Schedule(hour="03", minute = "35")
 	//@Schedule(hour="08", minute = "56")
 	public void coletarDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial da Parnaiba");
@@ -59,7 +59,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial da Parnaiba");
 	}
 	
-	@Schedule(hour="03", minute = "40")
+	//@Schedule(hour="03", minute = "40")
 	//@Schedule(hour="08", minute = "58")
 	public void coletarDiarioOficialTeresina() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial de Teresina");
@@ -89,7 +89,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial do Estado do Piaui");
 	}
 	
-	@Schedule(hour="03", minute = "50")
+	//@Schedule(hour="03", minute = "50")
 	//@Schedule(hour="09", minute = "03")
 	public void coletarDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial dos Municipios");
