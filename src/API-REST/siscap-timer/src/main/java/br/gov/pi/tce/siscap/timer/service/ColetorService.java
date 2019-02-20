@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.gov.pi.tce.siscap.timer.client.PublicacaoServiceClient;
-import br.gov.pi.tce.siscap.timer.config.property.SiscapTimerProperty;
 import br.gov.pi.tce.siscap.timer.model.Arquivo;
 import br.gov.pi.tce.siscap.timer.model.Fonte;
 import br.gov.pi.tce.siscap.timer.model.Publicacao;
@@ -30,9 +29,6 @@ public class ColetorService {
 	@Autowired
 	private NotificacaoService notificacaoService;
 	
-	@Autowired
-	private SiscapTimerProperty property;
-	
 	public void checarPublicacaoInexistente(List<LocalDate> diasUteisList, Fonte fonte) {
 		logger.info("checando publicacao inexistente");
 		
@@ -40,10 +36,9 @@ public class ColetorService {
 			Boolean isFeriado = feriadoService.isFeriado(date, fonte.getId());
 			if (!isFeriado) {
 				logger.info("Não foi coletado Diário da fonte " + fonte.getNome() +
-						" referente ao dia " + DateUtil.convertLocalDateToString(date));
+					" referente ao dia " + DateUtil.convertLocalDateToString(date));
 				salvarPublicacao(fonte, "", DateUtil.convertToDate(date), "", Boolean.FALSE, Boolean.FALSE,
-						"Erro: Diário não encontrado", null, null, "",
-						"Diário indisponível");
+					"Erro: Diário não encontrado", null, null, "", "Diário indisponível");
 			}
 		}
 		
@@ -100,17 +95,9 @@ public class ColetorService {
 			logger.error("Erro ao Criar/Atualizar Publicacao.");
 			logger.error(e.getMessage());
 		}
-		if (!isSucesso) {
-			Long qtTentativasColetar = publicacaoRetorno.getQuantidadeTentativas();
-			Long qtTentativasNotificar = new Long(property.getQuantidadeTentativasNofiticar());
-			if (qtTentativasColetar > 0 && 
-					(qtTentativasNotificar == 0
-						|| (qtTentativasColetar	% qtTentativasNotificar) == 0)
-					) {
-				
-				notificacaoService.cadastrarNotificacao(publicacaoRetorno);
-			}
 
+		if (!isSucesso) {
+			notificacaoService.checarNotificacao(publicacaoRetorno);
 		}
 	}
 

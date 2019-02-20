@@ -10,7 +10,6 @@ public class SiscapTimerProperty {
 	private final Fontes fontes = new Fontes();
 	
 	private Integer quantidadeDiasColeta = 5;
-	private Integer quantidadeTentativasNofiticar = 1;
 
 	public Integer getQuantidadeDiasColeta() {
 		return quantidadeDiasColeta;
@@ -32,14 +31,6 @@ public class SiscapTimerProperty {
 		return uriApiSicap;
 	}
 	
-	public Integer getQuantidadeTentativasNofiticar() {
-		return quantidadeTentativasNofiticar;
-	}
-
-	public void setQuantidadeTentativasNofiticar(Integer quantidadeTentativasNofiticar) {
-		this.quantidadeTentativasNofiticar = quantidadeTentativasNofiticar;
-	}
-
 	public static class Mail {
 		private String host;
 		private Integer port;

@@ -1,7 +1,8 @@
 package br.gov.pi.tce.siscap.timer.mail;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -27,18 +28,15 @@ public class Mailer {
 	 * System.out.println("Terminado o envio de e-mail"); }
 	 */
 
-	public void avisarEmailNotificacao(String tituloNotificacao, String conteudoNotificacao, List<Usuario> usuarios) {
+	public void avisarEmailNotificacao(String tituloNotificacao, String conteudoNotificacao, Set<Usuario> usuarios) {
 		enviarEmail(REMETENTE, destinatarios(usuarios), tituloNotificacao, conteudoNotificacao);
 	}
 
-	private List<String> destinatarios(List<Usuario> usuarios) {
-		// TODO fazer retornar destinatarios a partir de usuarios
-		/*
-		return usuarios.stream()
+	private List<String> destinatarios(Set<Usuario> usuarios) {
+		List<String> emails = usuarios.stream()
 			.map(u -> u.getEmail())
 			.collect(Collectors.toList());
-		*/
-		return Arrays.asList("amsf10@gmail.com");
+		return emails;
 	}
 
 	public void enviarEmail(String remetente, List<String> destinatarios, String assunto, String mensagem) {

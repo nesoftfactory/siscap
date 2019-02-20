@@ -1,56 +1,52 @@
-package br.gov.pi.tce.siscap.timer.model;
+package br.gov.pi.tce.siscap.timer.model.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import br.gov.pi.tce.siscap.timer.model.enums.NotificacaoTipo;
+import br.gov.pi.tce.siscap.timer.model.Usuario;
 
-public class Notificacao {
+public class NotificacaoDTO {
 
-	private Long id;
-	private NotificacaoTipo tipo;
+	private String tipo;
 	private List<Usuario> usuarios;
 	private Publicacao publicacao;
 	private String texto;
 	private LocalDateTime dataCriacao;
 	private LocalDateTime dataAtualizacao;
 
-	public Notificacao() {
-		// TODO Auto-generated constructor stub
-	}
 
-	public Notificacao(NotificacaoTipo tipo, List<Usuario> usuarios, Publicacao publicacao, String texto) {
-		super();
+	public NotificacaoDTO(String tipo, List<Usuario> usuarios, Long idPublicacao, String texto) {
 		setTipo(tipo);
 		setUsuarios(usuarios);
-		setPublicacao(publicacao);
+		setPublicacao(new Publicacao(idPublicacao));
 		setTexto(texto);
 		setDataCriacao(LocalDateTime.now());
 		setDataAtualizacao(LocalDateTime.now());
 	}
 
-	public Notificacao(Long id, NotificacaoTipo tipo, List<Usuario> usuarios, Publicacao publicacao, String texto,
-			String usuarioCriacaoString, String dataCriacaoString) {
-		this.id = id;
-		setTipo(tipo);
-		setUsuarios(usuarios);
-		setPublicacao(publicacao);
-		setTexto(texto);
-	}
+	public static class Publicacao {
+		private Long id;
 
-	public Long getId() {
-		return id;
-	}
+		public Long getId() {
+			return id;
+		}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+		public void setId(Long id) {
+			this.id = id;
+		}
 
-	public NotificacaoTipo getTipo() {
+		public Publicacao(Long id) {
+			super();
+			this.id = id;
+		}
+		
+	}
+	
+	public String getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(NotificacaoTipo tipo) {
+	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 
