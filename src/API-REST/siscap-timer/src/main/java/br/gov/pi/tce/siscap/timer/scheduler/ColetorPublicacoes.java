@@ -34,7 +34,7 @@ public class ColetorPublicacoes {
 	@EventListener()
 	private void teste(ApplicationEvent event) {
 		// Executar ao iniciar
-		//this.coletarDiarioOficialParnaiba();
+		//this.coletarDiarioOficialPiaui();
 	}
 
 	@Scheduled(cron = "0 20 10,19 * * *")
@@ -58,8 +58,8 @@ public class ColetorPublicacoes {
 	}
 
 	private void coletar(FONTE_COLETA_AUTOMATICA fonteColeta, int idFonte) {
-		Date data = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
-		//Date data = new Date();
+		//Date data = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
+		Date data = new Date();
 
 		Date dataInicial = DateUtil.getData00Horas00Minutos00SeguntosMenosQuatidadeDias(data,
 				property.getQuantidadeDiasColeta());

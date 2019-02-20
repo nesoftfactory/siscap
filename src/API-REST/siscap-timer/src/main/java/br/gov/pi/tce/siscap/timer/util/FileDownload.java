@@ -38,7 +38,10 @@ public class FileDownload {
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
-		return new FileSystemResource(file);
+		FileSystemResource fileSystemResource = new FileSystemResource(file);
+		
+		logger.info("Concluído o download de " + this.linkArquivo);
+		return fileSystemResource;
 	}
 	
 }
