@@ -43,20 +43,20 @@ public class ColetorPublicacoes {
 	}
 
 	@Scheduled(cron = "0 30 10,19 * * *")
-	public void coletarDiarioOficialMunicipios() {
-		coletar(FONTE_COLETA_AUTOMATICA.MUNICIPIOS, property.getFontes().getMunicipios());
-	}
-
-	@Scheduled(cron = "0 40 10,19 * * *")
 	public void coletarDiarioOficialTeresina() {
 		coletar(FONTE_COLETA_AUTOMATICA.TERESINA, property.getFontes().getTeresina());
 	}
 
-	@Scheduled(cron = "0 50 10,19 * * *")
+	@Scheduled(cron = "0 40 10,19 * * *")
 	public void coletarDiarioOficialPiaui() {
 		coletar(FONTE_COLETA_AUTOMATICA.PIAUI, property.getFontes().getPiaui());
 	}
 
+	@Scheduled(cron = "0 50 10,19 * * *")
+	public void coletarDiarioOficialMunicipios() {
+		coletar(FONTE_COLETA_AUTOMATICA.MUNICIPIOS, property.getFontes().getMunicipios());
+	}
+	
 	private void coletar(FONTE_COLETA_AUTOMATICA fonteColeta, int idFonte) {
 		//Date data = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
 		Date data = new Date();

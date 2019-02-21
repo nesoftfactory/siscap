@@ -75,7 +75,8 @@ public class PublicacaoServiceClient extends AbstractServiceClient {
 	}
 
 	private MultiValueMap<Object,Object> criaPublicacaoBody(Publicacao publicacao, Arquivo arquivo) {
-		logger.info("Criando publicacao: " + publicacao);
+		logger.info("Criando publicacao " + (StringUtils.isEmpty(arquivo.getLink()) ? "inexistente: " : "") 
+				+ ": " + publicacao);
 		
 		MultiValueMap<Object, Object> body = new LinkedMultiValueMap<>();
 

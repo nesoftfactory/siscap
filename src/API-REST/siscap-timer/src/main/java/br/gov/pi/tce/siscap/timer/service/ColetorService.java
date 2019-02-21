@@ -29,14 +29,12 @@ public class ColetorService {
 	@Autowired
 	private NotificacaoService notificacaoService;
 	
-	public void checarPublicacaoInexistente(List<LocalDate> diasUteisList, Fonte fonte) {
-		logger.info("checando publicacao inexistente");
-		
+	public void checarPublicacaoInexistente(List<LocalDate> diasUteisList, Fonte fonte) {	
 		for (LocalDate date : diasUteisList) {
 			Boolean isFeriado = feriadoService.isFeriado(date, fonte.getId());
 			if (!isFeriado) {
-				logger.info("Não foi coletado Diário da fonte " + fonte.getNome() +
-					" referente ao dia " + DateUtil.convertLocalDateToString(date));
+				logger.info("Salvar publicacao inexistente - " + fonte.getNome() +
+					" - " + DateUtil.convertLocalDateToString(date));
 				salvarPublicacao(fonte, "", DateUtil.convertToDate(date), "", Boolean.FALSE, Boolean.FALSE,
 					"Erro: Diário não encontrado", null, null, "", "Diário indisponível");
 			}

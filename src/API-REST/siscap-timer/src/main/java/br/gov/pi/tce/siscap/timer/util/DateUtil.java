@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DateUtil {
 
@@ -44,7 +45,7 @@ public class DateUtil {
 
 		for (String dateFormatString : dateFormats) {
 			try {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString);
+				SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatString, new Locale("pt", "BR"));
 				dateFormat.setLenient(false);
 				return dateFormat.parse(date.trim());
 			} catch (ParseException pe) {
