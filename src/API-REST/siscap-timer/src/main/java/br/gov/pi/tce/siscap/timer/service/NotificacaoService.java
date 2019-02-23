@@ -53,6 +53,29 @@ public class NotificacaoService {
 		return notificacaoSalva;
 	}
 
+	public Notificacao checarNotificacaoOCR(Publicacao publicacao) {
+		List<NotificacaoConfig> notificacaoConfigList = notificacaoConfigClient
+				.consultarNotificacaoConfigPorTipo(NotificacaoTipo.OCR, true);
+		Set<Usuario> usuariosNotificar = recuperarUsuariosNotificar(notificacaoConfigList,
+				publicacao.getQuantidadeTentativasOCR());
+		
+		if (usuariosNotificar == null || usuariosNotificar.isEmpty())
+			return null;
+		
+		String tituloNotificacao = "Notificação Coletor - OCR não coletado";
+		String conteudoNotificacao = "Não foi realizado OCR do Diário Oficial da Fonte "
+				+ publicacao.getFonte().getNome() + " referente ao dia "
+				+ publicacao.getData();
+		NotificacaoDTO notificacao = new NotificacaoDTO(NotificacaoTipo.CAPTURA.toString(),
+				new ArrayList<>(usuariosNotificar), publicacao.getId(), conteudoNotificacao);
+
+		Notificacao notificacaoSalva = notificacaoClient.cadastrarNotificacao(notificacao);
+		
+		mailer.avisarEmailNotificacao(tituloNotificacao, conteudoNotificacao, usuariosNotificar);
+
+		return notificacaoSalva;
+	}
+
 	private HashSet<Usuario> recuperarUsuariosNotificar(List<NotificacaoConfig> notificacaoConfigList, 
 			Long quantidadeTentativas) {
 		if (notificacaoConfigList == null) {

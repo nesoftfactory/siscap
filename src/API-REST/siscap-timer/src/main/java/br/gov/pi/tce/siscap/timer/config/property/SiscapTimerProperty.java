@@ -2,6 +2,8 @@ package br.gov.pi.tce.siscap.timer.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import br.gov.pi.tce.siscap.timer.enums.FONTE_COLETA_AUTOMATICA;
+
 @ConfigurationProperties("siscap")
 public class SiscapTimerProperty {
 
@@ -71,43 +73,49 @@ public class SiscapTimerProperty {
 
 	}
 	public static class Fontes {
-		private int municipios = 10;
-		private int piaui = 1010;
-		private int teresina = 12;
-		private int parnaiba = 13;
+		private final FonteAuto municipios = new FonteAuto(10, FONTE_COLETA_AUTOMATICA.MUNICIPIOS);
+		private final FonteAuto piaui = new FonteAuto(1010, FONTE_COLETA_AUTOMATICA.PIAUI);
+		private final FonteAuto teresina = new FonteAuto(12, FONTE_COLETA_AUTOMATICA.TERESINA);
+		private final FonteAuto parnaiba = new FonteAuto(13, FONTE_COLETA_AUTOMATICA.PARNAIBA);
 
-		public int getMunicipios() {
+		public static class FonteAuto {
+			private int id = 10;
+			private final FONTE_COLETA_AUTOMATICA enumFonte;
+			
+			public FonteAuto(int id, FONTE_COLETA_AUTOMATICA enumFonte) {
+				this.id = id;
+				this.enumFonte = enumFonte;
+			}
+
+			public int getId() {
+				return id;
+			}
+			
+			public void setId(int id) {
+				this.id = id;
+			}
+			
+			public FONTE_COLETA_AUTOMATICA getEnumFonte() {
+				return enumFonte;
+			}
+		}
+		
+		public FonteAuto getMunicipios() {
 			return municipios;
 		}
 		
-		public void setMunicipios(int municipios) {
-			this.municipios = municipios;
-		}
-		
-		public int getPiaui() {
+		public FonteAuto getPiaui() {
 			return piaui;
 		}
 		
-		public void setPiaui(int piaui) {
-			this.piaui = piaui;
-		}
-		
-		public int getTeresina() {
+		public FonteAuto getTeresina() {
 			return teresina;
 		}
 		
-		public void setTeresina(int teresina) {
-			this.teresina = teresina;
-		}
-		
-		public int getParnaiba() {
+		public FonteAuto getParnaiba() {
 			return parnaiba;
 		}
 		
-		public void setParnaiba(int parnaiba) {
-			this.parnaiba = parnaiba;
-		}
-
 	}
 	
 }

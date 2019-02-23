@@ -74,9 +74,9 @@ public class PiauiColetor implements Coletor {
 				fonteHTML.close();
 
 			} catch (MalformedURLException excecao) {
-				logger.error(excecao.getMessage());
+				logger.error("Erro de URL mal formada: " + excecao.getMessage());
 			} catch (IOException excecao) {
-				logger.error(excecao.getMessage());
+				logger.error("Erro ao ler a página: " + excecao.getMessage());
 			}
 		}
 	}	

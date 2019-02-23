@@ -62,9 +62,9 @@ public class TeresinaColetor implements Coletor {
 			isFinalPaginacao = lerPaginaDiario(fonte, String.valueOf(pageDiario), arquivoList,
 					dataInicial, dataFinal, diasUteisList);
 		} catch (MalformedURLException excecao) {
-			logger.error(excecao.getMessage());
+			logger.error("Erro de URL mal formada: " + excecao.getMessage());
 		} catch (IOException excecao) {
-			logger.error(excecao.getMessage());
+			logger.error("Erro ao ler a página: " + excecao.getMessage());
 		}
 		return isFinalPaginacao;
 	}

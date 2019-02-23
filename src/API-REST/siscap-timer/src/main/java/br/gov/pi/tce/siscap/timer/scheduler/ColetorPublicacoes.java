@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import br.gov.pi.tce.siscap.timer.client.FonteServiceClient;
 import br.gov.pi.tce.siscap.timer.config.property.SiscapTimerProperty;
-import br.gov.pi.tce.siscap.timer.enums.FONTE_COLETA_AUTOMATICA;
+import br.gov.pi.tce.siscap.timer.config.property.SiscapTimerProperty.Fontes.FonteAuto;
 import br.gov.pi.tce.siscap.timer.model.Fonte;
 import br.gov.pi.tce.siscap.timer.service.ColetorService;
 import br.gov.pi.tce.siscap.timer.util.DateUtil;
@@ -39,25 +39,25 @@ public class ColetorPublicacoes {
 
 	@Scheduled(cron = "0 20 10,19 * * *")
 	public void coletarDiarioOficialParnaiba() {
-		coletar(FONTE_COLETA_AUTOMATICA.PARNAIBA, property.getFontes().getParnaiba());
+		coletar(property.getFontes().getParnaiba());
 	}
 
 	@Scheduled(cron = "0 30 10,19 * * *")
 	public void coletarDiarioOficialTeresina() {
-		coletar(FONTE_COLETA_AUTOMATICA.TERESINA, property.getFontes().getTeresina());
+		coletar(property.getFontes().getTeresina());
 	}
 
 	@Scheduled(cron = "0 40 10,19 * * *")
 	public void coletarDiarioOficialPiaui() {
-		coletar(FONTE_COLETA_AUTOMATICA.PIAUI, property.getFontes().getPiaui());
+		coletar(property.getFontes().getPiaui());
 	}
 
 	@Scheduled(cron = "0 50 10,19 * * *")
 	public void coletarDiarioOficialMunicipios() {
-		coletar(FONTE_COLETA_AUTOMATICA.MUNICIPIOS, property.getFontes().getMunicipios());
+		coletar(property.getFontes().getMunicipios());
 	}
 	
-	private void coletar(FONTE_COLETA_AUTOMATICA fonteColeta, int idFonte) {
+	private void coletar(FonteAuto fonteAutomatica) {
 		//Date data = new Date(new Date().getTime() + (1000 * 60 * 60 * 24));
 		Date data = new Date();
 
@@ -65,14 +65,14 @@ public class ColetorPublicacoes {
 				property.getQuantidadeDiasColeta());
 		Date dataFinal = DateUtil.getData23Horas59Minutos59Seguntos(data);
 
-		Fonte fonte = fonteServiceClient.consultarFontePorIdFonte(new Long(idFonte));
+		Fonte fonte = fonteServiceClient.consultarFontePorIdFonte(new Long(fonteAutomatica.getId()));
 
-		logger.info("Iniciando a Coleta do Diario Oficial de " + fonteColeta + " - "
+		logger.info("Iniciando a Coleta do Diario Oficial de " + fonteAutomatica.getEnumFonte() + " - "
 				+ DateUtil.convertDateToString(dataInicial) + " a " + DateUtil.convertDateToString(dataFinal));
 
-		fonteColeta.getColetor().coletar(coletorService, fonte, dataInicial, dataFinal);
+		fonteAutomatica.getEnumFonte().getColetor().coletar(coletorService, fonte, dataInicial, dataFinal);
 
-		logger.info("Finalizada a Coleta do Diario Oficial de " + fonteColeta);
+		logger.info("Finalizada a Coleta do Diario Oficial de " + fonteAutomatica.getEnumFonte());
 	}
 
 }
