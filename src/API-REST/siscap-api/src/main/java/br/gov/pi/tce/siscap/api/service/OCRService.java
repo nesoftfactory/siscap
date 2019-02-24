@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import br.gov.pi.tce.siscap.api.service.ocr.PDF2Images;
 
 @Service
 public class OCRService {
+	private static final Logger logger = LoggerFactory.getLogger(OCRService.class);
 
 	@Autowired
 	private Image2Text image2Text;
@@ -33,9 +36,12 @@ public class OCRService {
 		
 		Map<Integer, byte[]> pages = pdf2Images.convertToPages(arquivo.getConteudo());
 		for (Map.Entry<Integer, byte[]> pair : pages.entrySet()) {
+			int numeroPagina = pair.getKey() + 1;
+			logger.info("Fazendo OCR da página " + numeroPagina + " de " + pages.size() + 
+					" do arquivo " + idArquivo);
 			byte[] conteudoPagina = pair.getValue();
 			String textoPagina = image2Text.convertToText(conteudoPagina);
-			mapaPaginasArquivo.put(pair.getKey(), new PaginaOCRArquivo(pair.getKey() + 1 , textoPagina, arquivo));
+			mapaPaginasArquivo.put(pair.getKey(), new PaginaOCRArquivo(numeroPagina , textoPagina, arquivo));
 		}
 		return mapaPaginasArquivo;
 	}
