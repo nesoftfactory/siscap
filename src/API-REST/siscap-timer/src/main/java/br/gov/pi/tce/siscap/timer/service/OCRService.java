@@ -35,27 +35,30 @@ public class OCRService {
 	private void realizarOCRPublicacao(Long idFonte) {
 		Publicacao publicacaoAtual = null;
 		try {
-			logger.info("Iniciando processo de OCR de publicações");
 			List<Publicacao> listaPublicacoesParaOCR = ocrServiceClient.consultarPublicacaoAptaParaOCR(idFonte); 
 
-			logger.info("Iniciando OCR de cada publicação apta");
-			for (Publicacao publicacao : listaPublicacoesParaOCR) {
-				publicacaoAtual = publicacao;
-				logger.info("Iniciando OCR da publicação:" + publicacao);
-				Publicacao publicacaoOCR = ocrServiceClient.realizarOCRPublicacao(publicacao); 
-				if (publicacaoOCR != null
-						&& publicacaoOCR.getSituacao().equals(SituacaoPublicacao.OCR_REALIZADO.getDescricao())) {
-					logger.info("OCR da publicação:" + publicacao + " realizado com sucesso. Situação: "
-							+ publicacaoOCR.getSituacao());
-				} else {
-					logger.error("OCR da publicação:" + publicacao + " NÃO realizado. Situação: "
-							+ publicacaoOCR.getSituacao());
-					notificacaoService.checarNotificacaoOCR(publicacaoAtual);
+			if (listaPublicacoesParaOCR != null && listaPublicacoesParaOCR.size() > 0) {
+				
+				logger.info("Iniciando OCR para " + listaPublicacoesParaOCR.size() + " publicação(ões) apta(s)");
+				for (Publicacao publicacao : listaPublicacoesParaOCR) {
+					publicacaoAtual = publicacao;
+					logger.info("Iniciando OCR da publicação:" + publicacao);
+					Publicacao publicacaoOCR = ocrServiceClient.realizarOCRPublicacao(publicacao); 
+					if (publicacaoOCR != null
+							&& publicacaoOCR.getSituacao().equals(SituacaoPublicacao.OCR_REALIZADO.getDescricao())) {
+						logger.info("OCR da publicação:" + publicacao + " realizado com sucesso. Situação: "
+								+ publicacaoOCR.getSituacao());
+					} else {
+						logger.error("OCR da publicação:" + publicacao + " NÃO realizado. Situação: "
+								+ publicacaoOCR.getSituacao());
+						notificacaoService.checarNotificacaoOCR(publicacaoAtual);
+					}
 				}
+	
+				logger.info("Finalizando processo de OCR de publicações");
+			} else {
+				logger.info("Não foram encontradas publicações aptas para OCR");				
 			}
-
-			logger.info("Finalizando processo de OCR de publicações");
-
 		} catch (Exception e) {
 			logger.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
 			if(publicacaoAtual != null) {

@@ -25,7 +25,7 @@ public class OCRPublicacoes {
 	@EventListener()
 	private void teste(ApplicationEvent event) {
 		// Executar ao iniciar
-		//this.realizarOCRDiarioOficialParnaiba();
+		//this.realizarOCRDiarioOficialMunicipios();
 	}
 
 	@Scheduled(cron = "0 10 21 * * *")
