@@ -80,7 +80,6 @@ public class PublicacaoUploadArquivoController extends BeanController {
 				publicacaoSelecionada.setQuantidadeTentativasOCR(0L);
 //				publicacaoSelecionada.setPossuiNotificacao(Boolean.FALSE);
 //				publicacaoSelecionada.setPossuiAnexo(Boolean.FALSE);
-//				publicacaoSelecionada.setSituacao("");
 				publicacaoSelecionada = publicacaoServiceClient.alterarPublicacao(publicacaoSelecionada, arquivo, true);
 				addMessage(FacesMessage.SEVERITY_INFO, "Upload manual realizado com sucesso");
 			}
@@ -104,7 +103,6 @@ public class PublicacaoUploadArquivoController extends BeanController {
 				//publicacaoSelecionada.setQuantidadeTentativasOCR(0L);
 //				publicacaoSelecionada.setPossuiNotificacao(Boolean.FALSE);
 				publicacaoSelecionada.setPossuiAnexo(Boolean.TRUE);
-//				publicacaoSelecionada.setSituacao("");
 				//publicacaoSelecionada = publicacaoServiceClient.alterarPublicacao(publicacaoSelecionada, arquivoAnexo, true);
 				
 				publicacaoAnexo.setPublicacao(publicacaoSelecionada);
