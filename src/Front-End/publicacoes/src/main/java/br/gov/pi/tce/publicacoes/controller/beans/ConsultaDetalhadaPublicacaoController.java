@@ -10,15 +10,20 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import br.gov.pi.tce.publicacoes.clients.ArquivoServiceClient;
 import br.gov.pi.tce.publicacoes.clients.ElasticServiceClient;
 import br.gov.pi.tce.publicacoes.clients.FonteServiceClient;
+import br.gov.pi.tce.publicacoes.modelo.Arquivo;
 import br.gov.pi.tce.publicacoes.modelo.Fonte;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketArquivo;
 import br.gov.pi.tce.publicacoes.modelo.elastic.BucketDataPublicacao;
@@ -37,9 +42,15 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 	
 	private static final Logger LOGGER = Logger.getLogger(ConsultaDetalhadaPublicacaoController.class);
 	
+	private static final String HEADER_CONTENT_DISPOSITION = "Content-disposition";
+	private static final String ATTACHMENT_FILENAME = "attachment; filename=";
+	
 
 	@Inject
 	private ElasticServiceClient elasticServiceClient;
+	
+	@Inject
+	private ArquivoServiceClient arquivoServiceClient;
 
 	
 	private String descricao;
@@ -110,7 +121,7 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 
 			}
 			PublicacaoElasticAggregate res = elasticServiceClient.consultarComAgragador(fonte!=null?fonte.getId():null, dataInicio, dataFim, descricao);
-			if(res != null) {
+			if(res != null && res.getAggregations() != null) {
 				listaPublicacoes = getListaPublicacoesElasticTO(res);
 			}
 			else {
@@ -200,35 +211,34 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 
 	public void downloadArquivo(){
 		
-//		try {
-//			Publicacao publicacao = (Publicacao)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
-//			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getArquivo());
-//			
-//			
-//			ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
-//			HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
-//			
-//			response.reset();
-//			response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
-//			try {
-//				response.getOutputStream().write(arquivo.getConteudo());
-//				response.flushBuffer();
-//			} catch (Exception e) {
-//				LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
-//				LOGGER.error(e.getMessage());
-//				e.printStackTrace();
-//			}
-//			FacesContext.getCurrentInstance().responseComplete();
-//		}
-//		catch(Exception e) {
-//			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
-//			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
-//			e.printStackTrace();
-//		}
+		try {
+			PublicacaoElasticTO publicacao = (PublicacaoElasticTO)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("publicacao");
+			Arquivo arquivo = arquivoServiceClient.consultarArquivoPorCodigo(publicacao.getIdArquivo());
+			
+			
+			ExternalContext econtext = FacesContext.getCurrentInstance().getExternalContext();  
+			HttpServletResponse response = (HttpServletResponse) econtext.getResponse();
+			
+			response.reset();
+			response.addHeader(HEADER_CONTENT_DISPOSITION, ATTACHMENT_FILENAME + arquivo.getNome());
+			try {
+				response.getOutputStream().write(arquivo.getConteudo());
+				response.flushBuffer();
+			} catch (Exception e) {
+				LOGGER.error("Erro realizar o download do arquivo:" + arquivo.getId());
+				LOGGER.error(e.getMessage());
+				e.printStackTrace();
+			}
+			FacesContext.getCurrentInstance().responseComplete();
+		}
+		catch(Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
+			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
+			e.printStackTrace();
+		}
 		
 	}
-
-
+	
 	public String getDataInicio() {
 		return dataInicio;
 	}
