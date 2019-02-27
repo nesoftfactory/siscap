@@ -74,7 +74,7 @@ public class ColetorPublicacoesService {
 		LOGGER.info("Finalizando a Coleta do Diario Oficial de Teresina");
 	}
 	
-	@Schedule(hour="03", minute = "45")
+	//@Schedule(hour="03", minute = "45")
 	//@Schedule(hour="09", minute = "00")
 	public void coletarDiarioOficialPiaui() {
 		LOGGER.info("Iniciando a Coleta do Diario Oficial do Estado do Piaui");
