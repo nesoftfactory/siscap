@@ -1,6 +1,5 @@
 package br.gov.pi.tce.publicacoes.services;
 
-import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -36,7 +35,6 @@ public class OCRPublicacoesService {
 		return token;
 	}
 
-	@Schedule(hour = "23", minute = "20")
 //	@Schedule(hour = "20", minute = "28")
 	public void realizarOCRDiarioOficialParnaiba() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial de Parnaiba");
@@ -47,7 +45,6 @@ public class OCRPublicacoesService {
 		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial de Parnaiba");
 	}
 
-	@Schedule(hour = "23", minute = "30")
 //	@Schedule(hour = "20", minute = "27")
 	public void realizarOCRDiarioOficialMunicipios() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial dos Municipios");
@@ -58,7 +55,6 @@ public class OCRPublicacoesService {
 		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial dos Municipios");
 	}
 
-	@Schedule(hour = "23", minute = "40")
 //	@Schedule(hour = "20", minute = "30")
 	public void realizarOCRDiarioOficialPiaui() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial do Piaui");
@@ -69,7 +65,6 @@ public class OCRPublicacoesService {
 		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial do Piaui");
 	}
 
-	@Schedule(hour = "23", minute = "50")
 //	@Schedule(hour = "20", minute = "33")
 	public void realizarOCRDiarioOficialTeresina() {
 		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial de Teresina");
