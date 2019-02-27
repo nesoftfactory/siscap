@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/paradise/templatePopup.xhtml">
 
-	<ui:define name="title">Upload Manual de Documentos</ui:define>
+	<ui:define name="title">Upload Manual de Anexos de Documentos</ui:define>
 		<ui:define name="msgPostConstruct">
 	    	<h:inputHidden value="#{publicacaoUploadArquivoController.msgPostConstruct}"></h:inputHidden>
 	</ui:define>
@@ -15,25 +15,25 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:panel header="Upload Manual de Documentos" style="margin-bottom:20px">
+						<p:panel header="Upload Manual de Anexos de Documentos" style="margin-bottom:20px">
 						
-							<p:fileUpload fileUploadListener="#{publicacaoUploadArquivoController.uploadFile}" mode="advanced" 
+							<p:fileUpload fileUploadListener="#{publicacaoUploadArquivoController.uploadFileAnexo}" mode="advanced" 
 								label="Selecione o arquivo PDF" auto="true" required="true" 
-								 update="arquivo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." 
+								 update="arquivoAnexo" fileLimit="1" fileLimitMessage="Só é possível escolher 1 arquivo por vez." 
 								 allowTypes="/(\.|\/)(pdf)$/" invalidFileMessage="São permitidas somente arquivos em PDF" 
 								 sizeLimit="314572800" invalidSizeMessage="O tamanho máximo permitido é de 300MB." >			
 							</p:fileUpload>
 							<p:panelGrid columns="1" columnClasses="ui-g-12 ui-md-8 ui-lg-4,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">			
-							<h:outputText id="arquivo" value="#{publicacaoUploadArquivoController.arquivo.nome}"/> 
+							<h:outputText id="arquivoAnexo" value="#{publicacaoUploadArquivoController.arquivoAnexo.nome}"/> 
 							</p:panelGrid>
 							
 							<p:toolbar>
 								<p:toolbarGroup>
  									<p:commandButton value="Limpar" action="#{publicacaoUploadArquivoController.limparTela()}" process="@this" update="@form"
 										icon="fa fa-eraser White" iconPos="right" style="width:auto;"/>
- 									<p:commandButton value="Salvar" action="#{publicacaoUploadArquivoController.salvarArquivo()}" process="@form" update="@form" 
- 										icon="fa fa-save White" iconPos="right" style="width:auto;" oncomplete="window.opener.location.reload();window.close();" />
+ 									<p:commandButton value="Salvar" action="#{publicacaoUploadArquivoController.salvarArquivoAnexo()}" process="@form" update="@form" 
+ 										icon="fa fa-save White" iconPos="right" style="width:auto;" oncomplete="window.opener.location.reload();window.close();"/>
 								</p:toolbarGroup>
 							</p:toolbar>
 							

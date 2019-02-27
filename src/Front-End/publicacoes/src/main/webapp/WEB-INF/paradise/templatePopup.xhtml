@@ -21,20 +21,11 @@
 </h:head>
 
 <h:body>
-	<!-- <div
-		class="layout-wrapper #{guestPreferences.slimMenu ? 'layout-menu-slim' : (guestPreferences.overlayMenu ? 'layout-menu-overlay' : 'layout-menu-static')}"> -->
-		<!-- <ui:include src="./topbar.xhtml" /> -->
-
 		<div class="layout-main">
-			<!-- <ui:include src="./menu.xhtml" /> -->
 			<ui:insert name="msgPostConstruct" />
 
 			<div class="layout-content">
 				<ui:insert name="MENSAGEM">
-					<!-- <p:div styleClass="#{utilsBean.styleMessages}" rendered="#{utilsBean.temMensagens}">
-						<h:messages errorClass="erro" infoClass="sucesso" warnClass="warning" showDetail="true" showSummary="false" styleClass="erro" layout="block"/>
-					</p:div>
-					-->
 					<p:messages id="messages" showDetail="false" closable="true">
 				        <p:autoUpdate />
 				    </p:messages>
@@ -46,9 +37,7 @@
 				<ui:insert name="content" />
 			</div>
 
-			<!-- <ui:include src="./footer.xhtml" /> -->
 		</div>
-	<!-- </div> -->
 
 	<p:ajaxStatus
 		style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">

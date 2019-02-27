@@ -1,7 +1,6 @@
 package br.gov.pi.tce.publicacoes.controller.beans;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJBException;
@@ -43,10 +42,8 @@ public class PublicacaoUploadArquivoController extends BeanController {
 	@PostConstruct
 	public void init() {
 		try {
-			//if (FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id") != null) {
-				limpar();
-				popupUploadManualArquivo();
-			//}
+			limpar();
+			popupUploadManualArquivo();
 		}
 		catch (EJBException e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Upload Manual.", e.getMessage());
@@ -70,7 +67,7 @@ public class PublicacaoUploadArquivoController extends BeanController {
 		}
 	}
 	
-	public void salvar()  {
+	public void salvarArquivo()  {
 		try {
 			if(arquivo == null || arquivo.getNome() ==null || arquivo.getNome().equals("")) {
 				addMessage(FacesMessage.SEVERITY_WARN, "Favor selecionar um arquivo PDF.");
@@ -78,22 +75,49 @@ public class PublicacaoUploadArquivoController extends BeanController {
 				publicacaoSelecionada.setNome(arquivo.getNome());
 				publicacaoSelecionada.setSucesso(Boolean.TRUE);
 				publicacaoSelecionada.setData(publicacaoSelecionada.getDataString());
-				publicacaoSelecionada.setDataCriacao(publicacaoSelecionada.getDataString());
+				//publicacaoSelecionada.setDataCriacao(publicacaoSelecionada.getDataString());
 				publicacaoSelecionada.setQuantidadeTentativasIndexacao(0L);
 				publicacaoSelecionada.setQuantidadeTentativasOCR(0L);
-				publicacaoSelecionada.setPossuiNotificacao(Boolean.FALSE);
-				publicacaoSelecionada.setPossuiAnexo(Boolean.FALSE);
-				//publicacaoSelecionada.setUsuarioCriacao();
+//				publicacaoSelecionada.setPossuiNotificacao(Boolean.FALSE);
+//				publicacaoSelecionada.setPossuiAnexo(Boolean.FALSE);
 //				publicacaoSelecionada.setSituacao("");
 				publicacaoSelecionada = publicacaoServiceClient.alterarPublicacao(publicacaoSelecionada, arquivo, true);
 				addMessage(FacesMessage.SEVERITY_INFO, "Upload manual realizado com sucesso");
 			}
 		} catch (Exception e) {
-			LOGGER.error("Erro realizar o upload manual.");
+			LOGGER.error("Erro realizar o upload manual do anexo.");
 			LOGGER.error(e.getMessage());
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload manual: " + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload manual do anexo: " + e.getMessage());
 		}
-		//return null;
+	}
+	
+	public void salvarArquivoAnexo()  {
+		try {
+			if(arquivoAnexo == null || arquivoAnexo.getNome() ==null || arquivoAnexo.getNome().equals("")) {
+				addMessage(FacesMessage.SEVERITY_WARN, "Favor selecionar um arquivo PDF.");
+			}else {
+				//publicacaoSelecionada.setNome(arquivoAnexo.getNome());
+				//publicacaoSelecionada.setSucesso(Boolean.TRUE);
+				publicacaoSelecionada.setData(publicacaoSelecionada.getDataString());
+				//publicacaoSelecionada.setDataCriacao(publicacaoSelecionada.getDataString());
+				//publicacaoSelecionada.setQuantidadeTentativasIndexacao(0L);
+				//publicacaoSelecionada.setQuantidadeTentativasOCR(0L);
+//				publicacaoSelecionada.setPossuiNotificacao(Boolean.FALSE);
+				publicacaoSelecionada.setPossuiAnexo(Boolean.TRUE);
+//				publicacaoSelecionada.setSituacao("");
+				//publicacaoSelecionada = publicacaoServiceClient.alterarPublicacao(publicacaoSelecionada, arquivoAnexo, true);
+				
+				publicacaoAnexo.setPublicacao(publicacaoSelecionada);
+				publicacaoAnexo.setNome(arquivoAnexo.getNome());
+				publicacaoAnexo.setSucesso(Boolean.TRUE);
+				publicacaoAnexo = publicacaoServiceClient.cadastrarPublicacaoAnexo(publicacaoAnexo, arquivoAnexo, true);
+				addMessage(FacesMessage.SEVERITY_INFO, "Upload manual do anexo realizado com sucesso");
+			}
+		} catch (Exception e) {
+			LOGGER.error("Erro realizar o upload manual do anexo.");
+			LOGGER.error(e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload manual do anexo: " + e.getMessage());
+		}
 	}
 	
 	public void uploadFile(FileUploadEvent event) throws IOException {
@@ -130,15 +154,6 @@ public class PublicacaoUploadArquivoController extends BeanController {
 		arquivoAnexo.setNome("");
 	}
 	
-//	public void popupUploadManualPublicacao() throws Exception {
-//	String  idPublicacao = (String)FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-//	if(idPublicacao !=null && !idPublicacao.equals("")) {
-//		//chamar o alterar adicionando o arquivo do upload
-//	}
-//	//historicoPublicacaoSelecionada = publicacaoHistoricoServiceClient.consultarPublicacaoHistoricoPeloIdPublicacao(Long.valueOf(idPublicacao));
-//	//FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("historicoPublicacaoSelecionada", historicoPublicacaoSelecionada);
-//}
-
 	/**
 	 * @return the publicacaoSelecionada
 	 */
