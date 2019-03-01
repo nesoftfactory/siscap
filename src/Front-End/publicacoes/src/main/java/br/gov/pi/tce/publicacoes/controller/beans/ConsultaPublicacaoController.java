@@ -89,13 +89,13 @@ public class ConsultaPublicacaoController extends BeanController {
 //			}
 		}
 		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
-			LOGGER.error("Erro ao consultar publicações.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Documentos.", e.getMessage());
+			LOGGER.error("Erro ao consultar documentos.:" + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao consultar publicações", e.getMessage());
-			LOGGER.error("Erro ao consultar publicações:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR,  "Erro ao consultar documentos", e.getMessage());
+			LOGGER.error("Erro ao consultar documentos:" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -220,13 +220,13 @@ public class ConsultaPublicacaoController extends BeanController {
 			publicacoes = publicacaoServiceClient.consultarTodasPublicacoes(sucesso);
 		}
 		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
-			LOGGER.error("Erro ao iniciar publicações.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Documentos.", e.getMessage());
+			LOGGER.error("Erro ao iniciar documentos.:" + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());
-			LOGGER.error("Erro ao iniciar publicações:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar documentos.", e.getMessage());
+			LOGGER.error("Erro ao iniciar documentos:" + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -265,8 +265,8 @@ public class ConsultaPublicacaoController extends BeanController {
 			FacesContext.getCurrentInstance().responseComplete();
 		}
 		catch(Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
-			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de documentos.", e.getMessage());
+			LOGGER.error("Erro realizar download de documentos:" + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -299,8 +299,8 @@ public class ConsultaPublicacaoController extends BeanController {
 			}
 		}
 		catch(Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de anexo de publicações.", e.getMessage());
-			LOGGER.error("Erro realizar download de anexo de publicações:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de anexo de documentos.", e.getMessage());
+			LOGGER.error("Erro realizar download de anexo de documentos:" + e.getMessage());
 			e.printStackTrace();
 		}
 		

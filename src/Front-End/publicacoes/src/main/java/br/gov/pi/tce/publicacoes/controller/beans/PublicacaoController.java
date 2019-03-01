@@ -44,7 +44,7 @@ import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
  * 
- * Classe responsável por executar as coletas das publicações nos sites.
+ * Classe responsável por executar as coletas dos documentos nos sites.
  * 
  * @author Erick Guilherme Cavalcanti
  *
@@ -101,7 +101,7 @@ public class PublicacaoController extends BeanController {
 	}
 
 	/**
-	 * Busca de diário oficial nas fontes de Parnaíba, Teresina e Municípios.
+	 * Busca de documentos nas fontes de Parnaíba, Teresina e Municípios.
 	 * 
 	 * @param idFonte
 	 * @param dataInicial
@@ -155,7 +155,7 @@ public class PublicacaoController extends BeanController {
 							diasUteisList, token);
 				}
 			}
-			LOGGER.info("SALVANDO PUBLICAÇÃO INEXISTENTE (FINAL DE TUDO)");
+			LOGGER.info("SALVANDO DOCUMENTO INEXISTENTE (FINAL DE TUDO)");
 
 			salvarPublicacaoInexistente(diasUteisList, fonte, token);
 		} else {
@@ -233,7 +233,7 @@ public class PublicacaoController extends BeanController {
 				regexForPDF = "[D][M]\\s+[0-9A-Za-z]+.(pdf)";
 				erroUrlFonte = Boolean.FALSE;
 			}
-			LOGGER.info("Pegando o REGEX para pegar o diário oficial");
+			LOGGER.info("Pegando o REGEX para pegar o documento");
 
 			if (erroUrlFonte) {
 				LOGGER.error("Erro: A Fonte " + fonte.getUrl() + " não foi Encontrada.");
@@ -252,8 +252,7 @@ public class PublicacaoController extends BeanController {
 	}
 
 	/**
-	 * Método responsável por buscar os htmls de um dos meses da fonte do diário
-	 * oficial dos municípios.
+	 * Método responsável por buscar os htmls de um dos meses da fonte do documento dos municípios.
 	 * 
 	 * @param urlString
 	 * @return
@@ -265,7 +264,7 @@ public class PublicacaoController extends BeanController {
 		Matcher matcher = null;
 
 		try {
-			LOGGER.error("Iniciando a busca das páginas para pegar o diário oficial dos Municipios");
+			LOGGER.error("Iniciando a busca das páginas para pegar o documento dos Municipios");
 
 			URL url = new URL(urlString);
 			BufferedReader fonteHTML = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -280,7 +279,7 @@ public class PublicacaoController extends BeanController {
 					}
 				}
 			}
-			LOGGER.error("Finalizando a busca das páginas para pegar o diário oficial dos Municipios");
+			LOGGER.error("Finalizando a busca das páginas para pegar o documento dos Municipios");
 
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Erro: HTML da página não foi encontrado.");
@@ -498,7 +497,7 @@ public class PublicacaoController extends BeanController {
 	}
 
 	/**
-	 * Método resposável por chamar a API para incluir ou alterar publicação.
+	 * Método resposável por chamar a API para incluir ou alterar o documento.
 	 * 
 	 * @param fonte
 	 * @param linkArquivoPublicacao
@@ -589,7 +588,7 @@ public class PublicacaoController extends BeanController {
 	}
 
 	/**
-	 * Método resposável por chamar a API para consultar publicação por Fonte, Data
+	 * Método resposável por chamar a API para consultar documento por Fonte, Data
 	 * e Nome.
 	 * 
 	 * @param publicacao
@@ -639,7 +638,7 @@ public class PublicacaoController extends BeanController {
 	}
 
 	/**
-	 * Método responsável por buscar os diários oficiais na fonte do Estado do
+	 * Método responsável por buscar os documentos na fonte do Estado do
 	 * Piauí.
 	 * 
 	 * @param dataInicial

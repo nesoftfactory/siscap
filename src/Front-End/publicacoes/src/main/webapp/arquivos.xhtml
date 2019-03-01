@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/paradise/template.xhtml">
 
-	<ui:define name="title">Upload de Diários Oficiais</ui:define>
+	<ui:define name="title">Upload de Documentos</ui:define>
 		<ui:define name="msgPostConstruct">
 	    <h:inputHidden value="#{arquivosController.msgPostConstruct}"></h:inputHidden>
     </ui:define>
@@ -15,7 +15,7 @@
 			<div class="ui-g">
 				<div class="ui-g-12">
                     <div class="card card-w-title">
-						<p:panel header="Upload de Diários Oficiais" style="margin-bottom:20px">
+						<p:panel header="Upload de Documentos" style="margin-bottom:20px">
 						
 						<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-12 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
@@ -41,7 +41,7 @@
 							<p:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4 ui-lg-2,ui-g-12 ui-md-8 ui-lg-4" layout="grid" 
                                 styleClass="ui-panelgrid-blank form-group form-elements">
 
-								<p:outputLabel value="Data de Publicação" for="data"/>
+								<p:outputLabel value="Data do Documento" for="data"/>
 								<p:calendar id="data" value="#{arquivosController.publicacao.data}" showOn="button" required="true" pattern="dd/MM/yyyy" mask="true" maxdate="#{arquivosController.today}" converter="dataConverter" />
 								
 							</p:panelGrid>

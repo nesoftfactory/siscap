@@ -128,7 +128,7 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: ElasticSearch.", e.getMessage());
-			LOGGER.error("Erro ao consultar publicações (ElasticSearch):" + e.getMessage());
+			LOGGER.error("Erro ao consultar documentos (ElasticSearch):" + e.getMessage());
 		}
 		
 	}
@@ -224,8 +224,8 @@ public class ConsultaDetalhadaPublicacaoController extends BeanController {
 			FacesContext.getCurrentInstance().responseComplete();
 		}
 		catch(Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de publicações.", e.getMessage());
-			LOGGER.error("Erro realizar download de publicações:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar download de documentos.", e.getMessage());
+			LOGGER.error("Erro realizar download de documentos:" + e.getMessage());
 			e.printStackTrace();
 		}
 		

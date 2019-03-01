@@ -68,9 +68,9 @@ public class PublicacaoOCRController extends BeanController {
 		
 		Publicacao publicacaoAtual = null;
 		try {
-			LOGGER.info("Iniciando processo de OCR de publicações");
+			LOGGER.info("Iniciando processo de OCR de documentos");
 
-			LOGGER.info("Iniciando busca das publicações que devem ter OCR realizado");
+			LOGGER.info("Iniciando busca dos documentos que devem ter OCR realizado");
 			if (token != null) {
 				publicacaoOCRServiceClient = new PublicacaoOCRServiceClient(token);
 				publicacaoServiceClient = new PublicacaoServiceClient(token);
@@ -79,38 +79,38 @@ public class PublicacaoOCRController extends BeanController {
 			
 			List<Publicacao> listaPublicacoesParaOCR = publicacaoOCRServiceClient
 					.consultarTodasPublicacoesAptasParaOCR(fonte);
-			LOGGER.info("Finalizando busca publicações que devem ter OCR realizado com sucesso");
+			LOGGER.info("Finalizando busca dos documentos que devem ter OCR realizado com sucesso");
 
-			LOGGER.info("Iniciando OCR de cada publicação apta");
+			LOGGER.info("Iniciando OCR de cada documento apto");
 			for (Publicacao publicacao : listaPublicacoesParaOCR) {
 				publicacaoAtual = publicacao;
-				LOGGER.info("Iniciando OCR da publicação:" + publicacao.getId());
+				LOGGER.info("Iniciando OCR do documento:" + publicacao.getId());
 				Publicacao publicacaoOCR = publicacaoOCRServiceClient.realizarOCRPublicacao(publicacao);
 				if (publicacaoOCR != null
 						&& publicacaoOCR.getSituacao().equals(SituacaoPublicacao.OCR_REALIZADO.getDescricao())) {
-					LOGGER.info("OCR da publicação:" + publicacao.getId() + " realizado com sucesso. Situação: "
+					LOGGER.info("OCR do documento:" + publicacao.getId() + " realizado com sucesso. Situação: "
 							+ publicacaoOCR.getSituacao());
 				} else {
-					LOGGER.error("OCR da publicação:" + publicacao.getId() + " NÃO realizado. Situação: "
+					LOGGER.error("OCR do documento:" + publicacao.getId() + " NÃO realizado. Situação: "
 							+ publicacaoOCR.getSituacao());
 					realizarNotificacaoOCR(publicacaoAtual);
 				}
-				LOGGER.info("Finalizando OCR da publicação:" + publicacao.getId());
+				LOGGER.info("Finalizando OCR do documento:" + publicacao.getId());
 			}
-			LOGGER.info("Finalizando OCR de cada publicação apta");
+			LOGGER.info("Finalizando OCR de cada documento apto");
 
-			LOGGER.info("Finalizando processo de OCR de publicações");
+			LOGGER.info("Finalizando processo de OCR de documentos");
 
 		} catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: OCR de publicações.", e.getMessage());
-			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: OCR de documentos.", e.getMessage());
+			LOGGER.error("Erro ao realizar OCR de documentos.:" + e.getMessage());
 			if(publicacaoAtual != null) {
 				realizarNotificacaoOCR(publicacaoAtual);
 			}
 		} catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao realizar OCR de publicações." + e.getMessage(),
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao realizar OCR de documentos." + e.getMessage(),
 					e.getMessage());
-			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
+			LOGGER.error("Erro ao realizar OCR de documentos.:" + e.getMessage());
 			if(publicacaoAtual != null) {
 				realizarNotificacaoOCR(publicacaoAtual);
 			}
@@ -173,48 +173,48 @@ public class PublicacaoOCRController extends BeanController {
 	public void realizarOCRAnexoPublicacaoGenerico(Long fonte, String token) {
 		PublicacaoAnexo publicacaoAnexoAtual = null;
 		try {
-			LOGGER.info("Iniciando processo de OCR de anexo de publicações");
+			LOGGER.info("Iniciando processo de OCR de anexo de documentos");
 
-			LOGGER.info("Iniciando busca de anexos das publicações que devem ter OCR realizado");
+			LOGGER.info("Iniciando busca de anexos dos documentos que devem ter OCR realizado");
 			if (token != null) {
 				publicacaoOCRServiceClient = new PublicacaoOCRServiceClient(token);
 			}
 			List<PublicacaoAnexo> listaAnexosPublicacoesParaOCR = publicacaoOCRServiceClient
 					.consultarTodosAnexosPublicacoesAptosParaOCR(fonte);
-			LOGGER.info("Finalizando busca de anexos de publicações que devem ter OCR realizado com sucesso");
+			LOGGER.info("Finalizando busca de anexos de documentos que devem ter OCR realizado com sucesso");
 
-			LOGGER.info("Iniciando OCR de cada anexo de publicação apta");
+			LOGGER.info("Iniciando OCR de cada anexo de documento apto");
 			for (PublicacaoAnexo publicacaoAnexo : listaAnexosPublicacoesParaOCR) {
 				publicacaoAnexoAtual = publicacaoAnexo;
-				LOGGER.info("Iniciando OCR do anexo: " + publicacaoAnexo.getId() + ", da publicação:"
+				LOGGER.info("Iniciando OCR do anexo: " + publicacaoAnexo.getId() + ", do documento:"
 						+ publicacaoAnexo.getPublicacao().getId());
 				PublicacaoAnexo publicacaoAnexoOCR = publicacaoOCRServiceClient.realizarOCRAnexo(publicacaoAnexo);
 				if (publicacaoAnexoOCR != null
 						&& publicacaoAnexoOCR.getSituacao().equals(SituacaoPublicacao.OCR_REALIZADO.getDescricao())) {
-					LOGGER.info("OCR do anexo:" + publicacaoAnexo.getId() + " da publicação:"
+					LOGGER.info("OCR do anexo:" + publicacaoAnexo.getId() + " do documento:"
 							+ publicacaoAnexo.getPublicacao().getId() + " realizado com sucesso. Situação: "
 							+ publicacaoAnexoOCR.getSituacao());
 				} else {
-					LOGGER.error("OCR do anexo:" + publicacaoAnexo.getId() + " da publicação:"
+					LOGGER.error("OCR do anexo:" + publicacaoAnexo.getId() + " do documento:"
 							+ publicacaoAnexo.getPublicacao().getId() + " NÃO realizado com sucesso. Situação: "
 							+ publicacaoAnexoOCR.getSituacao());
 				}
-				LOGGER.info("Finalizando OCR do anexo da publicação:" + publicacaoAnexo.getId());
+				LOGGER.info("Finalizando OCR do anexo do documento:" + publicacaoAnexo.getId());
 			}
-			LOGGER.info("Finalizando OCR de cada anexo de publicação apta");
+			LOGGER.info("Finalizando OCR de cada anexo de documento apto");
 
-			LOGGER.info("Finalizando processo de OCR de anexo de publicações");
+			LOGGER.info("Finalizando processo de OCR de anexo de documentos");
 
 		} catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: OCR de publicações.", e.getMessage());
-			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: OCR de documentos.", e.getMessage());
+			LOGGER.error("Erro ao realizar OCR de documentos.:" + e.getMessage());
 			if(publicacaoAnexoAtual != null) {
 				realizarNotificacaoOCRAnexo(publicacaoAnexoAtual);
 			}
 		} catch (Exception e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao realizar OCR de publicações." + e.getMessage(),
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao realizar OCR de documentos." + e.getMessage(),
 					e.getMessage());
-			LOGGER.error("Erro ao realizar OCR de publicações.:" + e.getMessage());
+			LOGGER.error("Erro ao realizar OCR de documentos.:" + e.getMessage());
 			if(publicacaoAnexoAtual != null) {
 				realizarNotificacaoOCRAnexo(publicacaoAnexoAtual);
 			}

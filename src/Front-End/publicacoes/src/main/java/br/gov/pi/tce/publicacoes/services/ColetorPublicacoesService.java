@@ -15,7 +15,7 @@ import br.gov.pi.tce.publicacoes.modelo.RespostaToken;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
- * Classe responsável por executar o agendamento das coletas das publicações nos sites.
+ * Classe responsável por executar o agendamento das coletas dos documentos nos sites.
  * 
  * 
  * @author Erick Guilherme Cavalcanti

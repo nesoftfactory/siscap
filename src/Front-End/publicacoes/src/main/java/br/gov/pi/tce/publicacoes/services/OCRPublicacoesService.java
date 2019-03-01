@@ -37,41 +37,41 @@ public class OCRPublicacoesService {
 
 //	@Schedule(hour = "20", minute = "28")
 	public void realizarOCRDiarioOficialParnaiba() {
-		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial de Parnaiba");
+		LOGGER.info("Iniciando processo de OCR dos documentos do Diario Oficial de Parnaiba");
 		if (tokenService == null || tokenService.equals("")) {
 			tokenService = getToken();
 		}
 		publicacaoOCRController.realizarOCRDiarioOficialParnaiba(tokenService);
-		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial de Parnaiba");
+		LOGGER.info("Finalizando processo de OCR dos documentos do Diario Oficial de Parnaiba");
 	}
 
 //	@Schedule(hour = "20", minute = "27")
 	public void realizarOCRDiarioOficialMunicipios() {
-		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial dos Municipios");
+		LOGGER.info("Iniciando processo de OCR dos documentos do Diario Oficial dos Municipios");
 		if (tokenService == null || tokenService.equals("")) {
 			tokenService = getToken();
 		}
 		publicacaoOCRController.realizarOCRDiarioOficialMunicipios(tokenService);
-		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial dos Municipios");
+		LOGGER.info("Finalizando processo de OCR dos documentos do Diario Oficial dos Municipios");
 	}
 
 //	@Schedule(hour = "20", minute = "30")
 	public void realizarOCRDiarioOficialPiaui() {
-		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial do Piaui");
+		LOGGER.info("Iniciando processo de OCR dos documentos do Diario Oficial do Piaui");
 		if (tokenService == null || tokenService.equals("")) {
 			tokenService = getToken();
 		}
 		publicacaoOCRController.realizarOCRDiarioOficialPiaui(tokenService);
-		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial do Piaui");
+		LOGGER.info("Finalizando processo de OCR dos documentos do Diario Oficial do Piaui");
 	}
 
 //	@Schedule(hour = "20", minute = "33")
 	public void realizarOCRDiarioOficialTeresina() {
-		LOGGER.info("Iniciando processo de OCR das publicações do Diario Oficial de Teresina");
+		LOGGER.info("Iniciando processo de OCR dos documentos do Diario Oficial de Teresina");
 		if (tokenService == null || tokenService.equals("")) {
 			tokenService = getToken();
 		}
 		publicacaoOCRController.realizarOCRDiarioOficialTeresina(tokenService);
-		LOGGER.info("Finalizando processo de OCR das publicações do Diario Oficial de Teresina");
+		LOGGER.info("Finalizando processo de OCR dos documentos do Diario Oficial de Teresina");
 	}
 }

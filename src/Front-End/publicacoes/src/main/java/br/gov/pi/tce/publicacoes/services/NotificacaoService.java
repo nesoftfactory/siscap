@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import br.gov.pi.tce.publicacoes.util.Propriedades;
 
 /**
- * Classe responsável por enviar as notificacoes das coletas das publicações nos sites.
+ * Classe responsável por enviar as notificacoes das coletas dos documentos nos sites.
  * 
  * 
  * @author Erick Guilherme Cavalcanti

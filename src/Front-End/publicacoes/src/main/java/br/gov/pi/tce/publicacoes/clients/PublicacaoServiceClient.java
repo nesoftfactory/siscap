@@ -99,13 +99,13 @@ public class PublicacaoServiceClient {
 
 		for (Publicacao publicacaoElement : publicacoes) {
 			if (publicacaoElement.getNome().equals(publicacao.getNome())) {
-				throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+				throw new Exception("Este nome já existe em outro documento. Por favor renomeie este documento.");
 			}
 
 			if (publicacaoElement.getFonte().equals(publicacao.getFonte())
 					&& publicacaoElement.getData().equals(publicacao.getData())) {
 				throw new Exception(
-						"Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+						"Há um cadastro de um documento desta fonte para esta data. Por favor consulte os documentos já existentes.");
 			}
 		}
 
@@ -485,13 +485,13 @@ public class PublicacaoServiceClient {
 
 		for (Publicacao publicacaoElement : publicacoes) {
 			if (publicacaoElement.getNome().equals(publicacao.getNome())) {
-				throw new Exception("Este nome já existe em outra publicacão. Por favor renomeie esta publicação.");
+				throw new Exception("Este nome já existe em outro documento. Por favor renomeie este documento.");
 			}
 
 			if (publicacaoElement.getFonte().equals(publicacao.getFonte())
 					&& publicacaoElement.getData().equals(publicacao.getData())) {
 				throw new Exception(
-						"Há um cadastro de uma publicação desta fonte para esta data. Por favor consulte as publicações já existentes.");
+						"Há um cadastro de um documento desta fonte para esta data. Por favor consulte os documentos já existentes.");
 			}
 		}
 

@@ -38,18 +38,18 @@ public class HistoricoAnexoPublicacaoController extends BeanController {
 			popupHistorico();
 		}	
 		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Histórico de anexo de publicação.", e.getMessage());
-			LOGGER.error("Erro ao iniciar histórico de anexo de publicação.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Histórico de anexo de documento.", e.getMessage());
+			LOGGER.error("Erro ao iniciar histórico de anexo de documento.:" + e.getMessage());
 			e.printStackTrace();
 		}
 		 catch (IOException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar histórico de anexo de publicação.", e.getMessage());
-			LOGGER.error("Erro ao iniciar histórico de anexo de publicação.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar histórico de anexo de documento.", e.getMessage());
+			LOGGER.error("Erro ao iniciar histórico de anexo de documento.:" + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (Exception e) {
 			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar usuários.", e.getMessage());
-			LOGGER.error("Erro ao iniciar histórico de anexo de publicação.:" + e.getMessage());
+			LOGGER.error("Erro ao iniciar histórico de anexo de documento.:" + e.getMessage());
 			e.printStackTrace();
 		}
 	}

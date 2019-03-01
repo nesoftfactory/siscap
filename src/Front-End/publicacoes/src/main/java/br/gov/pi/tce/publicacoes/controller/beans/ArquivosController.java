@@ -92,14 +92,14 @@ public class ArquivosController extends BeanController {
 	public void salvar() throws Exception {
 		
 		if (arquivo.getNome().isEmpty()) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Arquivo de diário não informado.");
-			//throw new ValidationException("Arquivo de diário não informado.");
+			addMessage(FacesMessage.SEVERITY_ERROR, "Arquivo de documento não informado.");
+			//throw new ValidationException("Arquivo de documento não informado.");
 			return;
 		}
 		
 		publicacao.setPossuiAnexo(false);
 		if (publicacaoAnexo.getNome().isEmpty() && !arquivoAnexo.getNome().isEmpty()) {
-				addMessage(FacesMessage.SEVERITY_ERROR, "O nome da publicação do arquivo anexo não foi informado.");
+				addMessage(FacesMessage.SEVERITY_ERROR, "O nome do documento do arquivo anexo não foi informado.");
 				return;
 		}else if (arquivoAnexo.getNome().isEmpty() && !publicacaoAnexo.getNome().isEmpty())	{
 				addMessage(FacesMessage.SEVERITY_ERROR, "O arquivo do anexo não foi informado.");
@@ -130,18 +130,18 @@ public class ArquivosController extends BeanController {
 			Date data = formato.parse(publicacao.getData());
 			Boolean isFeriado = isFeriado(data, publicacao.getFonte().getId());
 			if(isFeriado){
-				addMessage(FacesMessage.SEVERITY_ERROR, "Não pode ser cadastrada uma publicação para esta fonte na data solicitada pois está configurada no sistema como feriado.");
+				addMessage(FacesMessage.SEVERITY_ERROR, "Não pode ser cadastrado um documento para esta fonte na data solicitada, pois está configurado no sistema como feriado.");
 			}
 			
 			if(publicacoes != null && !publicacoes.isEmpty()) {
 				Publicacao publicacaoExistente = publicacoes.get(0);
 				if(publicacaoExistente != null) {
 					if(publicacaoExistente.getSucesso()) {
-						addMessage(FacesMessage.SEVERITY_ERROR, "Já foi feito anteriormente um upload de arquivo para a publicação solicitada.");
+						addMessage(FacesMessage.SEVERITY_ERROR, "Já foi feito anteriormente um upload de arquivo para o documento solicitado.");
 					}
 					else {
 						publicacaoServiceClient.alterarPublicacaoPorUpload(publicacaoExistente, publicacao, arquivo, publicacaoAnexo, arquivoAnexo);
-						addMessage(FacesMessage.SEVERITY_INFO, "Diário salvo com sucesso.", "Diário atualizado com sucesso.");
+						addMessage(FacesMessage.SEVERITY_INFO, "Documento salvo com sucesso.", "Documento atualizado com sucesso.");
 						limpar();
 					}
 				}
@@ -152,21 +152,21 @@ public class ArquivosController extends BeanController {
 				//			if (publicacao.getPossuiAnexo() && !arquivoAnexo.getNome().isEmpty()) {
 				//				publicacaoServiceClient.armazenarArquivo(arquivoAnexo);
 				//			}
-				addMessage(FacesMessage.SEVERITY_INFO, "Diário salvo com sucesso.", "Diário salvo com sucesso.");
+				addMessage(FacesMessage.SEVERITY_INFO, "Documento salvo com sucesso.", "Documento salvo com sucesso.");
 				limpar();
 			}
 			
 				
 		} 
 		catch (EJBException e) {
-			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
-			LOGGER.error("Erro realizar o upload da publicação.:" + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Documentos.", e.getMessage());
+			LOGGER.error("Erro realizar o upload do documento.:" + e.getMessage());
 			e.printStackTrace();
 		}
 		catch (Exception e) {
-			LOGGER.error("Erro realizar o upload da publicação.");
+			LOGGER.error("Erro realizar o upload do documento.");
 			LOGGER.error(e.getMessage());
-			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload da publicação: " + e.getMessage());
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro realizar o upload do documento: " + e.getMessage());
 		    //throw new Exception(e);
 		}
 			

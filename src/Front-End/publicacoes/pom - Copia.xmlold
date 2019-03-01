@@ -9,7 +9,7 @@
 	<packaging>war</packaging>
 	
 	<name>publicacoes</name>
-	<description>Catálogo de publicações oficiais de jurisdicionados</description>
+	<description>Catálogo de documentos</description>
 
 
 	<properties>

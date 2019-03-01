@@ -14,7 +14,7 @@
 			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 	</f:facet>
-	<title>Histórico de Anexos de Publicações</title>
+	<title>Histórico de Anexos de Documentos</title>
 	<h:outputScript name="js/nanoscroller.js" library="paradise-layout" />
 	<h:outputScript name="js/layout.js" library="paradise-layout" />
 	<ui:insert name="head" />
@@ -29,9 +29,9 @@
 				<div class="ui-g-12">
                     <div class="card card-w-title">
 						<p:dataTable id="anexosPublicacoesHistoricoTable" var="historicoAnexoPublicacao" value="#{historicoAnexoPublicacaoController.historicoAnexoPublicacaoSelecionada}" reflow="true" paginator="true" rows="10" widgetVar="anexosPublicacoesHistoricoTable"
-                 emptyMessage="Não foi encontrado histórico da publicação.">
+                 emptyMessage="Não foi encontrado histórico do documento.">
                             <f:facet name="header">
-                                Histórico de Anexos de Publicações
+                                Histórico de Anexos de Documentos
                             </f:facet>
 
                             <p:column headerText="Mensagem"  >
