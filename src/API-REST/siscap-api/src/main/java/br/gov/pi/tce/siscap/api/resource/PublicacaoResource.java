@@ -75,6 +75,16 @@ public class PublicacaoResource {
 				ResponseEntity.ok(publicacaoOptional.get()) : ResponseEntity.notFound().build();
 	}
 	
+	@GetMapping("/total")
+	public String buscarTotalPublicacoes() {
+		return publicacaoRepository.buscarTotalPublicacoes();
+	}
+	
+	@GetMapping("/pagina")
+	public List<Publicacao> buscarPorPagina(PublicacaoFilter publicacaoFilter) throws Exception {
+		List<Publicacao> lista = publicacaoRepository.filtrarPagina(publicacaoFilter);
+		return lista;
+	}
 	@PutMapping("/{id}")
 	public ResponseEntity<Publicacao> atualizar(@PathVariable Long id, 
 			@RequestParam(required=false) MultipartFile partFile,

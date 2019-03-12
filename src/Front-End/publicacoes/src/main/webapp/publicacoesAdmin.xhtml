@@ -50,22 +50,23 @@
 							</p:toolbar>	
 						</p:panel>
 						
-						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.publicacoes}" reflow="true" paginator="true" rows="10" widgetVar="publicacoesTable"
-                 emptyMessage="Informações não encontradas.">
+						<p:dataTable id="publicacoesTable" var="publicacao" value="#{consultaPublicacaoController.lazyPublicacoes}" paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                 rowsPerPageTemplate="5,10,15" reflow="true" paginator="true" lazy="true" rows="10" widgetVar="publicacoesTable"
+                 emptyMessage="Informações não encontradas.">                
                             <f:facet name="header">
                                 Lista de Documentos
                             </f:facet>
 
-                            <p:column headerText="Fonte" sortBy="#{publicacao.fonte.nome}">
+                            <p:column headerText="Fonte">
                                 <h:outputText value="#{publicacao.fonte.nome}" />
                             </p:column>
                             
-                             <p:column headerText="Situação" sortBy="#{publicacao.situacao}">
+                             <p:column headerText="Situação">
                                 <h:outputText value="#{publicacao.situacao}" rendered="#{publicacao.situacao != null}"/>
                                 <h:outputText value="Não Coletado" rendered="#{publicacao.situacao == null}"/>
                             </p:column>
 
-                            <p:column headerText="Data" sortBy="#{publicacao.data}" style="width:70px;">
+                            <p:column headerText="Data" style="width:70px;">
                                 <h:outputText value="#{publicacao.dataString}" >
                                 	<f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>	
@@ -99,7 +100,7 @@
                            		</h:commandLink> 
                             </p:column>
                             
-                             <p:column headerText="Situação Anexo" sortBy="#{publicacao.publicacaoAnexo.situacao}">
+                             <p:column headerText="Situação Anexo" >
                            		  <h:outputText value="#{publicacao.publicacaoAnexo.situacao}" rendered="#{publicacao.possuiAnexo}"/>
                            		  <h:outputText value="-" rendered="#{! publicacao.possuiAnexo}"/>
                             </p:column>

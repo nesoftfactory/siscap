@@ -64,6 +64,48 @@ public class PublicacaoRepositoryImpl implements PublicacaoRepositoryQuery {
 		return publicacoes;
 	}
 
+	@Override
+	public List<Publicacao> filtrarPagina(PublicacaoFilter publicacaoFilter) {
+
+		CriteriaBuilder builder= manager.getCriteriaBuilder();
+		CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+		countQuery.select(builder.count(countQuery.from(Publicacao.class)));
+		Long count = manager.createQuery(countQuery).getSingleResult();
+		
+		
+		CriteriaQuery<Publicacao> criteriaQuery = builder.createQuery(Publicacao.class);
+		
+		Root<Publicacao> root = criteriaQuery.from(Publicacao.class);
+		
+		// restrições
+		Predicate[] predicates = criarRestriscoes(publicacaoFilter, builder, root);
+		criteriaQuery.where(predicates);
+		
+		TypedQuery<Publicacao> query = manager.createQuery(criteriaQuery);
+		
+		List<Publicacao> publicacoes = null;
+		if (Integer.parseInt(publicacaoFilter.getFirst()) != 0 && Integer.parseInt(publicacaoFilter.getPageSize()) != 0) {
+			query.setFirstResult(Integer.parseInt(publicacaoFilter.getFirst()));
+		} 
+		query.setMaxResults(Integer.parseInt(publicacaoFilter.getPageSize()));
+
+		publicacoes = query.getResultList();
+		
+		for (Publicacao publicacao : publicacoes) {
+			if(publicacao.getPossuiAnexo()) {
+				publicacao.setPublicacaoAnexo(getPublicacaoAnexo(publicacao.getId()));
+			}
+			NotificacaoFilter filter = new NotificacaoFilter();
+			filter.setIdPublicacao(publicacao.getId());
+			List<Notificacao> notificacoes = notificacaoRepositoryImpl.filtrar(filter);
+			if(notificacoes != null && !notificacoes.isEmpty()) {
+				publicacao.setPossuiNotificacao(true);
+			}
+			
+		}
+		return publicacoes;
+	}
+
 	private PublicacaoAnexo getPublicacaoAnexo(Long idPublicacao) {
 		List<PublicacaoAnexo> anexos = publicacaoAnexoRepository.buscarPorIdPublicacao(idPublicacao);
 		if(!anexos.isEmpty()) {

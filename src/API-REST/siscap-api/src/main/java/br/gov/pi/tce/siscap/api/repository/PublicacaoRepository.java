@@ -13,4 +13,7 @@ public interface PublicacaoRepository extends JpaRepository<Publicacao, Long>, P
 
 	@Query("SELECT new br.gov.pi.tce.siscap.api.model.Publicacao(p.id, p.situacao, p.fonte.id, p.fonte.nome, p.data)  FROM Publicacao p WHERE p.situacao = :situacao AND p.fonte.id = :idFonte")
 	public List<Publicacao> buscarPublicacoesAptasParaOCR(Long idFonte, String situacao);
+	
+	@Query("SELECT count(p) FROM Publicacao p")
+	public String buscarTotalPublicacoes();
 }

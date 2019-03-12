@@ -21,6 +21,62 @@ public class PublicacaoFilter {
 	
 	private Boolean sucesso;
 	
+	private String first;
+	
+	public String getFirst() {
+		return first;
+	}
+
+	public void setFirst(String first) {
+		this.first = first;
+	}
+
+	public String getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(String pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	private String pageSize;
+	private int primeiroRegistro;
+	private int quantidadeRegistros;
+	private String propriedadeOrdenacao;
+	private boolean ascendente;
+	
+	public int getPrimeiroRegistro() {
+		return primeiroRegistro;
+	}
+
+	public void setPrimeiroRegistro(int primeiroRegistro) {
+		this.primeiroRegistro = primeiroRegistro;
+	}
+
+	public int getQuantidadeRegistros() {
+		return quantidadeRegistros;
+	}
+
+	public void setQuantidadeRegistros(int quantidadeRegistros) {
+		this.quantidadeRegistros = quantidadeRegistros;
+	}
+
+	public String getPropriedadeOrdenacao() {
+		return propriedadeOrdenacao;
+	}
+
+	public void setPropriedadeOrdenacao(String propriedadeOrdenacao) {
+		this.propriedadeOrdenacao = propriedadeOrdenacao;
+	}
+
+	public boolean isAscendente() {
+		return ascendente;
+	}
+
+	public void setAscendente(boolean ascendente) {
+		this.ascendente = ascendente;
+	}
+
 	public Long getIdFonte() {
 		return idFonte;
 	}

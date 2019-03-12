@@ -46,6 +46,19 @@ public class ConsultaPublicacaoController extends BeanController {
 	
 	private Boolean sucesso;
 	
+	private int quantidade;
+	
+	private LazyPublicacaoController lazyPublicacoes;
+	
+	public LazyPublicacaoController getLazyPublicacoes() {
+		return lazyPublicacoes;
+	}
+
+
+	public void setLazyPublicacoes(LazyPublicacaoController lazyPublicacoes) {
+		this.lazyPublicacoes = lazyPublicacoes;
+	}
+
 	@Inject
 	private PublicacaoServiceClient publicacaoServiceClient;
 	
@@ -63,8 +76,10 @@ public class ConsultaPublicacaoController extends BeanController {
 	public void init() {
 		limpar();
 		iniciaFontes();
+
 		if(!((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI().contains("publicacoesUsuario")) {
-			iniciaPublicacoes(null);
+			int total = totalPublicacoes();
+			lazyPublicacoes = new LazyPublicacaoController(total);
 		}else {
 			iniciaPublicacoes(Boolean.TRUE);
 		}
@@ -230,7 +245,39 @@ public class ConsultaPublicacaoController extends BeanController {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public int totalPublicacoes() {
+		try {
+			quantidade = publicacaoServiceClient.consultarQuantidadeDePublicacoes();
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
+			LOGGER.error("Erro ao iniciar publicações.:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());
+			LOGGER.error("Erro ao iniciar publicações:" + e.getMessage());
+			e.printStackTrace();
+		}
+		return quantidade;
+	}
+	public List<Publicacao> consultarPublicacaoPorPagina(int first, int pageSize) {
+		try {
+			publicacoes = publicacaoServiceClient.consultarPublicacaoPorPagina(first, pageSize);
+		}
+		catch (EJBException e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Serviço indisponível: Publicações.", e.getMessage());
+			LOGGER.error("Erro ao iniciar publicações.:" + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			addMessage(FacesMessage.SEVERITY_ERROR, "Erro ao iniciar publicações.", e.getMessage());
+			LOGGER.error("Erro ao iniciar publicações:" + e.getMessage());
+			e.printStackTrace();
+		}
+		return publicacoes;
+	}
 
 	public void limpar() {
 		this.dataInicio = "";		
