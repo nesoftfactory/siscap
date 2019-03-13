@@ -51,7 +51,7 @@ public class GoogleVisionImage2Text implements Image2Text {
 				textoCompletoConvertido.append(System.lineSeparator());
 			}
 		} catch (IOException e) {
-			throw new OCRException("Erro ao fazer OCR");		
+			throw new OCRException("Erro ao fazer OCR: " + e.getMessage());		
 		}
 
 		return textoCompletoConvertido.toString();

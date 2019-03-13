@@ -28,26 +28,26 @@ public class OCRPublicacoes {
 		//this.realizarOCRDiarioOficialMunicipios();
 	}
 
-	@Scheduled(cron = "0 10 21 * * *")
+	@Scheduled(cron = "0 20 7,20 * * *")
 	public void realizarOCRDiarioOficialParnaiba() {
 		orquestrarOCR(property.getFontes().getParnaiba());
 	}
 
-	@Scheduled(cron = "0 20 21 * * *")
-	public void realizarOCRDiarioOficialMunicipios() {
-		orquestrarOCR(property.getFontes().getMunicipios());
-	}
-
-	@Scheduled(cron = "0 40 21 * * *")
+	@Scheduled(cron = "0 50 7,20 * * *")
 	public void realizarOCRDiarioOficialPiaui() {
 		orquestrarOCR(property.getFontes().getPiaui());
 	}
 
-	@Scheduled(cron = "0 50 21 * * *")
+	@Scheduled(cron = "0 20 8,21 * * *")
 	public void realizarOCRDiarioOficialTeresina() {
 		orquestrarOCR(property.getFontes().getTeresina());
 	}
 
+	@Scheduled(cron = "0 50 8,21 * * *")
+	public void realizarOCRDiarioOficialMunicipios() {
+		orquestrarOCR(property.getFontes().getMunicipios());
+	}
+	
 	private void orquestrarOCR(FonteAuto fonteAuto) {
 		logger.info("Iniciando processo de OCR das publicações: " + fonteAuto.getEnumFonte());
 		ocrService.realizarOCR(new Long(fonteAuto.getId()));
